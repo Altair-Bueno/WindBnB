@@ -1,0 +1,18 @@
+version: "3.1"
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: iweb
+
+  a2reservasrest:
+    build: A2reservasREST
+    environment:
+      mongo_url: "mongodb://root:example@mongodb:27017"
+      mongo_collection: "reservas"
+      mongo_database: "iweb"
+    ports:
+      - "8080:8080"
