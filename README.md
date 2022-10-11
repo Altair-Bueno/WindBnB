@@ -5,7 +5,7 @@
 - Docker
 - Docker compose
 
-### Instrucciones
+## Instrucciones para la ejecución
 
 ```sh
 # Iniciar el servicio
