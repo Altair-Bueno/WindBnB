@@ -1,9 +1,11 @@
 from datetime import date
-from fastapi import APIRouter, Depends
-from pydantic import PositiveInt
 from typing import Optional, List
 
+from fastapi import APIRouter, Depends
+from pydantic import PositiveInt
+
 from ..beans import get_booking_service
+from ..model import Message
 from ..model.booking import Booking, NewBooking, FilterBooking
 from ..service import BookingService
 
@@ -38,8 +40,9 @@ async def get_booking(
     return await service.get_booking_by_id(booking_id)
 
 
-@router.delete("/{booking_id}")
+@router.delete("/{booking_id}", response_model=Message)
 async def cancel_booking(
     booking_id: str, service: BookingService = Depends(get_booking_service)
 ):
-    return await service.delete_booking(booking_id)
+    await service.delete_booking(booking_id)
+    return Message(message=f"Successfully removed {booking_id}")
