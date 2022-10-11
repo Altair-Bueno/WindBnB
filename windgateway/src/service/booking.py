@@ -1,18 +1,52 @@
-from fastapi import Depends
+from typing import Optional, List
 
-from src.beans import get_windbnb_collection
-from src.model.booking import Booking, CreateBooking
+from bson.objectid import ObjectId
+
+from src.model.booking import Booking, NewBooking, FilterBooking
 
 
 class BookingService:
-    def __init__(self, windbnb=Depends(get_windbnb_collection)):
-        self.windbnb = windbnb
+    def __init__(self, collection):
+        self.collection = collection
 
-    async def get_booking_by_id(self, booking_id: str) -> Booking:
-        pass
+    async def get_booking_by_id(self, booking_id: str) -> Optional[Booking]:
+        document = await self.collection.find_one({"_id": ObjectId(booking_id)})
+        return Booking(id=str(document["_id"]), **document)
 
-    async def new_booking(self, request: CreateBooking) -> Booking:
-        pass
+    async def get_bookings(self, f: FilterBooking) -> List[Booking]:
+        query = {}
 
-    async def cancel_booking(self, booking_id: str):
-        pass
+        if f.user:
+            query["user"] = f.user
+
+        if f.before_date:
+            query["start_date"] = {"$lte": str(f.before_date)}
+
+        if f.after_date:
+            query["end_date"] = {"$gte": str(f.after_date)}
+
+        cursor = self.collection.find(query)
+
+        if f.skip:
+            cursor.skip(f.skip)
+
+        return [
+            Booking(id=str(document["_id"]), **document) async for document in cursor
+        ]
+
+    async def new_booking(self, request: NewBooking) -> Booking:
+        result = await self.collection.insert_one(
+            {
+                "house_id": request.house_id,
+                "user": request.user,
+                "start_date": str(request.start_date),
+                "end_date": str(request.end_date),
+            }
+        )
+        return Booking(id=str(result.inserted_id), **request.dict())
+
+    async def delete_booking(self, booking_id: str):
+        result = await self.collection.delete_one({"_id": ObjectId(booking_id)})
+
+        if result.deleted_count == 0:
+            raise KeyError(f"Couldn't find any booking with id={booking_id}")

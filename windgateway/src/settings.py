@@ -9,20 +9,21 @@ class MongoConfig(BaseModel):
     class Config:
         frozen = True
 
-
+"""
 class AWSConfig(BaseModel):
     url: str
 
     class Config:
         frozen = True
 
+"""
 
 class Settings(BaseSettings):
     mongo: MongoConfig
-    aws: AWSConfig
+    #aws: AWSConfig
 
     class Config:
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
-        env_nested_delimiter = '_'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        env_nested_delimiter = "_"
         frozen = True
