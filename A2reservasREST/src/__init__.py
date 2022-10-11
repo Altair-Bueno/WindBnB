@@ -20,6 +20,6 @@ app.add_middleware(
 @app.exception_handler(KeyError)
 async def keyerror_exception_handler(request, exc):
     return JSONResponse(
-        status_code=401,
+        status_code=422,
         content=Message(message="".join(exc.args)).dict(),
     )
