@@ -1,8 +1,7 @@
 from datetime import date
-from typing import Optional, List
-
 from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
+from typing import Optional, List
 
 from ..beans import get_booking_service
 from ..model.booking import Booking, NewBooking, FilterBooking

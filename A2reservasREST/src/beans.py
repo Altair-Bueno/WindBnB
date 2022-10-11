@@ -1,6 +1,5 @@
-from functools import lru_cache
-
 from fastapi import Depends
+from functools import lru_cache
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from .service import BookingService

@@ -1,6 +1,5 @@
-from typing import Optional, List
-
 from bson.objectid import ObjectId
+from typing import Optional, List
 
 from src.model.booking import Booking, NewBooking, FilterBooking
 
