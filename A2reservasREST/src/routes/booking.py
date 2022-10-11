@@ -6,7 +6,7 @@ from pydantic import PositiveInt
 
 from ..beans import get_booking_service
 from ..model import Message
-from ..model.booking import Booking, NewBooking, FilterBooking
+from ..model.booking import Booking, NewBooking, FilterBooking, SortBookingEnum
 from ..service import BookingService
 
 router = APIRouter()
@@ -18,10 +18,12 @@ async def get_bookings(
     before_date: Optional[date] = None,
     after_date: Optional[date] = None,
     skip: Optional[PositiveInt] = None,
+    sort_by: Optional[SortBookingEnum] = None,
+    ascending: Optional[bool] = False,
     service: BookingService = Depends(get_booking_service),
 ):
     f = FilterBooking(
-        user=user, before_date=before_date, after_date=after_date, skip=skip
+        user=user, before_date=before_date, after_date=after_date, skip=skip, sort_by=sort_by, ascending=ascending
     )
     return await service.get_bookings(f)
 

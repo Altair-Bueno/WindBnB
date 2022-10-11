@@ -1,6 +1,8 @@
 from datetime import date
-from pydantic import BaseModel, root_validator
+from enum import Enum
 from typing import Optional
+
+from pydantic import BaseModel, root_validator
 
 
 class Booking(BaseModel):
@@ -28,8 +30,15 @@ class NewBooking(BaseModel):
         return values
 
 
+class SortBookingEnum(str, Enum):
+    start_date = "start_date"
+    end_date = "end_date"
+
+
 class FilterBooking(BaseModel):
     user: Optional[str]
     before_date: Optional[date]
     after_date: Optional[date]
     skip: Optional[int]
+    sort_by: Optional[SortBookingEnum]
+    ascending = False

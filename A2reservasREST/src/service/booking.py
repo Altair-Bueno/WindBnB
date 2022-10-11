@@ -1,5 +1,7 @@
-from bson.objectid import ObjectId
 from typing import Optional, List
+
+import pymongo
+from bson.objectid import ObjectId
 
 from src.model.booking import Booking, NewBooking, FilterBooking
 
@@ -26,11 +28,15 @@ class BookingService:
 
         cursor = self.collection.find(query)
 
+        if f.sort_by:
+            mode = pymongo.ASCENDING if f.ascending else pymongo.DESCENDING
+            cursor.sort(f.sort_by, mode)
+
         if f.skip:
             cursor.skip(f.skip)
 
         return [
-            Booking(id=str(document["_id"]), **document) async for document in cursor
+            Booking(id=str(document["_id"]), **document) async for document in cursor.limit(10)
         ]
 
     async def new_booking(self, request: NewBooking) -> Booking:
