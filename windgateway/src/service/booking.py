@@ -1,17 +1,18 @@
 from fastapi import Depends
-from pydantic import BaseModel
-from src.beans import MongoClient
 
-from src.model.booking import Booking
+from src.beans import get_windbnb_collection
+from src.model.booking import Booking, CreateBooking
+
 
 class BookingService:
-    mongoClient = Depends(MongoClient)
-    
-    async def getBooking(booking: str) -> Booking:
+    def __init__(self, windbnb=Depends(get_windbnb_collection)):
+        self.windbnb = windbnb
+
+    async def get_booking_by_id(self, booking_id: str) -> Booking:
         pass
 
-    async def newBooking():
+    async def new_booking(self, request: CreateBooking) -> Booking:
         pass
-    
-    async def cancelBooking():
+
+    async def cancel_booking(self, booking_id: str):
         pass

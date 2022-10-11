@@ -3,11 +3,27 @@ from functools import lru_cache
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .config import Config
+from .settings import Settings
+
 
 @lru_cache
-def MongoClient(config: Config = Depends(Config)):
-    # replace this with your MongoDB connection string
-    connection_string = config.mongo.url
+def get_settings() -> Settings:
+    return Settings()
+
+
+@lru_cache
+def get_mongo_client(config: Settings = Depends(get_settings)):
     # set a 5-second connection timeout
-    return AsyncIOMotorClient(connection_string, serverSelectionTimeoutMS=5000)
+    return AsyncIOMotorClient(config.mongo.url, serverSelectionTimeoutMS=5000)
+
+
+@lru_cache
+def get_mongo_database(client=Depends(get_mongo_client),
+                       settings: Settings = Depends(get_settings)):
+    return client[settings.mongo.database]
+
+
+@lru_cache
+def get_windbnb_collection(database=Depends(get_mongo_database),
+                           settings: Settings = Depends(get_settings)):
+    return database[settings.mongo.collection]
