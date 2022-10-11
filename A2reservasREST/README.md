@@ -1,3 +1,5 @@
+Contiene el microservicio encargado de gestionar la información sobre las reservas
+
 # Uso
 
 ## Ejecución de desarrollo
