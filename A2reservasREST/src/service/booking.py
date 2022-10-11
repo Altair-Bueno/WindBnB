@@ -21,10 +21,10 @@ class BookingService:
             query["user_id"] = f.user_id
 
         if f.before_date:
-            query["start_date"] = {"$lte": str(f.before_date)}
+            query["end_date"] = {"$lte": str(f.before_date)}
 
         if f.after_date:
-            query["end_date"] = {"$gte": str(f.after_date)}
+            query["start_date"] = {"$gte": str(f.after_date)}
 
         cursor = self.collection.find(query)
 
