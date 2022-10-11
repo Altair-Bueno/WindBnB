@@ -17,8 +17,8 @@ class BookingService:
     async def get_bookings(self, f: FilterBooking) -> List[Booking]:
         query = {}
 
-        if f.user:
-            query["user"] = f.user
+        if f.user_id:
+            query["user_id"] = f.user_id
 
         if f.before_date:
             query["start_date"] = {"$lte": str(f.before_date)}
@@ -43,7 +43,7 @@ class BookingService:
         result = await self.collection.insert_one(
             {
                 "house_id": request.house_id,
-                "user": request.user,
+                "user_id": request.user_id,
                 "start_date": str(request.start_date),
                 "end_date": str(request.end_date),
             }

@@ -8,14 +8,14 @@ from pydantic import BaseModel, root_validator
 class Booking(BaseModel):
     id: str
     house_id: str
-    user: str
+    user_id: str
     start_date: date
     end_date: date
 
 
 class NewBooking(BaseModel):
     house_id: str
-    user: str
+    user_id: str
     start_date: date
     end_date: date
 
@@ -36,7 +36,7 @@ class SortBookingEnum(str, Enum):
 
 
 class FilterBooking(BaseModel):
-    user: Optional[str]
+    user_id: Optional[str]
     before_date: Optional[date]
     after_date: Optional[date]
     skip: Optional[int]

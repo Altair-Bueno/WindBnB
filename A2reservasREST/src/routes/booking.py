@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.get("", response_model=List[Booking])
 async def get_bookings(
-    user: Optional[str] = None,
+    user_id: Optional[str] = None,
     before_date: Optional[date] = None,
     after_date: Optional[date] = None,
     skip: Optional[PositiveInt] = None,
@@ -23,7 +23,7 @@ async def get_bookings(
     service: BookingService = Depends(get_booking_service),
 ):
     f = FilterBooking(
-        user=user, before_date=before_date, after_date=after_date, skip=skip, sort_by=sort_by, ascending=ascending
+        user_id=user_id, before_date=before_date, after_date=after_date, skip=skip, sort_by=sort_by, ascending=ascending
     )
     return await service.get_bookings(f)
 
