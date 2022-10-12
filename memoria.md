@@ -49,7 +49,9 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
   // Fecha de inicio de la reserva
   "start_date": "date(YYYY-MM-DD)",
   // Fecha de fin de la reserva
-  "end_date": "date(YYYY-MM-DD)"
+  "end_date": "date(YYYY-MM-DD)",
+  // Estado de la reserva. Por defecto: reservado
+  "state": "enum(reserved,canceled)"
 }
 ```
 
@@ -71,7 +73,7 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
   - `end_date`: Fin de la reserva
 - `GET /booking/{booking_id}`: Devuelve toda la información sobre la reserva con
   identificador `booking_id`
-- `DELETE /booking/{booking_id}`: Elimina la reserva con identificador
+- `DELETE /booking/{booking_id}`: Cancela la reserva con identificador
   `booking_id`
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
