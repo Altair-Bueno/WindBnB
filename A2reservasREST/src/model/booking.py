@@ -2,7 +2,7 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, root_validator, validator
 
 
 class BookingStateEnum(str, Enum):
@@ -34,6 +34,13 @@ class NewBooking(BaseModel):
             raise ValueError("Invalid start date")
 
         return values
+
+    @validator("start_date")
+    def no_past_reservations(cls, v):
+        if date.today() <= v:
+            return v
+        else:
+            raise ValueError("Cannot book on a past date")
 
 
 class SortBookingEnum(str, Enum):
