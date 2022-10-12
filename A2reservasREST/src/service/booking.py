@@ -61,7 +61,7 @@ class BookingService:
     async def cancel_booking(self, booking_id: str):
         result = await self.collection.update_one(
             {"_id": ObjectId(booking_id), "state": BookingStateEnum.reserved.value},
-            {"$set": {"state": BookingStateEnum.canceled.value}}
+            {"$set": {"state": BookingStateEnum.canceled.value}},
         )
 
         if result.modified_count == 0:
