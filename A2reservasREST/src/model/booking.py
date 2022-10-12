@@ -5,12 +5,18 @@ from typing import Optional
 from pydantic import BaseModel, root_validator
 
 
+class BookingStateEnum(str, Enum):
+    reserved = "reserved"
+    canceled = "canceled"
+
+
 class Booking(BaseModel):
     id: str
     house_id: str
     user_id: str
     start_date: date
     end_date: date
+    state: BookingStateEnum = BookingStateEnum.reserved
 
 
 class NewBooking(BaseModel):
@@ -37,6 +43,8 @@ class SortBookingEnum(str, Enum):
 
 class FilterBooking(BaseModel):
     user_id: Optional[str]
+    house_id: Optional[str]
+    state: Optional[BookingStateEnum]
     before_date: Optional[date]
     after_date: Optional[date]
     skip: Optional[int]
