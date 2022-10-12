@@ -4,15 +4,20 @@ import pymongo
 from bson.objectid import ObjectId
 
 from src.model.booking import *
+from .error import AlreadyBookedError, NotFoundError
+from ..model import PyObjectId
 
 
 class BookingService:
     def __init__(self, collection):
         self.collection = collection
 
-    async def get_booking_by_id(self, booking_id: str) -> Optional[Booking]:
+    async def get_booking_by_id(self, booking_id: PyObjectId) -> Optional[Booking]:
         document = await self.collection.find_one({"_id": ObjectId(booking_id)})
-        return Booking(id=str(document["_id"]), **document)
+        if document:
+            return Booking(id=str(document["_id"]), **document)
+        else:
+            raise NotFoundError()
 
     async def get_bookings(self, f: FilterBooking) -> List[Booking]:
         query = {}
@@ -47,18 +52,46 @@ class BookingService:
         ]
 
     async def new_booking(self, request: NewBooking) -> Booking:
-        result = await self.collection.insert_one(
-            {
-                "house_id": request.house_id,
-                "user_id": request.user_id,
-                "start_date": str(request.start_date),
-                "end_date": str(request.end_date),
-                "state": BookingStateEnum.reserved.value,
-            }
+        document = {
+            "house_id": request.house_id,
+            "user_id": request.user_id,
+            "start_date": str(request.start_date),
+            "end_date": str(request.end_date),
+            "state": BookingStateEnum.reserved.value,
+        }
+        f = {
+            "house_id": request.house_id,
+            "$or": [
+                # Reservations with start date before the given start date
+                {
+                    "start_date": {"$lte": str(request.start_date)},
+                    "end_date": {"$gte": str(request.start_date)},
+                },
+                # Reservations with end date after the given end date
+                {
+                    "start_date": {"$lte": str(request.end_date)},
+                    "end_date": {"$gte": str(request.end_date)},
+                },
+                # Reservations smaller than the given reservation
+                {
+                    "start_date": {"$gte": str(request.start_date)},
+                    "end_date": {"$lte": str(request.end_date)},
+                },
+            ],
+        }
+        # If nothing matches the filter, the document will be inserted
+        result = await self.collection.update_one(
+            f,
+            {"$setOnInsert": document},
+            upsert=True,
         )
-        return Booking(id=str(result.inserted_id), **request.dict())
 
-    async def cancel_booking(self, booking_id: str):
+        if result.upserted_id:
+            return Booking(id=str(result.upserted_id), **request.dict())
+        else:
+            raise AlreadyBookedError("A booking already exists")
+
+    async def cancel_booking(self, booking_id: PyObjectId):
         result = await self.collection.update_one(
             {"_id": ObjectId(booking_id), "state": BookingStateEnum.reserved.value},
             {"$set": {"state": BookingStateEnum.canceled.value}},

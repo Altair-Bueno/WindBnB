@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
 
 from ..beans import get_booking_service
-from ..model import Message
+from ..model import Message, PyObjectId
 from ..model.booking import *
 from ..service import BookingService
 
@@ -45,14 +45,14 @@ async def create_booking(
 
 @router.get("/{booking_id}", response_model=Booking)
 async def get_booking(
-    booking_id: str, service: BookingService = Depends(get_booking_service)
+    booking_id: PyObjectId, service: BookingService = Depends(get_booking_service)
 ):
     return await service.get_booking_by_id(booking_id)
 
 
 @router.delete("/{booking_id}", response_model=Message)
 async def cancel_booking(
-    booking_id: str, service: BookingService = Depends(get_booking_service)
+    booking_id: PyObjectId, service: BookingService = Depends(get_booking_service)
 ):
     await service.cancel_booking(booking_id)
     return Message(message=f"Successfully canceled {booking_id}")

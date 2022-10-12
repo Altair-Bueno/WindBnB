@@ -6,10 +6,12 @@ from fastapi.responses import JSONResponse
 from .beans import get_settings
 from .model import Message
 from .routes import BaseRouter
+from .service.error import *
 
 __name__ = "A2reservasREST"
 __version__ = "0.1.0"
 __docs__ = "Gestión de reservas. Ingeniería web"
+
 
 app = FastAPI()
 app.include_router(BaseRouter)
@@ -45,9 +47,19 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-@app.exception_handler(KeyError)
-async def keyerror_exception_handler(request, exc):
+@app.exception_handler(AlreadyBookedError)
+async def already_booked_handler(request, exc):
     return JSONResponse(
+        # Conflict
+        status_code=409,
+        content=Message(message="".join(exc.args)).dict(),
+    )
+
+
+@app.exception_handler(NotFoundError)
+async def not_found_handler(request, exc):
+    return JSONResponse(
+        # Not found
         status_code=404,
         content=Message(message="".join(exc.args)).dict(),
     )
