@@ -61,6 +61,7 @@ class BookingService:
         }
         f = {
             "house_id": request.house_id,
+            "state": BookingStateEnum.reserved.value,
             "$or": [
                 # Reservations with start date before the given start date
                 {
