@@ -1,19 +1,27 @@
 from datetime import date
-from pydantic import BaseModel, root_validator
+from enum import Enum
 from typing import Optional
+
+from pydantic import BaseModel, root_validator, validator
+
+
+class BookingStateEnum(str, Enum):
+    reserved = "reserved"
+    canceled = "canceled"
 
 
 class Booking(BaseModel):
     id: str
     house_id: str
-    user: str
+    user_id: str
     start_date: date
     end_date: date
+    state: BookingStateEnum = BookingStateEnum.reserved
 
 
 class NewBooking(BaseModel):
     house_id: str
-    user: str
+    user_id: str
     start_date: date
     end_date: date
 
@@ -27,9 +35,25 @@ class NewBooking(BaseModel):
 
         return values
 
+    @validator("start_date")
+    def no_past_reservations(cls, v):
+        if date.today() <= v:
+            return v
+        else:
+            raise ValueError("Cannot book on a past date")
+
+
+class SortBookingEnum(str, Enum):
+    start_date = "start_date"
+    end_date = "end_date"
+
 
 class FilterBooking(BaseModel):
-    user: Optional[str]
+    user_id: Optional[str]
+    house_id: Optional[str]
+    state: Optional[BookingStateEnum]
     before_date: Optional[date]
     after_date: Optional[date]
     skip: Optional[int]
+    sort_by: Optional[SortBookingEnum]
+    ascending = False
