@@ -26,14 +26,16 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
   // Identificador del usuario dueño de la vivienda
   "user_id": "string",
   // Estado de la vivienda
-  "state": "enum(available,deleted)"
+  "state": "enum(available,deleted)",
   "bookings": [
     {
       "_id": "ObjectId",
-      // Fecha de inicio de la reserva
-      "start_date": "date(YYYY-MM-DD)",
-      // Fecha de fin de la reserva
-      "end_date": "date(YYYY-MM-DD)",
+      // Identificador del usuario que hace la reserva
+      "user_id": "string",
+      // Fecha de inicio de la reserva en formato YYYY-MM-DD
+      "start_date": "string",
+      // Fecha de fin de la reserva en formato YYYY-MM-DD
+      "end_date": "string",
       // Estado de la reserva. Por defecto: reservado
       "state": "enum(reserved,canceled)"
     }
