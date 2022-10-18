@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from pydantic import PositiveInt
 
 from ..beans import get_booking_service
-from ..model import Message, PyObjectId
+from ..model import Message
 from ..model.booking import *
 from ..service import BookingService
 
@@ -19,7 +19,8 @@ async def get_bookings(
     skip: Optional[PositiveInt] = None,
     sort_by: Optional[SortBookingEnum] = None,
     ascending: Optional[bool] = False,
-    house_id: Optional[str] = None,
+    house_id: Optional[PyObjectId] = None,
+    owner_id: Optional[PyObjectId] = None,
     state: Optional[BookingStateEnum] = None,
     service: BookingService = Depends(get_booking_service),
 ):
@@ -31,6 +32,7 @@ async def get_bookings(
         sort_by=sort_by,
         ascending=ascending,
         house_id=house_id,
+        owner_id=owner_id,
         state=state,
     )
     return await service.get_bookings(f)
@@ -55,4 +57,4 @@ async def cancel_booking(
     booking_id: PyObjectId, service: BookingService = Depends(get_booking_service)
 ):
     await service.cancel_booking(booking_id)
-    return Message(message=f"Successfully canceled {booking_id}")
+    return Message(message=f"Successfully canceled booking")
