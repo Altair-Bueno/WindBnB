@@ -15,6 +15,32 @@ toc: true
 
 # Introducción
 
+# Esquema de las entidades
+
+Los documentos almacenados en Mongo mantienen la el siguiente esquema:
+
+```json
+{
+  // Clave primaria de Mongo
+  "_id": "ObjectId",
+  // Identificador del usuario dueño de la vivienda
+  "user_id": "string",
+  // Estado de la vivienda
+  "state": "enum(available,deleted)"
+  "bookings": [
+    {
+      "_id": "ObjectId",
+      // Fecha de inicio de la reserva
+      "start_date": "date(YYYY-MM-DD)",
+      // Fecha de fin de la reserva
+      "end_date": "date(YYYY-MM-DD)",
+      // Estado de la reserva. Por defecto: reservado
+      "state": "enum(reserved,canceled)"
+    }
+  ]
+}
+```
+
 # Descripción de los servicios
 
 ## A2ReservasREST
@@ -33,27 +59,6 @@ pueden encontrar en el fichero `README.md`, dentro de la carpeta del proyecto
 
 - **Al menos dos operaciones de consulta o búsqueda parametrizada**:
   `GET /booking`, `GET /booking/{booking_id}`, `DELETE /booking/{booking_id}`
-
-### Esquema de las entidades
-
-Los documentos almacenados en Mongo mantienen la el siguiente esquema:
-
-```json
-{
-  // Clave primaria de Mongo
-  "_id": "ObjectId",
-  // Identificador del usuario que realiza la reserva
-  "user_id": "string",
-  // Identificador de la vivienda
-  "house_id": "string",
-  // Fecha de inicio de la reserva
-  "start_date": "date(YYYY-MM-DD)",
-  // Fecha de fin de la reserva
-  "end_date": "date(YYYY-MM-DD)",
-  // Estado de la reserva. Por defecto: reservado
-  "state": "enum(reserved,canceled)"
-}
-```
 
 ### Endpoints REST disponibles
 
