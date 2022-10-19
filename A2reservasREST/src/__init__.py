@@ -37,7 +37,7 @@ def custom_openapi():
     # Include servers section
     openapi_schema["servers"] = [
         {"url": "/", "description": "Default"},
-        {"url": "http://localhost:8080", "description": "Docker compose"},
+        {"url": "http://localhost:8001", "description": "Docker compose"},
     ]
 
     app.openapi_schema = openapi_schema

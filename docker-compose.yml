@@ -1,5 +1,6 @@
 version: "3.1"
 services:
+  # http://localhost:27017
   mongodb:
     image: "mongo:6.0.2"
     restart: always
@@ -7,7 +8,10 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: iweb
+    ports:
+      - "27017:27017"
 
+  # http://localhost:8001
   a2reservasrest:
     build: A2reservasREST
     environment:
@@ -15,4 +19,4 @@ services:
       mongo_collection: "reservas"
       mongo_database: "iweb"
     ports:
-      - "8080:8080"
+      - "8001:8000"
