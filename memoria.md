@@ -13,11 +13,18 @@ toc-own-page: true
 toc: true
 ---
 
+<!--
+TODO
+
+- Indicar despliegue de los servicios con docker compose `docker compose up -d`. Esto está en el README.md
+- Rellenar los datos de `iweb/iweb.json`
+-->
+
 # Introducción
 
 # Esquema de las entidades
 
-Los documentos almacenados en Mongo mantienen la el siguiente esquema:
+Los documentos almacenados en Mongo mantienen el siguiente esquema:
 
 ```json
 {
@@ -25,8 +32,9 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
   "_id": "ObjectId",
   // Identificador del usuario dueño de la vivienda
   "user_id": "string",
-  // Estado de la vivienda
+  // Estado de la vivienda. Por defecto: available
   "state": "enum(available,deleted)",
+  // Lista de todas las reservas que ha recibido esta vivienda
   "bookings": [
     {
       "_id": "ObjectId",
@@ -36,12 +44,20 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
       "start_date": "string",
       // Fecha de fin de la reserva en formato YYYY-MM-DD
       "end_date": "string",
-      // Estado de la reserva. Por defecto: reservado
+      // Estado de la reserva. Por defecto: reserved
       "state": "enum(reserved,canceled)"
     }
   ]
 }
 ```
+
+## Datos de prueba para Mongo
+
+En el interior de la carpeta `iweb`, se proporciona un fichero `houses.json` con
+el volcado de la colección de pruebas. Para restaurarla, basta con realizar una
+inserción de multiples elementos del contenido del fichero. Para automatizar el
+proceso, se proporciona un script de Python `iweb.py`. Requiere que la librería
+`pymongo` esté instalada
 
 # Descripción de los servicios
 
@@ -50,41 +66,47 @@ Los documentos almacenados en Mongo mantienen la el siguiente esquema:
 Este microservicio se encarga de proporcionar los datos sobre las reservas. Esta
 desarrollado en Python utilizando el framework
 [FastAPI](https://fastapi.tiangolo.com). Para la persistencia de datos utiliza
-[MongoDB](https://www.mongodb.com/), a través del driver
+[MongoDB](https://www.mongodb.com/), a través del driver asíncrono
 [Motor](https://motor.readthedocs.io/en/stable/index.html).
 
 Para facilitar el despliegue de la aplicación, se proporciona un fichero
-`Dockerfile`. Las instrucciones detalladas sobre como desplegar la aplicación se
-pueden encontrar en el fichero `README.md`, dentro de la carpeta del proyecto
+`Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las
+instrucciones detalladas sobre como utilizar la imagen y las opciones de
+configuración disponibles se pueden encontrar en el fichero `README.md`, dentro
+de la carpeta `A2ReservasREST`.
 
 ### Requisitos considerados
 
 - **Al menos dos operaciones de consulta o búsqueda parametrizada**:
   `GET /booking`, `GET /booking/{booking_id}`, `DELETE /booking/{booking_id}`
+- **Una operación de consulta sobre las relaciones entre las entidades**:
+  `GET /booking` y su parámetro de consulta `owner_id`
 
 ### Endpoints REST disponibles
+
+La siguiente lista es una especificación informal sobre los endpoints REST
+disponibles en el microservicio, a modo de resumen. La documentación completa se
+puede encontrar en el propio servidor, bajo la ruta `/docs`. Además, se adjunta
+una copia local en el fichero `openapi.json`, dentro de la carpeta del proyecto.
 
 - `GET /booking`: Devuelve una lista de reservas que cumplan con los filtros
   especificados. 10 reservas como máximo. Los parámetros de consulta son:
   - `skip`: Número de reservas a ignorar
-  - `user_id`: Identificador de usuario
+  - `user_id`: Identificador de usuario (quien realiza la reserva)
+  - `owner_id`: Identificador de usuario (propietario de la vivienda)
   - `before_date`: Fechas de fin anteriores
   - `after_date`: Fechas de inicio posteriores
   - `sort_by`: Campo utilizado para ordenar
   - `ascending`: Ordenar de forma ascendente. Por defecto: `false`
 - `POST /booking`: Crea una nueva reserva. El cuerpo de la petición es un json
   con los siguientes campos:
-  - `user_id`: Identificador del usuario
+  - `user_id`: Identificador del usuario que realiza la reserva
   - `house_id`: Identificador de la vivienda
-  - `start_date`: Inicio de la reserva
-  - `end_date`: Fin de la reserva
+  - `start_date`: Fecha de inicio de la reserva
+  - `end_date`: Fecha de inicio de la reserva
 - `GET /booking/{booking_id}`: Devuelve toda la información sobre la reserva con
   identificador `booking_id`
 - `DELETE /booking/{booking_id}`: Cancela la reserva con identificador
   `booking_id`
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
-
-La documentación completa para los endpoints REST desarrollados se puede
-encontrar en el propio servidor, bajo la ruta `/docs`. Además, se adjunta una
-copia local en el fichero `openapi.json`, dentro de la carpeta del proyecto.
