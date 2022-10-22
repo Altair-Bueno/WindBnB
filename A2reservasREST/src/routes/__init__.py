@@ -10,4 +10,5 @@ BaseRouter.include_router(booking_router, prefix="/booking")
 
 @BaseRouter.get("/ping", response_model=Message)
 async def ping():
+    """Responds with an "Available" message, if the service is available"""
     return Message(message="Available")
