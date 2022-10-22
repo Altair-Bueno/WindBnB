@@ -58,9 +58,6 @@ class SortBookingEnum(str, Enum):
     start_date = "start_date"
     end_date = "end_date"
 
-    class Config:
-        json_encoders = {ObjectId: str}
-
 
 class FilterBooking(BaseModel):
     """Payload for filtering bookings"""
