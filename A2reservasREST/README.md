@@ -1,4 +1,5 @@
-Contiene el microservicio encargado de gestionar la información sobre las reservas
+Contiene el microservicio encargado de gestionar la información sobre las
+reservas
 
 # Uso
 
@@ -56,3 +57,7 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `mongo_database`   | Base de datos donde buscar la colección |                   |
 
 # Documentación
+
+Se proporciona un fichero `openapi.json` con la especificación de OpenApi.
+Además, el propio servidor web proporciona la documentación sobre los endpoints
+REST bajo las rutas `/docs` (SwaggerUI) y `/redoc` (Redoc)
