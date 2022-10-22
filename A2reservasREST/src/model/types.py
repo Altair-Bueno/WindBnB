@@ -3,10 +3,12 @@ from pydantic import BaseModel
 
 
 class Message(BaseModel):
+    """A single message payload"""
     message: str
 
 
 class PyObjectId(ObjectId):
+    """Wrapper around `pymongo`'s `ObjectId` class for Pydantic"""
     @classmethod
     def __get_validators__(cls):
         yield cls.validate

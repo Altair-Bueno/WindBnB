@@ -14,6 +14,7 @@ class BookingStateEnum(str, Enum):
 
 
 class Booking(BaseModel):
+    """Contains all the known information about a booking"""
     id: PyObjectId
     house_id: PyObjectId
     user_id: str
@@ -26,6 +27,7 @@ class Booking(BaseModel):
 
 
 class NewBooking(BaseModel):
+    """Payload for creating new bookings"""
     house_id: PyObjectId
     user_id: str
     start_date: date
@@ -37,7 +39,7 @@ class NewBooking(BaseModel):
         end_date = values.get("end_date")
 
         if start_date >= end_date:
-            raise ValueError("Invalid start date")
+            raise ValueError("Cannot end booking on a past date")
 
         return values
 
@@ -61,6 +63,7 @@ class SortBookingEnum(str, Enum):
 
 
 class FilterBooking(BaseModel):
+    """Payload for filtering bookings"""
     user_id: Optional[str]
     owner_id: Optional[str]
     house_id: Optional[PyObjectId]
