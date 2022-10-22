@@ -86,8 +86,9 @@ de la carpeta `A2ReservasREST`.
 
 La siguiente lista es una especificación informal sobre los endpoints REST
 disponibles en el microservicio, a modo de resumen. La documentación completa se
-puede encontrar en el propio servidor, bajo la ruta `/docs`. Además, se adjunta
-una copia local en el fichero `openapi.json`, dentro de la carpeta del proyecto.
+puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
+`/redoc` (Redoc). Además, se adjunta una copia local en el fichero
+`openapi.json`, dentro de la carpeta del proyecto.
 
 - `GET /booking`: Devuelve una lista de reservas que cumplan con los filtros
   especificados. 10 reservas como máximo. Los parámetros de consulta son:
