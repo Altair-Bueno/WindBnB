@@ -30,8 +30,14 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
 {
   // Clave primaria de Mongo
   "_id": "ObjectId",
+  // Titulo de la vivienda
+  "title": "string",
+  // Descripción de la vivienda
+  "description": "string",
   // Identificador del usuario dueño de la vivienda
   "user_id": "string",
+  // Ubicación de la vivienda
+  "location": "string",
   // Estado de la vivienda. Por defecto: available
   "state": "enum(available,deleted)",
   // Lista de todas las reservas que ha recibido esta vivienda

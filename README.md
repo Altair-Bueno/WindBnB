@@ -22,5 +22,5 @@ docker compose up -d
 docker compose down
 ```
 
-- El servidor de mongo está disponible en <http://localhost:27017>
+- El servidor de mongo está disponible en <mongodb://root:example@127.0.0.1:27017>
 - El microservicio A2reservasREST está disponible en <http://localhost:8001>
