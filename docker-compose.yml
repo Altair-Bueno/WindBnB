@@ -20,12 +20,13 @@ services:
       mongo_collection: "houses"
     ports:
       - "8001:8000"
-
+  # http://localhost:8002
   a2viviendasrest:
-    build: A2viviendasREST
+    build: A2viviendasREST_nuevo
     environment:
       mongo_url: "mongodb://root:example@mongodb:27017"
       mongo_database: "iweb"
       mongo_collection: "houses"
     ports:
-      - "8001:8000"
+      - "8002:8000"
+

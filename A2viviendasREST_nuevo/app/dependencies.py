@@ -5,7 +5,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from .settings import Settings
 
 
-
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
@@ -19,14 +18,14 @@ def get_mongo_client(config: Settings = Depends(get_settings)):
 
 @lru_cache
 def get_mongo_database(
-    client=Depends(get_mongo_client), settings: Settings = Depends(get_settings)
+        client=Depends(get_mongo_client), settings: Settings = Depends(get_settings)
 ):
     return client[settings.mongo.database]
 
 
 @lru_cache
 def get_windbnb_collection(
-    database=Depends(get_mongo_database), settings: Settings = Depends(get_settings)
+        database=Depends(get_mongo_database), settings: Settings = Depends(get_settings)
 ):
     return database[settings.mongo.collection]
 
@@ -36,4 +35,3 @@ def get_windbnb_collection(
 def get_booking_service(collection=Depends(get_windbnb_collection)) -> BookingService:
     return BookingService(collection)
 """
-

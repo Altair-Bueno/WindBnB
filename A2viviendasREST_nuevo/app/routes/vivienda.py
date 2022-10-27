@@ -3,8 +3,6 @@ from fastapi import APIRouter, Depends
 from fastapi.openapi.models import Response
 from fastapi.responses import Response
 
-from app.schemas.vivienda import viviendaEntity
-from app.config.db import connection
 from app.models.vivienda import Vivienda
 from ..dependencies import get_windbnb_collection
 
