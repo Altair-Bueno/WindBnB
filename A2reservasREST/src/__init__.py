@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
-from .beans import get_settings
 from .model import Message
 from .routes import BaseRouter
 from .service.error import *

@@ -3,8 +3,8 @@ from typing import List
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from src.model.booking import *
 from .error import AlreadyBookedError, NotFoundError
+from ..model.booking import *
 from ..model import PyObjectId
 from ..model.house import HouseStateEnum
 
