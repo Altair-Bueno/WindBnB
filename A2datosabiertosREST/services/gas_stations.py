@@ -1,5 +1,5 @@
 from typing import List
-from models.gas_stations import GasStation, EESSPrecio
+from models.gas_stations import EESSPrecio
 from services import gas_station_json
 from models.area import Area
 
@@ -17,7 +17,7 @@ class GasStationService:
 
         while result.__len__() < limit and index < gas_station_list.__len__() - 1:
             current_eessprecio = gas_station_list.__getitem__(index)
-            if current_eessprecio.provincia == provincia:
+            if current_eessprecio.provincia == provincia.upper():
                 result.append(current_eessprecio)
             index += 1
         return result

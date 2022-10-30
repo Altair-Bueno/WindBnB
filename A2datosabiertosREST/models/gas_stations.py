@@ -4,27 +4,28 @@ from pydantic.fields import Field
 
 
 class EESSPrecio(BaseModel):
-  # Dirección: str
-  #  #Horario: str
+  cp: str = Field(alias="C.P.")
+  direccion: str = Field(alias="Dirección")
+  horario: str = Field(alias="Horario")
   latitud: str = Field(alias="Latitud")
-  #  #Localidad: str
+  localidad: str = Field(alias="Localidad")
   longitud: str = Field(alias="Longitud (WGS84)")
   #  #Margen: str
   municipio: str = Field(alias="Municipio")
-  #  #Precio_x0020_Biodiesel: str
-  #  #Precio_x0020_Bioetanol: str
-  #  #Precio_x0020_Gas_x0020_Natural_x0020_Comprimido: str
-  #  #Precio_x0020_Gas_x0020_Natural_x0020_Licuado: str
-  #  #Precio_x0020_Gases_x0020_licuados_x0020_del_x0020_petróleo: str
-  #  #Precio_x0020_Gasoleo_x0020_A: str
-  #  #Precio_x0020_Gasoleo_x0020_B: str
-  #  #Precio_x0020_Gasoleo_x0020_Premium: str
-  #  #Precio_x0020_Gasolina_x0020_95_x0020_E10: str
-  #  #Precio_x0020_Gasolina_x0020_95_x0020_E5: str
-  #  #Precio_x0020_Gasolina_x0020_95_x0020_E5_x0020_Premium: str
-  #  #Precio_x0020_Gasolina_x0020_98_x0020_E10: str
-  #  #Precio_x0020_Gasolina_x0020_98_x0020_E5: str
-  #  #Precio_x0020_Hidrogeno: str
+  biodiesel: str = Field(alias="Precio Biodiesel")
+  bioetanol: str = Field(alias="Precio Bioetanol")
+  gas_natural_comprimido: str = Field(alias="Precio Gas Natural Comprimido")
+  gas_natural_licudado: str = Field(alias="Precio Gas Natural Licuado")
+  gases_licuados_del_petroleo: str = Field(alias="Precio Gases licuados del petróleo")
+  gasoleo_a: str = Field(alias="Precio Gasoleo A")
+  gasoleo_b: str = Field(alias="Precio Gasoleo B")
+  gasoleo_premium: str = Field(alias="Precio Gasoleo Premium")
+  gasolina_95_e10: str = Field(alias="Precio Gasolina 95 E10")
+  gasolina_95_e5: str = Field(alias="Precio Gasolina 95 E5")
+  gasolina_95_e5_premium: str = Field(alias="Precio Gasolina 95 E5 Premium")
+  gasolina_98_e10: str = Field(alias="Precio Gasolina 98 E10")
+  gasolina_98_e5: str = Field(alias="Precio Gasolina 98 E5")
+  hidrogeno: str = Field(alias="Precio Hidrogeno")
   provincia: str = Field(alias="Provincia")
   #  #Remisión: str
   #  #Rótulo: str
