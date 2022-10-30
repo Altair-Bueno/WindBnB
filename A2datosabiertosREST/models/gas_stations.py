@@ -1,15 +1,16 @@
 from pydantic import BaseModel
 from typing import List
+from pydantic.fields import Field
 
 
 class EESSPrecio(BaseModel):
-  #  ## Dirección: str
+  # Dirección: str
   #  #Horario: str
-  Latitud: str
+  latitud: str = Field(alias="Latitud")
   #  #Localidad: str
-  # Longitud (WGS84): str
+  longitud: str = Field(alias="Longitud (WGS84)")
   #  #Margen: str
-  Municipio: str
+  municipio: str = Field(alias="Municipio")
   #  #Precio_x0020_Biodiesel: str
   #  #Precio_x0020_Bioetanol: str
   #  #Precio_x0020_Gas_x0020_Natural_x0020_Comprimido: str
@@ -24,7 +25,7 @@ class EESSPrecio(BaseModel):
   #  #Precio_x0020_Gasolina_x0020_98_x0020_E10: str
   #  #Precio_x0020_Gasolina_x0020_98_x0020_E5: str
   #  #Precio_x0020_Hidrogeno: str
-  Provincia: str
+  provincia: str = Field(alias="Provincia")
   #  #Remisión: str
   #  #Rótulo: str
   #  #Tipo_x0020_Venta: str

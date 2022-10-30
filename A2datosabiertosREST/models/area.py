@@ -20,4 +20,7 @@ class Area():
         return kilometers / 111.0
 
     def km_to_longitude(self, kilometers: int, latitude: float) -> float:
-        return kilometers / (111*cos(latitude))
+        return kilometers / (111 * cos(latitude))
+
+    def is_in_area(self, latitude: float, longitude: float) -> bool:
+        return self.min_latitude < latitude < self.max_latitude and self.min_longitude < longitude < self.max_longitude

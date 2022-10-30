@@ -1,13 +1,14 @@
-import json
-from os.path import join
-import requests
+from json import load
+from os.path import join, exists
 from definitions import ROOT_DIR
 from models.gas_stations import GasStation
-# from polars import read_json
+from utils import download_gas_stations
 
 gas_station_file_path = join(ROOT_DIR, "data", "gas_stations.json")
-raw_gas_stations = requests.get("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/")
-with open(gas_station_file_path, "w") as outfile:
-    gas_station = raw_gas_stations.json()
-    json.dump(gas_station, outfile, indent=4)
-    gas_station_json = GasStation(**gas_station)
+if not exists(gas_station_file_path):
+    gas_station_json = download_gas_stations()
+else:
+    with open(gas_station_file_path, "r") as file:
+        if file.__sizeof__() > 0:
+            gas_station = load(file)
+            gas_station_json: GasStation = GasStation(**gas_station)

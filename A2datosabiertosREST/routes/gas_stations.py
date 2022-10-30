@@ -11,3 +11,14 @@ async def get_gas_stations(
         service: GasStationService = Depends(GasStationService),
 ):
     return await service.find_by_provincia(provincia, limit)
+
+
+@router.get("/gas-stations/{latitude}/{longitude}")
+async def get_stations_by_radius(
+        latitude: float,
+        longitude: float,
+        area: int = Query(default=5),
+        limit: int = Query(default=10),
+        service: GasStationService = Depends(GasStationService),
+):
+    return service.find_by_area(area, latitude, longitude, limit)
