@@ -1,16 +1,24 @@
+from typing import Optional
+
 from fastapi import APIRouter, Query, Depends
 from services.gas_stations import GasStationService
+from models.gas_stations import EESSPrecioFilter
 
 router = APIRouter()
 
 
-@router.get("/gas-stations/{provincia}")
+@router.get("/gas-stations")
 async def get_gas_stations(
-        provincia: str,
+        provincia: Optional[str] = None,
+        rotulo: Optional[str] = None,
         limit: int = Query(default=10),
         service: GasStationService = Depends(GasStationService),
 ):
-    return await service.find_by_provincia(provincia, limit)
+    gas_station_filter = EESSPrecioFilter(
+        provincia=provincia,
+        rotulo=rotulo,
+    )
+    return await service.find_gas_stations(gas_station_filter, limit)
 
 
 @router.get("/gas-stations/{latitude}/{longitude}")
