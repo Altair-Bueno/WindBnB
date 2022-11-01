@@ -35,7 +35,10 @@ async def create_house(vivienda: Vivienda, collection=Depends(get_windbnb_collec
                                                                              "description": 1,
                                                                              "user_id": 1,
                                                                              "location": 1,
-                                                                             "state": viviendaStateEnum.available.value})
+                                                                             "state": viviendaStateEnum.available.value,
+                                                                             "url_photo": 1,
+                                                                             "longitude": 1,
+                                                                             "latitude": 1})
 
 @vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
 async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
@@ -44,7 +47,10 @@ async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
                                                                    "description": 1,
                                                                    "user_id": 1,
                                                                    "location": 1,
-                                                                   "state": 1})
+                                                                   "state": 1,
+                                                                   "url_photo": 1,
+                                                                   "longitude": 1,
+                                                                   "latitude": 1})
     result["_id"] = str(result["_id"])
     return result
 
