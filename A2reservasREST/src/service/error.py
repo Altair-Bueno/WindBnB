@@ -1,6 +1,6 @@
 class AlreadyBookedError(Exception):
-    pass
+    error_code = 'ALREADY_BOOKED'
 
 
 class NotFoundError(Exception):
-    pass
+    error_code = 'NOT_FOUND'

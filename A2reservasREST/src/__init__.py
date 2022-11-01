@@ -1,9 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse
-
-from .model import Message
 from .routes import BaseRouter
 from .service.error import *
 
@@ -44,21 +41,3 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-
-
-@app.exception_handler(AlreadyBookedError)
-async def already_booked_handler(request, exc):
-    return JSONResponse(
-        # Conflict
-        status_code=409,
-        content=Message(message="".join(exc.args)).dict(),
-    )
-
-
-@app.exception_handler(NotFoundError)
-async def not_found_handler(request, exc):
-    return JSONResponse(
-        # Not found
-        status_code=404,
-        content=Message(message="".join(exc.args)).dict(),
-    )
