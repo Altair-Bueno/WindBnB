@@ -2,6 +2,7 @@ from typing import List
 from src.models.gas_stations import EESSPrecio, EESSPrecioFilter
 from src.services import gas_station_json
 from src.models.area import Area
+from src.services.error import NoGasStations
 from src.utils import match_filter
 
 
@@ -21,7 +22,15 @@ class GasStationService:
             if match_filter(gas_station_filter, current_eessprecio):
                 result.append(current_eessprecio)
             index += 1
-        return result
+
+        if result.__len__() <= 0:
+            if gas_station_filter.rotulo is not None:
+                gas_station_filter.rotulo = f"{gas_station_filter.rotulo} "
+            else:
+                gas_station_filter.rotulo = ""
+            raise NoGasStations(f"No {gas_station_filter.rotulo}gas stations found in {gas_station_filter.provincia}")
+        else:
+            return result
 
     def find_by_area(self, kilometers: int, latitude: float, longitude: float, limit: int) -> List[EESSPrecio]:
         area: Area = Area(kilometers, latitude, longitude)
@@ -37,4 +46,8 @@ class GasStationService:
                                float(current_eessprecio.longitud.replace(",", "."))):
                 result.append(current_eessprecio)
             index += 1
-        return result
+
+        if result.__len__() <= 0:
+            raise NoGasStations(f"No gas stations found within {kilometers}km from [{latitude}º, {longitude}º]")
+        else:
+            return result
