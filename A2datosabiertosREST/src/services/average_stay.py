@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from src.models.average_stay import AverageStayFilter, AverageStay, Data
 from src.services import average_stay_json
@@ -18,7 +18,7 @@ class AverageStayService:
         wanted_name = average_stay_filter.provincia + ", " + average_stay_filter.mes
         average_stay_list: List[AverageStay] = average_stay_json
         index = 1
-        while index < average_stay_list.__len__() - 1 and result.valor > -1.0:
+        while index < average_stay_list.__len__() - 1 and result.valor <= -1.0:
             current_element: AverageStay = average_stay_list.__getitem__(index)
             current_name = current_element.nombre
             if match_filter_average_stay(wanted_name, current_name):
