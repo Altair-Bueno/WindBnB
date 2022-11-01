@@ -6,6 +6,9 @@ class Message(BaseModel):
     """A single message payload"""
     message: str
 
+class ApiError(BaseModel):
+    """An error response"""
+    detail: str
 
 class PyObjectId(ObjectId):
     """Wrapper around `pymongo`'s `ObjectId` class for Pydantic"""
