@@ -2,8 +2,8 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from models.average_stay import AverageStayFilter
-from services.average_stay import AverageStayService
+from src.models.average_stay import AverageStayFilter
+from src.services.average_stay import AverageStayService
 
 router = APIRouter()
 

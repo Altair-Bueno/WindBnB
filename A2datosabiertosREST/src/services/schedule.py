@@ -1,7 +1,3 @@
-from rocketry import Rocketry
-from rocketry.conds import daily
-import utils
-
 #rocketry = Rocketry(execution="thread")
 
 

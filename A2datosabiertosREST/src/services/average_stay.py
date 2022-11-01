@@ -1,8 +1,8 @@
 from typing import List
 
-from models.average_stay import AverageStayFilter, AverageStay
-from services import average_stay_json
-from utils import match_filter_average_stay
+from src.models.average_stay import AverageStayFilter, AverageStay
+from src.services import average_stay_json
+from src.utils import match_filter_average_stay
 
 
 class AverageStayService:

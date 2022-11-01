@@ -1,8 +1,8 @@
 from typing import List
-from models.gas_stations import EESSPrecio, EESSPrecioFilter
-from services import gas_station_json
-from models.area import Area
-from utils import match_filter
+from src.models.gas_stations import EESSPrecio, EESSPrecioFilter
+from src.services import gas_station_json
+from src.models.area import Area
+from src.utils import match_filter
 
 
 class GasStationService:

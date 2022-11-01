@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from routes import gas_stations, average_stay
+from src.routes import gas_stations, average_stay
 
 router = APIRouter()
 router.include_router(gas_stations.router, tags=["Gas Stations"])

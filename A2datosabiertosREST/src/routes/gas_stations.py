@@ -1,8 +1,8 @@
 from typing import Optional
 
 from fastapi import APIRouter, Query, Depends
-from services.gas_stations import GasStationService
-from models.gas_stations import EESSPrecioFilter
+from src.services.gas_stations import GasStationService
+from src.models.gas_stations import EESSPrecioFilter
 
 router = APIRouter()
 

@@ -3,9 +3,9 @@ from typing import List
 from pydantic import parse_obj_as
 
 from requests import get
-from definitions import ROOT_DIR
-from models.gas_stations import GasStation, EESSPrecioFilter, EESSPrecio
-from models.average_stay import AverageStay
+from src.definitions import ROOT_DIR
+from src.models.gas_stations import GasStation, EESSPrecioFilter, EESSPrecio
+from src.models.average_stay import AverageStay
 from json import dump
 
 gas_station_file_path = join(ROOT_DIR, "data", "gas_stations.json")
