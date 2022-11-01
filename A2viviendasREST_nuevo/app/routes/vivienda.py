@@ -3,12 +3,28 @@ from fastapi import APIRouter, Depends
 from fastapi.openapi.models import Response
 from fastapi.responses import Response
 from pymongo import ReturnDocument
+from app.service.vivienda import ViviendaService
+from app.models.vivienda import NewVivienda
+from app.models.vivienda import viviendaStateEnum
 
 from app.models.vivienda import Vivienda
 from ..dependencies import get_windbnb_collection
 
 vivienda = APIRouter()
 
+
+'''@vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_vivienda")
+async def create_house(request: NewVivienda, service: ViviendaService = Depends(get_windbnb_collection)):
+   # new_house = dict(vivienda)
+    #result = await collection.insert_one(new_house)
+    #return await collection.find_one({"_id": ObjectId(result.inserted_id)}, {"_id": 1,
+     #                                                                        "title": vivienda.title,
+      #                                                                       "description": vivienda.description,
+       #                                                                      "user_id": vivienda.user_id,
+        #                                                                     "location": vivienda.location,
+         #                                                                    "state": viviendaStateEnum.available.value}) #quiza cambiar esto para que se ponga a available solo
+    
+    return await service.new_vivienda(request)'''
 
 @vivienda.post("/viviendas", response_model=Vivienda)
 async def create_house(vivienda: Vivienda, collection=Depends(get_windbnb_collection)):
@@ -19,8 +35,7 @@ async def create_house(vivienda: Vivienda, collection=Depends(get_windbnb_collec
                                                                              "description": 1,
                                                                              "user_id": 1,
                                                                              "location": 1,
-                                                                             "state": 1})
-
+                                                                             "state": viviendaStateEnum.available.value})
 
 @vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
 async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
@@ -46,7 +61,7 @@ async def update_house(idCasa: str, vivienda: Vivienda, collection=Depends(get_w
 
 @vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
 async def delete_house(idCasa: str, collection=Depends(get_windbnb_collection)):
-    result = await collection.find_one_and_delete({"_id": ObjectId(idCasa)})
+    result = await collection.find_one_and_delete({"_id": ObjectId(idCasa)}) #esto hay que cambiarlo para que se ponga el state a deleted y no se borre de la bd
     if result:
         return Response(status_code=204)
     else:
