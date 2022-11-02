@@ -71,13 +71,13 @@ async def update_house(idCasa: str, vivienda: Vivienda, collection=Depends(get_w
         return Response(status_code=404)
 
 
-'''@vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
+@vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
 async def delete_house(idCasa: str, collection=Depends(get_windbnb_collection)):
     result = await collection.find_one_and_delete({"_id": ObjectId(idCasa)}) #esto hay que cambiarlo para que se ponga el state a deleted y no se borre de la bd
     if result:
         return Response(status_code=204)
     else:
-        return Response(status_code=404)'''
+        return Response(status_code=404)
 
 '''@vivienda.delete("/viviendas/{idCasa}", response_model=Message, operation_id="delete house", responses=NOT_FOUND_RESPONSE)
 async def delete_house(idCasa: str, service: ViviendaService = Depends(get_windbnb_collection)):
@@ -91,11 +91,11 @@ async def delete_house(idCasa: str, service: ViviendaService = Depends(get_windb
             detail=e.error_code
         )'''
 
-@vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
+'''@vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
 async def delete_house(idCasa: str, vivienda: Vivienda, collection=Depends(get_windbnb_collection)):
     result = await collection.find_one_and_update({"_id": ObjectId(idCasa)}, {"$set": dict(vivienda)}, #este set lo tengo que cambiar
                                                   return_document=ReturnDocument.AFTER)
     if result:
         return result
     else:
-        return Response(status_code=404)
+        return Response(status_code=404)'''
