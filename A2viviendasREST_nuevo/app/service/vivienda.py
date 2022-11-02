@@ -35,3 +35,14 @@ class ViviendaService:
                 location= request.location,
                 state= viviendaStateEnum.available
             )
+
+        '''async def delete_house(self, idCasa: str):
+        result = await self.collection.update_one(
+            {"bookings._id": booking_id},
+            {"$set": {
+                "bookings.$[booking].state": BookingStateEnum.canceled.value}},
+        )
+
+        if result.modified_count == 0:
+            raise NotFoundError(
+                f"Couldn't find any reserved bookings to cancel. {booking_id=}")'''
