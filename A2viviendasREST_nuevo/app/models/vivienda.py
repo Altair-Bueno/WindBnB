@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel
+from app.models.types import PyObjectId
 
 class viviendaStateEnum(str, Enum):
     available = "available"
@@ -8,6 +9,7 @@ class viviendaStateEnum(str, Enum):
 
 
 class Vivienda(BaseModel):
+    id: PyObjectId
     title: str
     description: Optional[str]
     user_id: str

@@ -1,3 +1,4 @@
+import re
 from turtle import title
 from typing import Collection
 from bson import ObjectId
@@ -15,25 +16,16 @@ class ViviendaService:
         self.collection = collection
 
     async def new_vivienda(self, request: NewVivienda) -> Vivienda:
-        Vivienda_id = ObjectId()
+        document = request.dict()
+        document["state"] = viviendaStateEnum.available.value
         
-        result = await self.collection.update_one(
-            {
-                "_id": Vivienda_id,
-                "title": request.title,
-                "description": request.description,
-                "user_id": request.user_id,
-                "location": request.location,
-                "state": viviendaStateEnum.available.value
-            }) 
+        result = await self.collection.insert_one(document) 
             
-        if result.modified_count == 1:
+        if result.inserted_id:
             return Vivienda(
-                title= request.title,
-                description= request.description,
-                user_id= request.user_id,
-                location= request.location,
-                state= viviendaStateEnum.available
+                id = result.inserted_id,
+                **document
+                # Te falta el id result.inserted_id
             )
 
         '''async def delete_house(self, idCasa: str):

@@ -11,7 +11,7 @@ from app.models.vivienda import NewVivienda
 from app.models.vivienda import viviendaStateEnum
 
 from app.models.vivienda import Vivienda
-from ..dependencies import get_windbnb_collection
+from ..dependencies import get_vivienda_service, get_windbnb_collection
 
 vivienda = APIRouter()
 
@@ -32,8 +32,8 @@ async def create_house(request: NewVivienda, service: ViviendaService = Depends(
     
     return await service.new_vivienda(request)'''
 
-@vivienda.post("/viviendas", response_model=Vivienda)
-async def create_house(vivienda: Vivienda, collection=Depends(get_windbnb_collection)):
+'''@vivienda.post("/viviendas", response_model=Vivienda)
+async def create_house(vivienda: NewVivienda, collection=Depends(get_windbnb_collection)):
     new_house = dict(vivienda)
     result = await collection.insert_one(new_house)
     return await collection.find_one({"_id": ObjectId(result.inserted_id)}, {"_id": 1,
@@ -44,7 +44,20 @@ async def create_house(vivienda: Vivienda, collection=Depends(get_windbnb_collec
                                                                              "state": viviendaStateEnum.available.value,
                                                                              "url_photo": 1,
                                                                              "longitude": 1,
-                                                                             "latitude": 1})
+                                                                             "latitude": 1})'''
+@vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_house")
+async def create_house(request: NewVivienda, service: ViviendaService = Depends(get_vivienda_service)):
+    """Creates a new house"""
+    #try:
+    return await service.new_vivienda(request)
+    '''except AlreadyBookedError as e:
+        raise HTTPException(
+            status_code=409, 
+            detail=e.error_code
+        )'''
+
+                                                                            
+
 
 @vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
 async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
