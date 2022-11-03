@@ -117,3 +117,10 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
   `booking_id`
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
+
+# Datos Abiertos
+
+## Precio de carburantes en las gasolineras españolas
+
+Hemos escogido un [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas) con información sobre todas las gasolineras de España, incluyendo información sobre su posición geográfica, dirección y precio de los carburantes ofertados. Este será utilizado para mostrar en un mapa las gasolineras cercanas a una vivienda publicada en la aplicación, o las gasolineras en una determinada provincia.
+
