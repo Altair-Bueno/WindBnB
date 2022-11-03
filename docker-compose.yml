@@ -29,4 +29,8 @@ services:
       mongo_collection: "houses"
     ports:
       - "8002:8000"
-
+  # http://localhost:8003
+  a2datosabiertosrest:
+    build: A2datosabiertosREST
+    ports:
+      - "8003:8000"
