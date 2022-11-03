@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Optional
+from bson import ObjectId
 from pydantic import BaseModel
 from app.models.types import PyObjectId
 
@@ -18,6 +19,9 @@ class Vivienda(BaseModel):
     url_photo: Optional[str]
     longitude: str
     latitude: str 
+
+    class Config:
+        json_encoders = {ObjectId: str}
 
 class NewVivienda(BaseModel):
     title: str

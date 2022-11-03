@@ -5,6 +5,8 @@ from bson import ObjectId
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
 from requests import request
+from app.service.error import NotFoundError
+from app.models.types import PyObjectId
 from app.models.vivienda import viviendaStateEnum
 from app.models.vivienda import Vivienda
 from app.models.vivienda import NewVivienda
@@ -25,16 +27,16 @@ class ViviendaService:
             return Vivienda(
                 id = result.inserted_id,
                 **document
-                # Te falta el id result.inserted_id
+            
             )
 
-        '''async def delete_house(self, idCasa: str):
+    async def delete_house(self, vivienda_id: PyObjectId):
         result = await self.collection.update_one(
-            {"bookings._id": booking_id},
+            {"houses._id": vivienda_id},
             {"$set": {
-                "bookings.$[booking].state": BookingStateEnum.canceled.value}},
+                "houses.$[vivienda].state": viviendaStateEnum.deleted.value}}, # es houses o vivienda????
         )
 
         if result.modified_count == 0:
             raise NotFoundError(
-                f"Couldn't find any reserved bookings to cancel. {booking_id=}")'''
+                f"Couldn't find any available houses to delete. {vivienda_id=}")
