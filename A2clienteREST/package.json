@@ -1,0 +1,32 @@
+{
+  "name": "@example/basics",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "prebuild": "npm run openapi",
+    "predev": "npm run openapi",
+    "openapi": "npm run openapi-reservas",
+    "openapi-reservas": "npx openapi-generator-cli generate -i ../A2reservasREST/openapi.json -g typescript-fetch -o src/api/A2reservasREST"
+  },
+  "dependencies": {
+    "@astrojs/svelte": "^1.0.2",
+    "@astrojs/vercel": "^2.3.3",
+    "astro": "^1.6.0",
+    "bootstrap": "^5.2.2",
+    "svelte": "^3.52.0"
+  },
+  "volta": {
+    "node": "19.0.0"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
+    "prettier": "^2.7.1",
+    "sass": "^1.55.0"
+  }
+}
