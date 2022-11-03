@@ -1,0 +1,16 @@
+---
+import { ReservasApi, ReservasConfiguration } from "../api";
+import config from "../config";
+import Layout from "../layouts/Layout.astro";
+
+const api = new ReservasApi(new ReservasConfiguration(config.reservas));
+const bookings = await api.getBookings();
+---
+
+<Layout title="reservas owo">
+  {
+    bookings.map((x) => {
+      <span>{x.id}</span>;
+    })
+  }
+</Layout>
