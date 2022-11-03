@@ -2,13 +2,17 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 
-from src.models.average_stay import AverageStayFilter
+from src.models.average_stay import AverageStayFilter, Data
 from src.services.average_stay import AverageStayService
 
 router = APIRouter()
 
 
-@router.get("/average-stay")
+@router.get(
+    "/average-stay",
+    response_model=Data,
+    operation_id="get_average_stay"
+)
 async def get_average_stay(
         provincia: str,
         mes: Optional[str] = None,

@@ -1,13 +1,17 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Query, Depends
 from src.services.gas_stations import GasStationService
-from src.models.gas_stations import EESSPrecioFilter
+from src.models.gas_stations import EESSPrecioFilter, EESSPrecio
 
 router = APIRouter()
 
 
-@router.get("/gas-stations")
+@router.get(
+    "/gas-stations",
+    response_model=List[EESSPrecio],
+    operation_id="get_gas_stations"
+)
 async def get_gas_stations(
         provincia: Optional[str] = None,
         rotulo: Optional[str] = None,
@@ -21,7 +25,11 @@ async def get_gas_stations(
     return await service.find_gas_stations(gas_station_filter, limit)
 
 
-@router.get("/gas-stations/{latitude}/{longitude}")
+@router.get(
+    "/gas-stations/{latitude}/{longitude}",
+    response_model=List[EESSPrecio],
+    operation_id="get_gas_stations_by_radius"
+)
 async def get_stations_by_radius(
         latitude: float,
         longitude: float,
