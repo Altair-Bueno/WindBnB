@@ -1,0 +1,384 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "A2datosabiertosREST Schema",
+        "description": "Open data service of WindBnB",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/gas-stations": {
+            "get": {
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Get Gas Stations",
+                "operationId": "get_gas_stations",
+                "parameters": [
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Provincia",
+                            "type": "string"
+                        },
+                        "name": "provincia",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Rotulo",
+                            "type": "string"
+                        },
+                        "name": "rotulo",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Limit",
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Gas Stations",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EESSPrecio"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/gas-stations/{latitude}/{longitude}": {
+            "get": {
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Get Stations By Radius",
+                "operationId": "get_gas_stations_by_radius",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Latitude",
+                            "type": "number"
+                        },
+                        "name": "latitude",
+                        "in": "path"
+                    },
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Longitude",
+                            "type": "number"
+                        },
+                        "name": "longitude",
+                        "in": "path"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Area",
+                            "type": "integer",
+                            "default": 5
+                        },
+                        "name": "area",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Limit",
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Get Gas Stations By Radius",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EESSPrecio"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/average-stay": {
+            "get": {
+                "tags": [
+                    "Average Stay"
+                ],
+                "summary": "Get Average Stay",
+                "operationId": "get_average_stay",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Provincia",
+                            "type": "string"
+                        },
+                        "name": "provincia",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Mes",
+                            "type": "string"
+                        },
+                        "name": "mes",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Data"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Data": {
+                "title": "Data",
+                "type": "object",
+                "properties": {
+                    "Valor": {
+                        "title": "Valor",
+                        "type": "number"
+                    }
+                }
+            },
+            "EESSPrecio": {
+                "title": "EESSPrecio",
+                "required": [
+                    "C.P.",
+                    "Dirección",
+                    "Horario",
+                    "Latitud",
+                    "Localidad",
+                    "Longitud (WGS84)",
+                    "Municipio",
+                    "Precio Biodiesel",
+                    "Precio Bioetanol",
+                    "Precio Gas Natural Comprimido",
+                    "Precio Gas Natural Licuado",
+                    "Precio Gases licuados del petróleo",
+                    "Precio Gasoleo A",
+                    "Precio Gasoleo B",
+                    "Precio Gasoleo Premium",
+                    "Precio Gasolina 95 E10",
+                    "Precio Gasolina 95 E5",
+                    "Precio Gasolina 95 E5 Premium",
+                    "Precio Gasolina 98 E10",
+                    "Precio Gasolina 98 E5",
+                    "Precio Hidrogeno",
+                    "Provincia",
+                    "Rótulo"
+                ],
+                "type": "object",
+                "properties": {
+                    "C.P.": {
+                        "title": "C.P.",
+                        "type": "string"
+                    },
+                    "Dirección": {
+                        "title": "Dirección",
+                        "type": "string"
+                    },
+                    "Horario": {
+                        "title": "Horario",
+                        "type": "string"
+                    },
+                    "Latitud": {
+                        "title": "Latitud",
+                        "type": "string"
+                    },
+                    "Localidad": {
+                        "title": "Localidad",
+                        "type": "string"
+                    },
+                    "Longitud (WGS84)": {
+                        "title": "Longitud (Wgs84)",
+                        "type": "string"
+                    },
+                    "Municipio": {
+                        "title": "Municipio",
+                        "type": "string"
+                    },
+                    "Precio Biodiesel": {
+                        "title": "Precio Biodiesel",
+                        "type": "string"
+                    },
+                    "Precio Bioetanol": {
+                        "title": "Precio Bioetanol",
+                        "type": "string"
+                    },
+                    "Precio Gas Natural Comprimido": {
+                        "title": "Precio Gas Natural Comprimido",
+                        "type": "string"
+                    },
+                    "Precio Gas Natural Licuado": {
+                        "title": "Precio Gas Natural Licuado",
+                        "type": "string"
+                    },
+                    "Precio Gases licuados del petróleo": {
+                        "title": "Precio Gases Licuados Del Petróleo",
+                        "type": "string"
+                    },
+                    "Precio Gasoleo A": {
+                        "title": "Precio Gasoleo A",
+                        "type": "string"
+                    },
+                    "Precio Gasoleo B": {
+                        "title": "Precio Gasoleo B",
+                        "type": "string"
+                    },
+                    "Precio Gasoleo Premium": {
+                        "title": "Precio Gasoleo Premium",
+                        "type": "string"
+                    },
+                    "Precio Gasolina 95 E10": {
+                        "title": "Precio Gasolina 95 E10",
+                        "type": "string"
+                    },
+                    "Precio Gasolina 95 E5": {
+                        "title": "Precio Gasolina 95 E5",
+                        "type": "string"
+                    },
+                    "Precio Gasolina 95 E5 Premium": {
+                        "title": "Precio Gasolina 95 E5 Premium",
+                        "type": "string"
+                    },
+                    "Precio Gasolina 98 E10": {
+                        "title": "Precio Gasolina 98 E10",
+                        "type": "string"
+                    },
+                    "Precio Gasolina 98 E5": {
+                        "title": "Precio Gasolina 98 E5",
+                        "type": "string"
+                    },
+                    "Precio Hidrogeno": {
+                        "title": "Precio Hidrogeno",
+                        "type": "string"
+                    },
+                    "Provincia": {
+                        "title": "Provincia",
+                        "type": "string"
+                    },
+                    "Rótulo": {
+                        "title": "Rótulo",
+                        "type": "string"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
