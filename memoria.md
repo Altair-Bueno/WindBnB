@@ -124,3 +124,24 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 
 Hemos escogido un [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas) con información sobre todas las gasolineras de España, incluyendo información sobre su posición geográfica, dirección y precio de los carburantes ofertados. Este será utilizado para mostrar en un mapa las gasolineras cercanas a una vivienda publicada en la aplicación, o las gasolineras en una determinada provincia.
 
+### Endpoints
+
+- `GET /gas-stations`: Devuelve una lista de gasolineras filtrados por provincia y rotulo. Por defecto 10 gasolineras como máximo
+  - `provincia`: Optional. Nombre de la provincia
+  - `rotulo`: Optional. Nombre de la marca o rótulo de la gasolinera
+  - `limit`: Default. Número máximo de elementos a devolver
+- `GET /gas-stations/{latitude}/{longitude}`: Devuelve una lista de gasolineras que se encuentran como máximo en un área a partir de una geolocalización. Por defecto 10 gasolineras como máximo.
+  - `latitude`: Latitud de la vivienda
+  - `longitude`: Longitud de la vivienda
+  - `area`: Default. Límite del área en kilómetros
+  - `limit`: Default. Número máximo de elementos a devolver
+
+## Estancia media de los viajeros por provincias y meses
+
+El segundo [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-de-los-viajeros-por-provincias-y-meses-eoap-identificador-api-t11-e162eoap-a2020-l0-01ndp03-px) escogido contiene información de la estancia media en días de los viajeros por provincia y mes. Esto será utilizado para mostrar la media de días de estancia en la provincia de la vivienda, pudiendo filtrarse por mes específico o el año en general.
+
+### Endpoints
+
+- `GET /average-stay`: Devuelve el valor de la estancia media de viajeros de una provincia en un mes o año.
+  - `provincia`: Nombre de la provincia
+  - `mes`: Optional. Nombre del mes
