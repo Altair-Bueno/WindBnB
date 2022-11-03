@@ -24,3 +24,4 @@ docker compose down
 
 - El servidor de mongo está disponible en <mongodb://root:example@127.0.0.1:27017>
 - El microservicio A2reservasREST está disponible en <http://localhost:8001>
+- El microservicio A2datosabiertosREST está disponible en <http://localhost:8003>
