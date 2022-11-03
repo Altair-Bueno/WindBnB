@@ -1,9 +1,9 @@
 ---
-import { ReservasApi, ReservasConfiguration } from "../api";
+import { BookingApi, Configuration } from "../api/A2reservasREST";
 import config from "../config";
 import Layout from "../layouts/Layout.astro";
 
-const api = new ReservasApi(new ReservasConfiguration(config.reservas));
+const api = new BookingApi(new Configuration(config.reservas));
 const bookings = await api.getBookings();
 ---
 
