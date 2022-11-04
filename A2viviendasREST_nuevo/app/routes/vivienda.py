@@ -32,21 +32,6 @@ async def create_house(request: NewVivienda, service: ViviendaService = Depends(
             detail=e.error_code
         )'''
 
-                                                                        
-
-'''@vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
-async def find_house(idCasa: PyObjectId, collection=Depends(get_windbnb_collection)):
-    result = await collection.find_one({"_id": ObjectId(idCasa)}, {"_id": 1,
-                                                                   "title": 1,
-                                                                   "description": 1,
-                                                                   "user_id": 1,
-                                                                   "location": 1,
-                                                                   "state": 1,
-                                                                   "url_photo": 1,
-                                                                   "longitude": 1,
-                                                                   "latitude": 1})
-    result["_id"] = str(result["_id"])
-    return result'''
 
 @vivienda.get("/viviendas/{idCasa}", response_model=Vivienda, operation_id="get_house_by_id", responses=NOT_FOUND_RESPONSE)
 async def get_house_by_id(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
@@ -56,23 +41,19 @@ async def get_house_by_id(idCasa: PyObjectId, service: ViviendaService = Depends
         raise HTTPException(status_code=404, detail=e.error_code)
 
 
-@vivienda.put('/viviendas/{idCasa}', response_model=Vivienda)
-async def update_house(idCasa: str, vivienda: Vivienda, collection=Depends(get_windbnb_collection)):
-    result = await collection.find_one_and_update({"_id": ObjectId(idCasa)}, {"$set": dict(vivienda)},
-                                                  return_document=ReturnDocument.AFTER)
-    if result:
-        return result
-    else:
-        return Response(status_code=404)
+@vivienda.put('/viviendas/{idCasa}', response_model=Vivienda, operation_id="update_house", responses=NOT_FOUND_RESPONSE)
+async def update_house(idCasa: PyObjectId, vivienda: NewVivienda, service: ViviendaService = Depends(get_vivienda_service)):
+    try:  
+        return await service.update_house(idCasa, vivienda)
+        
+    except NotFoundError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=e.error_code
+        )
 
 
-'''@vivienda.delete('/viviendas/{idCasa}', response_model=Vivienda)
-async def delete_house(idCasa: str, collection=Depends(get_windbnb_collection)):
-    result = await collection.find_one_and_delete({"_id": ObjectId(idCasa)}) #esto hay que cambiarlo para que se ponga el state a deleted y no se borre de la bd
-    if result:
-        return Response(status_code=204)
-    else:
-        return Response(status_code=404)'''
+
 
 @vivienda.delete("/viviendas/{idCasa}", response_model=Message, operation_id="delete house", responses=NOT_FOUND_RESPONSE)
 async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
@@ -85,6 +66,3 @@ async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(ge
             status_code=404, 
             detail=e.error_code
         )
-
-
-

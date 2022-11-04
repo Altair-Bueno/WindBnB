@@ -4,6 +4,7 @@ from bson import ObjectId
 from pydantic import BaseModel
 from app.models.types import PyObjectId
 
+
 class viviendaStateEnum(str, Enum):
     available = "available"
     deleted = "deleted"
@@ -18,10 +19,11 @@ class Vivienda(BaseModel):
     state: viviendaStateEnum = viviendaStateEnum.available
     url_photo: Optional[str]
     longitude: str
-    latitude: str 
+    latitude: str
 
     class Config:
         json_encoders = {ObjectId: str}
+
 
 class NewVivienda(BaseModel):
     title: str
@@ -30,7 +32,7 @@ class NewVivienda(BaseModel):
     location: str
     url_photo: Optional[str]
     longitude: str
-    latitude: str 
-    
+    latitude: str
+
     class Config:
         json_encoders = {ObjectId: str}

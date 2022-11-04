@@ -1,5 +1,4 @@
-import re
-from turtle import title
+
 from typing import Collection, Optional
 from bson import ObjectId
 import pymongo
@@ -27,16 +26,14 @@ class ViviendaService:
             return Vivienda(
                 id = result.inserted_id,
                 **document
-            
             )
 
     async def get_vivienda_by_id(self, idCasa: PyObjectId) -> Optional[Vivienda]:
         document = await self.collection.find_one(
-            {"houses._id": idCasa},
-            {"houses": {"$elemMatch": {"_id": idCasa}}}
+            {"_id": PyObjectId(idCasa)}
         )
         if document:
-            vivienda = document["houses"][0]
+            vivienda = document
             return Vivienda(
                 id=document["_id"],
                 **vivienda
@@ -44,11 +41,39 @@ class ViviendaService:
 
     async def delete_house(self, idCasa: PyObjectId):
         result = await self.collection.update_one(
-            {"houses._id": idCasa},
+            {"_id": idCasa},
             {"$set": {
-                "houses.$[Vivienda].state": viviendaStateEnum.deleted.value}}
+                "state": viviendaStateEnum.deleted.value}}
         )
 
         if result.modified_count == 0:
             raise NotFoundError(
                 f"Couldn't find any available houses to delete. {idCasa=}")
+
+    async def update_house(self, idCasa: PyObjectId, vivienda: NewVivienda):
+        result = await self.collection.find_one_and_update(
+            {"_id": idCasa},
+            {"$set": {
+                "_id": idCasa,
+                "title": vivienda.title,
+                "description": vivienda.description,
+                "user_id": vivienda.user_id,
+                "location": vivienda.location,
+                "url_photo": vivienda.url_photo,
+                "longitude": vivienda.longitude,
+                "latitude": vivienda.latitude
+            }}
+        )
+
+        print(result)
+
+        if result:
+            return Vivienda(
+                    id=result["_id"],
+                    **result
+                )
+
+        if result == None:
+            raise NotFoundError(
+                f"Couldn't find any available houses to delete. {idCasa=}"
+            )
