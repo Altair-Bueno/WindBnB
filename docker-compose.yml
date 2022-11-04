@@ -22,7 +22,7 @@ services:
       - "8001:8000"
   # http://localhost:8002
   a2viviendasrest:
-    build: A2viviendasREST_nuevo
+    build: A2viviendasREST
     environment:
       mongo_url: "mongodb://root:example@mongodb:27017"
       mongo_database: "iweb"

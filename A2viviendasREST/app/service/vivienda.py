@@ -62,10 +62,8 @@ class ViviendaService:
                 "url_photo": vivienda.url_photo,
                 "longitude": vivienda.longitude,
                 "latitude": vivienda.latitude
-            }}
+            }},return_document=pymongo.ReturnDocument.AFTER
         )
-
-        print(result)
 
         if result:
             return Vivienda(
