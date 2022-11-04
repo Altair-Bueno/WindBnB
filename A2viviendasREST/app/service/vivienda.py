@@ -8,7 +8,7 @@ from app.service.error import NotFoundError
 from app.models.types import PyObjectId
 from app.models.vivienda import viviendaStateEnum
 from app.models.vivienda import Vivienda
-from app.models.vivienda import NewVivienda
+from app.models.vivienda import NewVivienda, EditVivienda
 
 class ViviendaService:
     collection: AsyncIOMotorCollection
@@ -38,6 +38,10 @@ class ViviendaService:
                 id=document["_id"],
                 **vivienda
             )
+        else:
+            raise NotFoundError(
+
+            )
 
     async def delete_house(self, idCasa: PyObjectId):
         result = await self.collection.update_one(
@@ -50,18 +54,11 @@ class ViviendaService:
             raise NotFoundError(
                 f"Couldn't find any available houses to delete. {idCasa=}")
 
-    async def update_house(self, idCasa: PyObjectId, vivienda: NewVivienda):
+    async def update_house(self, idCasa: PyObjectId, vivienda: EditVivienda):
         result = await self.collection.find_one_and_update(
             {"_id": idCasa},
             {"$set": {
-                "_id": idCasa,
-                "title": vivienda.title,
-                "description": vivienda.description,
-                "user_id": vivienda.user_id,
-                "location": vivienda.location,
-                "url_photo": vivienda.url_photo,
-                "longitude": vivienda.longitude,
-                "latitude": vivienda.latitude
+                k:v for k,v in vivienda.dict().items() if v is not None
             }},return_document=pymongo.ReturnDocument.AFTER
         )
 
@@ -70,8 +67,20 @@ class ViviendaService:
                     id=result["_id"],
                     **result
                 )
+        else:
+            raise NotFoundError(
+                f"Couldn't find any available houses to delete. {idCasa}"
+            )
 
-        if result == None:
+    async def bookings_amount(self, idCasa: PyObjectId):
+        result = await self.collection.find_one(
+            {"_id": idCasa},
+            {"bookings": 1, "_id": 0}
+        )
+        if result:
+            return len(result["bookings"])
+        else:
             raise NotFoundError(
                 f"Couldn't find any available houses to delete. {idCasa=}"
             )
+            

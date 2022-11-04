@@ -3,6 +3,7 @@ from typing import Optional
 from bson import ObjectId
 from pydantic import BaseModel
 from app.models.types import PyObjectId
+from typing import List
 
 
 class viviendaStateEnum(str, Enum):
@@ -17,7 +18,7 @@ class Vivienda(BaseModel):
     user_id: str
     location: str
     state: viviendaStateEnum = viviendaStateEnum.available
-    url_photo: Optional[str]
+    url_photo: Optional[List[str]]
     longitude: str
     latitude: str
 
@@ -30,9 +31,21 @@ class NewVivienda(BaseModel):
     description: Optional[str]
     user_id: str
     location: str
-    url_photo: Optional[str]
+    url_photo: Optional[List[str]]
     longitude: str
     latitude: str
+
+    class Config:
+        json_encoders = {ObjectId: str}
+
+class EditVivienda(BaseModel):
+    title: Optional[str]
+    description: Optional[str]
+    user_id: Optional[str]
+    location: Optional[str]
+    url_photo: Optional[List[str]]
+    longitude: Optional[str]
+    latitude: Optional[str]
 
     class Config:
         json_encoders = {ObjectId: str}
