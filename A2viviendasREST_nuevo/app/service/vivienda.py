@@ -1,6 +1,6 @@
 import re
 from turtle import title
-from typing import Collection
+from typing import Collection, Optional
 from bson import ObjectId
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
@@ -30,13 +30,25 @@ class ViviendaService:
             
             )
 
-    async def delete_house(self, vivienda_id: PyObjectId):
+    async def get_vivienda_by_id(self, idCasa: PyObjectId) -> Optional[Vivienda]:
+        document = await self.collection.find_one(
+            {"houses._id": idCasa},
+            {"houses": {"$elemMatch": {"_id": idCasa}}}
+        )
+        if document:
+            vivienda = document["houses"][0]
+            return Vivienda(
+                id=document["_id"],
+                **vivienda
+            )
+
+    async def delete_house(self, idCasa: PyObjectId):
         result = await self.collection.update_one(
-            {"houses._id": vivienda_id},
+            {"houses._id": idCasa},
             {"$set": {
-                "houses.$[vivienda].state": viviendaStateEnum.deleted.value}}, # es houses o vivienda????
+                "houses.$[Vivienda].state": viviendaStateEnum.deleted.value}}
         )
 
         if result.modified_count == 0:
             raise NotFoundError(
-                f"Couldn't find any available houses to delete. {vivienda_id=}")
+                f"Couldn't find any available houses to delete. {idCasa=}")

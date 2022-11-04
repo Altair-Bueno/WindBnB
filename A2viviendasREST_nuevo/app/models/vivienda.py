@@ -32,3 +32,5 @@ class NewVivienda(BaseModel):
     longitude: str
     latitude: str 
     
+    class Config:
+        json_encoders = {ObjectId: str}

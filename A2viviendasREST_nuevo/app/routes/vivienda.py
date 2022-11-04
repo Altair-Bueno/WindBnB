@@ -20,32 +20,7 @@ NOT_FOUND_RESPONSE = {
     404: {"model": ApiError}
 }
 
-'''@vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_vivienda")
-async def create_house(request: NewVivienda, service: ViviendaService = Depends(get_windbnb_collection)):
-   # new_house = dict(vivienda)
-    #result = await collection.insert_one(new_house)
-    #return await collection.find_one({"_id": ObjectId(result.inserted_id)}, {"_id": 1,
-     #                                                                        "title": vivienda.title,
-      #                                                                       "description": vivienda.description,
-       #                                                                      "user_id": vivienda.user_id,
-        #                                                                     "location": vivienda.location,
-         #                                                                    "state": viviendaStateEnum.available.value}) #quiza cambiar esto para que se ponga a available solo
-    
-    return await service.new_vivienda(request)'''
 
-'''@vivienda.post("/viviendas", response_model=Vivienda)
-async def create_house(vivienda: NewVivienda, collection=Depends(get_windbnb_collection)):
-    new_house = dict(vivienda)
-    result = await collection.insert_one(new_house)
-    return await collection.find_one({"_id": ObjectId(result.inserted_id)}, {"_id": 1,
-                                                                             "title": 1,
-                                                                             "description": 1,
-                                                                             "user_id": 1,
-                                                                             "location": 1,
-                                                                             "state": viviendaStateEnum.available.value,
-                                                                             "url_photo": 1,
-                                                                             "longitude": 1,
-                                                                             "latitude": 1})'''
 @vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_house")
 async def create_house(request: NewVivienda, service: ViviendaService = Depends(get_vivienda_service)):
     """Creates a new house"""
@@ -57,11 +32,10 @@ async def create_house(request: NewVivienda, service: ViviendaService = Depends(
             detail=e.error_code
         )'''
 
-                                                                            
+                                                                        
 
-
-@vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
-async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
+'''@vivienda.get('/viviendas/{idCasa}', response_model=Vivienda)
+async def find_house(idCasa: PyObjectId, collection=Depends(get_windbnb_collection)):
     result = await collection.find_one({"_id": ObjectId(idCasa)}, {"_id": 1,
                                                                    "title": 1,
                                                                    "description": 1,
@@ -72,7 +46,14 @@ async def find_house(idCasa: str, collection=Depends(get_windbnb_collection)):
                                                                    "longitude": 1,
                                                                    "latitude": 1})
     result["_id"] = str(result["_id"])
-    return result
+    return result'''
+
+@vivienda.get("/viviendas/{idCasa}", response_model=Vivienda, operation_id="get_house_by_id", responses=NOT_FOUND_RESPONSE)
+async def get_house_by_id(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
+    try:
+        return await service.get_vivienda_by_id(idCasa)
+    except NotFoundError as e:
+        raise HTTPException(status_code=404, detail=e.error_code)
 
 
 @vivienda.put('/viviendas/{idCasa}', response_model=Vivienda)
@@ -94,7 +75,7 @@ async def delete_house(idCasa: str, collection=Depends(get_windbnb_collection)):
         return Response(status_code=404)'''
 
 @vivienda.delete("/viviendas/{idCasa}", response_model=Message, operation_id="delete house", responses=NOT_FOUND_RESPONSE)
-async def delete_house(idCasa: str, service: ViviendaService = Depends(get_windbnb_collection)):
+async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
     """Cancels the house identified by the given `idCasa`"""
     try: 
         await service.delete_house(idCasa)
