@@ -2,6 +2,8 @@ from functools import lru_cache
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from app.service.vivienda import ViviendaService
+
 from .settings import Settings
 
 
@@ -29,6 +31,10 @@ def get_windbnb_collection(
 ):
     return database[settings.mongo.collection]
 
+
+@lru_cache
+def get_vivienda_service(collection=Depends(get_windbnb_collection)) -> ViviendaService:
+    return ViviendaService(collection)
 
 """
 @lru_cache

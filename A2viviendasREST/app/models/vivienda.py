@@ -1,6 +1,9 @@
 from enum import Enum
 from typing import Optional
+from bson import ObjectId
 from pydantic import BaseModel
+from app.models.types import PyObjectId
+
 
 class viviendaStateEnum(str, Enum):
     available = "available"
@@ -8,6 +11,7 @@ class viviendaStateEnum(str, Enum):
 
 
 class Vivienda(BaseModel):
+    id: PyObjectId
     title: str
     description: Optional[str]
     user_id: str
@@ -15,7 +19,11 @@ class Vivienda(BaseModel):
     state: viviendaStateEnum = viviendaStateEnum.available
     url_photo: Optional[str]
     longitude: str
-    latitude: str 
+    latitude: str
+
+    class Config:
+        json_encoders = {ObjectId: str}
+
 
 class NewVivienda(BaseModel):
     title: str
@@ -24,5 +32,7 @@ class NewVivienda(BaseModel):
     location: str
     url_photo: Optional[str]
     longitude: str
-    latitude: str 
-    
+    latitude: str
+
+    class Config:
+        json_encoders = {ObjectId: str}
