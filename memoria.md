@@ -33,13 +33,19 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
   // Titulo de la vivienda
   "title": "string",
   // Descripción de la vivienda
-  "description": "string",
+  "description": "string", 
   // Identificador del usuario dueño de la vivienda
   "user_id": "string",
   // Ubicación de la vivienda
   "location": "string",
   // Estado de la vivienda. Por defecto: available
   "state": "enum(available,deleted)",
+  //Lista de fotos de la vivienda
+  "url_photo": "List[string]",
+  //Coordenada geográfica longitud
+  "longitude": "string"
+  //Coordenada geográfica latitud
+  "latitude": "string"
   // Lista de todas las reservas que ha recibido esta vivienda
   "bookings": [
     {
@@ -182,3 +188,43 @@ Cuando buscamos la estancia media dada una provincia y un mes (o la media anual)
   "message": "No data was found for [{provincia}, {mes/total}]"
 }
 ```
+
+# A2ViviendasREST
+
+Este microservicio se encarga de proporcionar los datos sobre las viviendas. Esta
+desarrollado en Python utilizando el framework
+[FastAPI](https://fastapi.tiangolo.com). Para la persistencia de datos utiliza
+[MongoDB](https://www.mongodb.com/), a través del driver asíncrono
+[Motor](https://motor.readthedocs.io/en/stable/index.html).
+
+Para facilitar el despliegue de la aplicación, se proporciona un fichero
+`Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las
+instrucciones detalladas sobre como utilizar la imagen y las opciones de
+configuración disponibles se pueden encontrar en el fichero `README.md`, dentro
+de la carpeta `A2viviendasREST`.
+
+### Endpoints REST disponibles
+
+La siguiente lista es una especificación informal sobre los endpoints REST
+disponibles en el microservicio, a modo de resumen. La documentación completa se
+puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
+`/redoc` (Redoc). Además, se adjunta una copia local en el fichero
+`openapi.json`, dentro de la carpeta del proyecto.
+
+- `POST /viviendas`: Crea una nueva vivienda. El cuerpo de la petición es un json
+  con los siguientes campos:
+  - `title`: Título de la vivienda
+  - `description`: Descripción de la vivienda
+  - `user_id`: Identificador del usuario que realiza la reserva
+  - `location`: Lugar donde se encuentra la vivienda
+  - `url_photo`: Fotos de la vivienda
+  - `longitude`: Coordenada geográfica longitud de la vivienda
+  - `latitude`: Coordenada geográfica latitud de la vivienda
+- `GET /viviendas/{idCasa}`: Devuelve toda la información sobre la vivienda con identificador `idCasa`
+- `PUT /viviendas/{idCasa}`: Modifica los campos de la vivienda con identificador `idCasa` 
+- `DELETE /viviendas/{idCasa}`: Borra la vivienda con identificador
+  `idCasa`
+- `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas de una vivienda con identificador `idCasa`
+
+## Casos alternativos
+En el caso de no encontrar una vivienda con el identificador corresponiente, se devolverá una excepción de tipo NotFoundError con su mensaje correspondiente dependiendo de la operación.
