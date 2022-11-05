@@ -139,6 +139,20 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
 
+En caso de error en una petición bien formada, se devolverá un mensaje de error
+siguiendo el siguiente formato.
+
+```json
+{
+  "detail": "error"
+}
+```
+
+Donde el campo `detail` contiene uno de los siguientes códigos de error
+
+- `ALREADY_BOOKED` (409 Conflict): No se puede reservar por un conflicto
+- `NOT_FOUND` (404 Not Found): No se ha encontrado la vivienda
+
 # Datos Abiertos
 
 El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
