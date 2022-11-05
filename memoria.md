@@ -159,6 +159,11 @@ Donde el campo `detail` contiene uno de los siguientes códigos de error
 
 El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
 
+## Requisitos considerados
+
+- **Al menos tres operaciones de consulta o búsqueda parametrizada sobre dichos datos abiertos**:
+  `GET /gas-stations`, `GET /gas-stations/{latitude}/{longitude}`, `GET /average-stay`
+
 ## Precio de carburantes en las gasolineras españolas
 
 Hemos escogido un
@@ -211,14 +216,14 @@ filtrarse por mes específico o la media anual.
 El modelo del tipo de salida `Data` se puede ver en
 `A2datosabiertosREST/src/models/average_stay.py`
 
-### Casos Alternativos
+## Casos Alternativos
 
 En el caso de que no se introduzca una entrada correcta, se han definido dos
 excepciones que se elevarán cuando sea oportuno: `NoGasStations` y
 `NoDataFound`. Si no se encuentran resultados en la búsqueda, el endpoint
 devuelve un mensaje indicándolo.
 
-#### NoGasStations Exception
+### NoGasStations Exception
 
 En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay
 gasolineras dado una provincia y rótulo se mostraría un objeto
@@ -238,7 +243,7 @@ y una longitud, se mostraría otro objeto de la misma forma
 }
 ```
 
-#### NoDataFound Exception
+### NoDataFound Exception
 
 Cuando buscamos la estancia media dada una provincia y un mes (o la media
 anual), puede darse el caso de que no haya datos sobre ello. No es que no se
