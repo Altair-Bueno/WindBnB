@@ -33,7 +33,7 @@ uvicorn --reload --port 8080 --host 0.0.0.0 src:app
 # Compilar el contenedor
 docker build -t a2reservas .
 # Inicializar el contenedor
-docker run a2reservas -p 8080:8080
+docker run -p 8080:8000 a2reservas
 ```
 
 # Documentación
