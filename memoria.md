@@ -66,7 +66,7 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
   // Estado de la vivienda. Por defecto: available
   "state": "enum(available,deleted)",
   //Lista de fotos de la vivienda
-  "url_photo": "List[string]",
+  "url_photo": ["string"],
   //Coordenada geográfica longitud
   "longitude": "string",
   //Coordenada geográfica latitud
