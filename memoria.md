@@ -22,6 +22,21 @@ TODO
 
 # Introducción
 
+# Tecnologías Utilizadas
+
+Todos los microservicios están desarrollados haciendo uso de Python. Más concretamente, se ha utilizado el framework
+[FastAPI](https://fastapi.tiangolo.com) para el desarrollo de las APIs REST. 
+
+Para la persistencia de datos se ha optado por la base de datos de [MongoDB](https://www.mongodb.com/), a través del driver asíncrono [Motor](https://motor.readthedocs.io/en/stable/index.html).
+
+# Instrucciones de Despliegue
+
+Se facilita el fichero `/WindBnB/docker-compose.yml` para poder hacer un despliegue de todos los microservicios utilizando la herramienta [Docker Compose](https://docs.docker.com/compose/compose-v2/). Instrucciones más detalladas en el fichero `/WindBnB/README.md`
+
+Para facilitar el despliegue de cada aplicación de forma individual, se proporciona un fichero `Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las instrucciones detalladas sobre como utilizar la imagen y las opciones de configuración disponibles se pueden encontrar en el fichero `README.md`, dentro del directorio correspondiente a cada microservicio.
+
+En caso de no disponer de las herramientas mencionadas, dentro del mismo fichero `README.md` en cada microservicio, se indica paso a paso cómo realizar un despliegue con [uvicorn](https://www.uvicorn.org).
+
 # Esquema de las entidades
 
 Los documentos almacenados en Mongo mantienen el siguiente esquema:
@@ -69,17 +84,7 @@ proceso, se proporciona un script de Python `iweb.py`. Requiere que la librería
 
 ## A2ReservasREST
 
-Este microservicio se encarga de proporcionar los datos sobre las reservas. Esta
-desarrollado en Python utilizando el framework
-[FastAPI](https://fastapi.tiangolo.com). Para la persistencia de datos utiliza
-[MongoDB](https://www.mongodb.com/), a través del driver asíncrono
-[Motor](https://motor.readthedocs.io/en/stable/index.html).
-
-Para facilitar el despliegue de la aplicación, se proporciona un fichero
-`Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las
-instrucciones detalladas sobre como utilizar la imagen y las opciones de
-configuración disponibles se pueden encontrar en el fichero `README.md`, dentro
-de la carpeta `A2ReservasREST`.
+Este microservicio se encarga de proporcionar los datos sobre las reservas.
 
 ### Requisitos considerados
 

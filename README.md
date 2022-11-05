@@ -15,11 +15,26 @@ de Málaga, Grado en Ingeniería del Software
 
 ### Mediante Docker compose
 
+En caso de disponer de la herramienta [Docker Compose V2](https://docs.docker.com/compose/compose-v2/), es posible realizar el despliegue siguiendo las siguientes instrucciones
+
 ```sh
+# Acceder a la carpeta ROOT del proyecto
+cd /WindBnB
 # Iniciar el servicio
 docker compose up -d
 # Detener el servicio
 docker compose down
+```
+
+En otro caso, si tenemos la herramienta `docker-compose` convencional
+
+```sh
+# Acceder a la carpeta ROOT del proyecto
+cd /WindBnB
+# Iniciar el servicio
+docker-compose up -d
+# Detener el servicio
+docker-compose down
 ```
 
 - El servidor de mongo está disponible en <mongodb://root:example@localhost:27017>
