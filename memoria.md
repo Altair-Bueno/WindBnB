@@ -22,6 +22,8 @@ TODO
 
 # Introducción
 
+Para la realización de los servicios REST propuestos en el documento _Práctica de servicios Web (I): servidores_, se ha optado un desarrollo basado en microservicios, donde cada uno de los servicios planteados son servidores independientes.
+
 # Tecnologías Utilizadas
 
 Todos los microservicios están desarrollados haciendo uso de Python. Más concretamente, se ha utilizado el framework
