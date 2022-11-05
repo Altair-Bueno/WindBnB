@@ -280,7 +280,14 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
   de una vivienda con identificador `idCasa`
 
-#### Casos alternativos
+### Requisitos considerados
+
+- **Al menos dos operaciones de consulta o búsqueda parametrizada**:
+  `GET /viviendas/{idCasa}`, `DELETE /viviendas/{idCasa}`
+- **Una operación de consulta sobre las relaciones entre las entidades**:
+  `GET /viviendas/{idCasa}/getBookingsAmount`
+
+### Casos alternativos
 
 En el caso de no encontrar una vivienda con el identificador proporcionado, se
 devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
