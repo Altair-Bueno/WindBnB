@@ -18,7 +18,7 @@ source .venv/bin/activate
 # Instalar los paquetes necesarios
 pip install -r requirements.txt
 # Iniciar el servidor
-uvicorn --reload --port 8080 --host 0.0.0.0 src:app
+uvicorn --reload --port 8000 --host 0.0.0.0 src:app
 ```
 
 ## Ejecución mediante docker
@@ -31,9 +31,9 @@ uvicorn --reload --port 8080 --host 0.0.0.0 src:app
 
 ```sh
 # Compilar el contenedor
-docker build -t a2reservas .
+docker build -t a2datosabiertos .
 # Inicializar el contenedor
-docker run -p 8080:8000 a2reservas
+docker run -p 8000:8000 a2datosabiertos
 ```
 
 # Documentación
