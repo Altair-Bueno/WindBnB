@@ -139,6 +139,8 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
 
+#### Casos alternativos
+
 En caso de error en una petición bien formada, se devolverá un mensaje de error
 siguiendo el siguiente formato.
 
@@ -209,14 +211,14 @@ filtrarse por mes específico o la media anual.
 El modelo del tipo de salida `Data` se puede ver en
 `A2datosabiertosREST/src/models/average_stay.py`
 
-## Casos Alternativos
+### Casos Alternativos
 
 En el caso de que no se introduzca una entrada correcta, se han definido dos
 excepciones que se elevarán cuando sea oportuno: `NoGasStations` y
 `NoDataFound`. Si no se encuentran resultados en la búsqueda, el endpoint
 devuelve un mensaje indicándolo.
 
-### NoGasStations Exception
+#### NoGasStations Exception
 
 En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay
 gasolineras dado una provincia y rótulo se mostraría un objeto
@@ -236,7 +238,7 @@ y una longitud, se mostraría otro objeto de la misma forma
 }
 ```
 
-### NoDataFound Exception
+#### NoDataFound Exception
 
 Cuando buscamos la estancia media dada una provincia y un mes (o la media
 anual), puede darse el caso de que no haya datos sobre ello. No es que no se
@@ -278,7 +280,7 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
   de una vivienda con identificador `idCasa`
 
-## Casos alternativos
+#### Casos alternativos
 
 En el caso de no encontrar una vivienda con el identificador proporcionado, se
 devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
