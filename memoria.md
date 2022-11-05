@@ -96,20 +96,18 @@ inserción de multiples elementos del contenido del fichero. Para automatizar el
 proceso, se proporciona un script de Python `iweb.py`. Requiere que la librería
 `pymongo` esté instalada
 
-# Descripción de los servicios
-
-## A2ReservasREST
+# A2ReservasREST
 
 Este microservicio se encarga de proporcionar los datos sobre las reservas.
 
-### Requisitos considerados
+## Requisitos considerados
 
 - **Al menos dos operaciones de consulta o búsqueda parametrizada**:
   `GET /booking`, `GET /booking/{booking_id}`, `DELETE /booking/{booking_id}`
 - **Una operación de consulta sobre las relaciones entre las entidades**:
   `GET /booking` y sus parámetro de consulta `owner_id` y `house_id`
 
-### Endpoints REST disponibles
+## Endpoints REST disponibles
 
 La siguiente lista es una especificación informal sobre los endpoints REST
 disponibles en el microservicio, a modo de resumen. La documentación completa se
@@ -139,7 +137,7 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
   disponible
 
-#### Casos alternativos
+### Casos alternativos
 
 En caso de error en una petición bien formada, se devolverá un mensaje de error
 siguiendo el siguiente formato.
@@ -161,8 +159,9 @@ El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
 
 ## Requisitos considerados
 
-- **Al menos tres operaciones de consulta o búsqueda parametrizada sobre dichos datos abiertos**:
-  `GET /gas-stations`, `GET /gas-stations/{latitude}/{longitude}`, `GET /average-stay`
+- **Al menos tres operaciones de consulta o búsqueda parametrizada sobre dichos
+  datos abiertos**: `GET /gas-stations`,
+  `GET /gas-stations/{latitude}/{longitude}`, `GET /average-stay`
 
 ## Precio de carburantes en las gasolineras españolas
 
@@ -260,7 +259,14 @@ caso, se mostrará el objeto
 
 Este microservicio se encarga de proporcionar los datos sobre las viviendas.
 
-### Endpoints REST disponibles
+## Requisitos considerados
+
+- **Al menos dos operaciones de consulta o búsqueda parametrizada**:
+  `GET /viviendas/{idCasa}`, `DELETE /viviendas/{idCasa}`
+- **Una operación de consulta sobre las relaciones entre las entidades**:
+  `GET /viviendas/{idCasa}/getBookingsAmount`
+
+## Endpoints REST disponibles
 
 La siguiente lista es una especificación informal sobre los endpoints REST
 disponibles en el microservicio, a modo de resumen. La documentación completa se
@@ -285,15 +291,14 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
   de una vivienda con identificador `idCasa`
 
-### Requisitos considerados
-
-- **Al menos dos operaciones de consulta o búsqueda parametrizada**:
-  `GET /viviendas/{idCasa}`, `DELETE /viviendas/{idCasa}`
-- **Una operación de consulta sobre las relaciones entre las entidades**:
-  `GET /viviendas/{idCasa}/getBookingsAmount`
-
 ### Casos alternativos
 
 En el caso de no encontrar una vivienda con el identificador proporcionado, se
 devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
 dependiendo de la operación.
+
+```json
+{
+  "detail": "string"
+}
+```
