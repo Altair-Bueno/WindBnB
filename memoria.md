@@ -43,9 +43,9 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
   //Lista de fotos de la vivienda
   "url_photo": "List[string]",
   //Coordenada geográfica longitud
-  "longitude": "string"
+  "longitude": "string",
   //Coordenada geográfica latitud
-  "latitude": "string"
+  "latitude": "string",
   // Lista de todas las reservas que ha recibido esta vivienda
   "bookings": [
     {
@@ -227,4 +227,4 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 - `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas de una vivienda con identificador `idCasa`
 
 ## Casos alternativos
-En el caso de no encontrar una vivienda con el identificador corresponiente, se devolverá una excepción de tipo NotFoundError con su mensaje correspondiente dependiendo de la operación.
+En el caso de no encontrar una vivienda con el identificador proporcionado, se devolverá una excepción de tipo NotFoundError con su mensaje correspondiente dependiendo de la operación.
