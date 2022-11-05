@@ -59,5 +59,7 @@ REST bajo las rutas `/docs` (SwaggerUI) y `/redoc` (Redoc)
 
 # Recomendaciones
 mongo_url=mongodb://root:example@localhost:27017
+
 mongo_collection=houses
+
 mongo_database=iweb
