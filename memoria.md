@@ -133,6 +133,8 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 
 # Datos Abiertos
 
+El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
+
 ## Precio de carburantes en las gasolineras españolas
 
 Hemos escogido un [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas) con información sobre todas las gasolineras de España, incluyendo información sobre su posición geográfica, dirección y precio de los carburantes ofertados. Este será utilizado para mostrar en un mapa las gasolineras cercanas a una vivienda publicada en la aplicación, o las gasolineras en una determinada provincia. Si no se encuentran resultados en la búsqueda, el endpoint devuelve un mensaje indicándolo.
@@ -198,17 +200,7 @@ Cuando buscamos la estancia media dada una provincia y un mes (o la media anual)
 
 # A2ViviendasREST
 
-Este microservicio se encarga de proporcionar los datos sobre las viviendas. Esta
-desarrollado en Python utilizando el framework
-[FastAPI](https://fastapi.tiangolo.com). Para la persistencia de datos utiliza
-[MongoDB](https://www.mongodb.com/), a través del driver asíncrono
-[Motor](https://motor.readthedocs.io/en/stable/index.html).
-
-Para facilitar el despliegue de la aplicación, se proporciona un fichero
-`Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las
-instrucciones detalladas sobre como utilizar la imagen y las opciones de
-configuración disponibles se pueden encontrar en el fichero `README.md`, dentro
-de la carpeta `A2viviendasREST`.
+Este microservicio se encarga de proporcionar los datos sobre las viviendas.
 
 ### Endpoints REST disponibles
 
