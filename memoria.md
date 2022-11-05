@@ -6,38 +6,46 @@ author:
   - "Carlos Marín Corbera"
   - "Carmen González Ortega"
   - "Altair Bueno Calvente"
-date: 11 oct 2022
+date: 5 nov 2022
 titlepage: true
 titlepage-rule-color: "4506B3"
 toc-own-page: true
 toc: true
 ---
 
-<!--
-TODO
-
-- Indicar despliegue de los servicios con docker compose `docker compose up -d`. Esto está en el README.md
-- Rellenar los datos de `iweb/iweb.json`
--->
-
 # Introducción
 
-Para la realización de los servicios REST propuestos en el documento _Práctica de servicios Web (I): servidores_, se ha optado un desarrollo basado en microservicios, donde cada uno de los servicios planteados son servidores independientes.
+Para la realización de los servicios REST propuestos en el documento _Práctica
+de servicios Web (I): servidores_, se ha optado un desarrollo basado en
+microservicios, donde cada uno de los servicios planteados son servidores
+independientes.
 
 # Tecnologías Utilizadas
 
-Todos los microservicios están desarrollados haciendo uso de Python. Más concretamente, se ha utilizado el framework
-[FastAPI](https://fastapi.tiangolo.com) para el desarrollo de las APIs REST. 
+Todos los microservicios están desarrollados haciendo uso de Python. Más
+concretamente, se ha utilizado el framework
+[FastAPI](https://fastapi.tiangolo.com) para el desarrollo de las APIs REST.
 
-Para la persistencia de datos se ha optado por la base de datos de [MongoDB](https://www.mongodb.com/), a través del driver asíncrono [Motor](https://motor.readthedocs.io/en/stable/index.html).
+Para la persistencia de datos se ha optado por la base de datos de
+[MongoDB](https://www.mongodb.com/), conectada a través del driver asíncrono
+[Motor](https://motor.readthedocs.io/en/stable/index.html).
 
 # Instrucciones de Despliegue
 
-Se facilita el fichero `/WindBnB/docker-compose.yml` para poder hacer un despliegue de todos los microservicios utilizando la herramienta [Docker Compose](https://docs.docker.com/compose/compose-v2/). Instrucciones más detalladas en el fichero `/WindBnB/README.md`
+Se facilita el fichero `docker-compose.yml` para poder hacer un despliegue de
+todos los microservicios utilizando la herramienta
+[Docker Compose](https://docs.docker.com/compose/compose-v2/). Instrucciones más
+detalladas están disponibles en el fichero `README.md`
 
-Para facilitar el despliegue de cada aplicación de forma individual, se proporciona un fichero `Dockerfile` para construir un contenedor de [Docker](https://docker.com). Las instrucciones detalladas sobre como utilizar la imagen y las opciones de configuración disponibles se pueden encontrar en el fichero `README.md`, dentro del directorio correspondiente a cada microservicio.
+Para facilitar el despliegue de cada aplicación de forma individual, se
+proporciona un fichero `Dockerfile` para construir un contenedor de
+[Docker](https://docker.com). Las instrucciones detalladas sobre como utilizar
+la imagen y las opciones de configuración disponibles se pueden encontrar en el
+fichero `README.md`, dentro del directorio correspondiente a cada microservicio.
 
-En caso de no disponer de las herramientas mencionadas, dentro del mismo fichero `README.md` en cada microservicio, se indica paso a paso cómo realizar un despliegue con [uvicorn](https://www.uvicorn.org).
+En caso de no disponer de las herramientas mencionadas, dentro del mismo fichero
+`README.md` en cada microservicio, se indica paso a paso cómo realizar un
+despliegue con [uvicorn](https://www.uvicorn.org).
 
 # Esquema de las entidades
 
@@ -50,7 +58,7 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
   // Titulo de la vivienda
   "title": "string",
   // Descripción de la vivienda
-  "description": "string", 
+  "description": "string",
   // Identificador del usuario dueño de la vivienda
   "user_id": "string",
   // Ubicación de la vivienda
@@ -99,7 +107,7 @@ Este microservicio se encarga de proporcionar los datos sobre las reservas.
 - **Al menos dos operaciones de consulta o búsqueda parametrizada**:
   `GET /booking`, `GET /booking/{booking_id}`, `DELETE /booking/{booking_id}`
 - **Una operación de consulta sobre las relaciones entre las entidades**:
-  `GET /booking` y su parámetro de consulta `owner_id`
+  `GET /booking` y sus parámetro de consulta `owner_id` y `house_id`
 
 ### Endpoints REST disponibles
 
@@ -137,42 +145,67 @@ El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
 
 ## Precio de carburantes en las gasolineras españolas
 
-Hemos escogido un [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas) con información sobre todas las gasolineras de España, incluyendo información sobre su posición geográfica, dirección y precio de los carburantes ofertados. Este será utilizado para mostrar en un mapa las gasolineras cercanas a una vivienda publicada en la aplicación, o las gasolineras en una determinada provincia. Si no se encuentran resultados en la búsqueda, el endpoint devuelve un mensaje indicándolo.
+Hemos escogido un
+[conjunto de datos abiertos](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas)
+con información sobre todas las gasolineras de España, incluyendo información
+sobre su posición geográfica, dirección y precio de los carburantes ofertados.
+Este será utilizado para mostrar en un mapa las gasolineras cercanas a una
+vivienda publicada en la aplicación, o las gasolineras en una determinada
+provincia. Si no se encuentran resultados en la búsqueda, el endpoint devuelve
+un mensaje indicándolo.
 
 ### Endpoints
 
-- `GET /gas-stations`: Devuelve una lista de gasolineras (`List[EESSPrecio]`) filtrados por provincia y rótulo. Por defecto 10 gasolineras como máximo
+- `GET /gas-stations`: Devuelve una lista de gasolineras (`List[EESSPrecio]`)
+  filtrados por provincia y rótulo. Por defecto 10 gasolineras como máximo
+
   - `provincia`: `Optional[str]`. Nombre de la provincia
   - `rotulo`: `Optional[str]`. Nombre de la marca o rótulo de la gasolinera
-  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor es 10
+  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor
+    es 10
 
-- `GET /gas-stations/{latitude}/{longitude}`: Devuelve una lista de gasolineras (`List[EESSPrecio]`) que se encuentran como máximo en un área a partir de una geolocalización. Por defecto 10 gasolineras como máximo.
+- `GET /gas-stations/{latitude}/{longitude}`: Devuelve una lista de gasolineras
+  (`List[EESSPrecio]`) que se encuentran como máximo en un área a partir de una
+  geolocalización. Por defecto 10 gasolineras como máximo.
   - `latitude`: `float`. Latitud de la vivienda
   - `longitude`: `float`. Longitud de la vivienda
   - `area`: `int`. Límite del área en kilómetros. Por defecto, el valor es 5
-  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor es 10
+  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor
+    es 10
 
-El modelo del tipo de salida `EESSPrecio` se puede ver en `A2datosabiertosREST/src/models/gas_stations.py`
+El modelo del tipo de salida `EESSPrecio` se puede ver en
+`A2datosabiertosREST/src/models/gas_stations.py`
 
 ## Estancia media de los viajeros por provincias y meses
 
-El segundo [conjunto de datos abiertos](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-de-los-viajeros-por-provincias-y-meses-eoap-identificador-api-t11-e162eoap-a2020-l0-01ndp03-px) escogido contiene información de la estancia media en días de los viajeros por provincia y mes. Esto será utilizado para mostrar la media de días de estancia en función de la provincia donde se esté realizando la búsqueda, pudiendo filtrarse por mes específico o la media anual.
+El segundo
+[conjunto de datos abiertos](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-de-los-viajeros-por-provincias-y-meses-eoap-identificador-api-t11-e162eoap-a2020-l0-01ndp03-px)
+escogido contiene información de la estancia media en días de los viajeros por
+provincia y mes. Esto será utilizado para mostrar la media de días de estancia
+en función de la provincia donde se esté realizando la búsqueda, pudiendo
+filtrarse por mes específico o la media anual.
 
 ### Endpoints
 
-- `GET /average-stay`: Devuelve el valor de la estancia media (`Data`) de viajeros de una provincia en un mes o año.
+- `GET /average-stay`: Devuelve el valor de la estancia media (`Data`) de
+  viajeros de una provincia en un mes o año.
   - `provincia`: `str`. Nombre de la provincia
   - `mes`: `Optional[str]`. Nombre del mes
 
-El modelo del tipo de salida `Data` se puede ver en `A2datosabiertosREST/src/models/average_stay.py`
+El modelo del tipo de salida `Data` se puede ver en
+`A2datosabiertosREST/src/models/average_stay.py`
 
 ## Casos Alternativos
 
-En el caso de que no se introduzca una entrada correcta, se han definido dos excepciones que se elevarán cuando sea oportuno: `NoGasStations` y `NoDataFound`. Si no se encuentran resultados en la búsqueda, el endpoint devuelve un mensaje indicándolo.
+En el caso de que no se introduzca una entrada correcta, se han definido dos
+excepciones que se elevarán cuando sea oportuno: `NoGasStations` y
+`NoDataFound`. Si no se encuentran resultados en la búsqueda, el endpoint
+devuelve un mensaje indicándolo.
 
 ### NoGasStations Exception
 
-En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay gasolineras dado una provincia y rótulo se mostraría un objeto
+En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay
+gasolineras dado una provincia y rótulo se mostraría un objeto
 
 ```json
 {
@@ -180,7 +213,8 @@ En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay 
 }
 ```
 
-O, en el caso de que no haya gasolineras dado un radio de búsqueda, una latitud y una longitud, se mostraría otro objeto de la misma forma
+O, en el caso de que no haya gasolineras dado un radio de búsqueda, una latitud
+y una longitud, se mostraría otro objeto de la misma forma
 
 ```json
 {
@@ -190,7 +224,10 @@ O, en el caso de que no haya gasolineras dado un radio de búsqueda, una latitud
 
 ### NoDataFound Exception
 
-Cuando buscamos la estancia media dada una provincia y un mes (o la media anual), puede darse el caso de que no haya datos sobre ello. No es que no se encuentre el recurso, simplemente que no hay información sobre ello. En este caso, se mostrará el objeto
+Cuando buscamos la estancia media dada una provincia y un mes (o la media
+anual), puede darse el caso de que no haya datos sobre ello. No es que no se
+encuentre el recurso, simplemente que no hay información sobre ello. En este
+caso, se mostrará el objeto
 
 ```json
 {
@@ -210,8 +247,8 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 `/redoc` (Redoc). Además, se adjunta una copia local en el fichero
 `openapi.json`, dentro de la carpeta del proyecto.
 
-- `POST /viviendas`: Crea una nueva vivienda. El cuerpo de la petición es un json
-  con los siguientes campos:
+- `POST /viviendas`: Crea una nueva vivienda. El cuerpo de la petición es un
+  json con los siguientes campos:
   - `title`: Título de la vivienda
   - `description`: Descripción de la vivienda
   - `user_id`: Identificador del usuario que realiza la reserva
@@ -219,11 +256,16 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
   - `url_photo`: Fotos de la vivienda
   - `longitude`: Coordenada geográfica longitud de la vivienda
   - `latitude`: Coordenada geográfica latitud de la vivienda
-- `GET /viviendas/{idCasa}`: Devuelve toda la información sobre la vivienda con identificador `idCasa`
-- `PUT /viviendas/{idCasa}`: Modifica los campos de la vivienda con identificador `idCasa` 
-- `DELETE /viviendas/{idCasa}`: Borra la vivienda con identificador
-  `idCasa`
-- `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas de una vivienda con identificador `idCasa`
+- `GET /viviendas/{idCasa}`: Devuelve toda la información sobre la vivienda con
+  identificador `idCasa`
+- `PUT /viviendas/{idCasa}`: Modifica los campos de la vivienda con
+  identificador `idCasa`
+- `DELETE /viviendas/{idCasa}`: Borra la vivienda con identificador `idCasa`
+- `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
+  de una vivienda con identificador `idCasa`
 
 ## Casos alternativos
-En el caso de no encontrar una vivienda con el identificador proporcionado, se devolverá una excepción de tipo NotFoundError con su mensaje correspondiente dependiendo de la operación.
+
+En el caso de no encontrar una vivienda con el identificador proporcionado, se
+devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
+dependiendo de la operación.
