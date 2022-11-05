@@ -24,7 +24,7 @@ export mongo_url=<VALOR>
 export mongo_collection=<VALOR>
 export mongo_database=<VALOR>
 # Iniciar el servidor
-uvicorn --reload --port 8080 --host 127.0.0.0 src:app
+uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 ```
 
 ## Ejecución mediante docker
@@ -39,7 +39,7 @@ uvicorn --reload --port 8080 --host 127.0.0.0 src:app
 # Compilar el contenedor
 docker build -t a2reservas .
 # Inicializar el contenedor
-docker run -p 8080:8080 \
+docker run -p 8080:8000 \
     -e mongo_url=<VALOR> \
     -e mongo_collection=<VALOR> \
     -e mongo_database=<VALOR> \
