@@ -30,6 +30,7 @@
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.8.0",
-    "sass": "^1.55.0"
+    "sass": "^1.55.0",
+    "vercel": "^28.4.15"
   }
 }

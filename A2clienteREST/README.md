@@ -12,20 +12,25 @@ Contiene el cliente web para acceder a los microservicios desarrollados
 ### Instrucciones
 
 ```sh
-# Instalar las dependencias
+# 1. Instalar las dependencias
 npm i
-# Compilar la api
+# 2. Compilar la api. Se debe de ejecutar en cada cambio en la especificación
 npm run openapi
-# Iniciar el servidor
+# 3. Iniciar el servidor
 npm run dev
 ```
 
 ## Ejecución de producción
 
 La aplicación ha sido configurada para ser desplegada en Vercel para producción.
-Se encuentra disponible en la url: <https://example.org>
 
-<!--TODO update URL-->
+Actualmente la aplicación no puede ser ejecutada en modo producción localmente
+
+<!--
+TODO update URL
+
+Se encuentra disponible en la url: <https://example.org>
+-->
 
 # Configuración
 
