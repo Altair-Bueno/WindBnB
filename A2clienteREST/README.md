@@ -25,6 +25,8 @@ npm run dev
 La aplicación admite las siguientes opciones de configuración mediante ficheros
 `.env` o variables de entorno
 
-| Variable             | Descripción                                                           | Valor por defecto |
-| -------------------- | --------------------------------------------------------------------- | ----------------- |
-| `RESERVAS_BASE_PATH` | Url del servidor donde se encuentra el microservicio `A2reservasREST` |
+| Variable                  | Descripción                                                                | Valor por defecto |
+| ------------------------- | -------------------------------------------------------------------------- | ----------------- |
+| `RESERVAS_BASE_PATH`      | Url del servidor donde se encuentra el microservicio `A2reservasREST`      |
+| `VIVIENDAS_BASE_PATH`     | Url del servidor donde se encuentra el microservicio `A2viviendasREST`     |
+| `DATOSABIERTOS_BASE_PATH` | Url del servidor donde se encuentra el microservicio `A2datosabiertosREST` |
