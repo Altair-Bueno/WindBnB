@@ -20,6 +20,13 @@ npm run openapi
 npm run dev
 ```
 
+## Ejecución de producción
+
+La aplicación ha sido configurada para ser desplegada en Vercel para producción.
+Se encuentra disponible en la url: <https://example.org>
+
+<!--TODO update URL-->
+
 # Configuración
 
 La aplicación admite las siguientes opciones de configuración mediante ficheros
