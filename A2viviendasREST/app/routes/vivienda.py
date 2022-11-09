@@ -14,7 +14,7 @@ from app.models.vivienda import viviendaStateEnum
 from app.models.vivienda import Vivienda
 from ..dependencies import get_vivienda_service, get_windbnb_collection
 
-vivienda = APIRouter()
+vivienda = APIRouter(tags=["Vivienda"])
 
 NOT_FOUND_RESPONSE = {
     404: {"model": ApiError}
