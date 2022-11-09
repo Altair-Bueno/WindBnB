@@ -21,3 +21,6 @@ pnpm-debug.log*
 
 # api files
 src/api
+
+# Vercel
+.vercel

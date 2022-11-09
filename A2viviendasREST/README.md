@@ -1,5 +1,5 @@
 Contiene el microservicio encargado de gestionar la información sobre las
-reservas
+viviendas
 
 # Uso
 
@@ -15,16 +15,13 @@ reservas
 ```sh
 # Crear un entorno virtual
 virtualenv .venv
-source .venv/bin/activate
+source .venv/bin/activate (Linux o MacOS)
+./.venv/Scripts/activate (Windows)
 # Instalar los paquetes necesarios
 pip install -r requirements.txt
 
-# Configuración necesaria para arrancar el servicio
-export mongo_url=<VALOR>
-export mongo_collection=<VALOR>
-export mongo_database=<VALOR>
 # Iniciar el servidor
-uvicorn --reload --port 8000 --host 127.0.0.0 src:app
+uvicorn app:app --reload
 ```
 
 ## Ejecución mediante docker
@@ -37,13 +34,10 @@ uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 
 ```sh
 # Compilar el contenedor
-docker build -t a2reservas .
+docker build -t a2viviendas .
 # Inicializar el contenedor
-docker run -p 8080:8000 \
-    -e mongo_url=<VALOR> \
-    -e mongo_collection=<VALOR> \
-    -e mongo_database=<VALOR> \
-    a2reservas
+docker run a2viviendas -p 8080:8000 \ -e mongo_url=<VALOR>\ -e mongo_collection=<VALOR>\ -e mongo_database=<VALOR> (Linux y MacOs)
+docker run a2viviendas -p 8080:8000 -e mongo_url=<VALOR> -e mongo_collection=<VALOR> -e mongo_database=<VALOR> (Windows)
 ```
 
 # Configuración
@@ -62,3 +56,10 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 Se proporciona un fichero `openapi.json` con la especificación de OpenApi.
 Además, el propio servidor web proporciona la documentación sobre los endpoints
 REST bajo las rutas `/docs` (SwaggerUI) y `/redoc` (Redoc)
+
+# Recomendaciones
+mongo_url=mongodb://root:example@localhost:27017
+
+mongo_collection=houses
+
+mongo_database=iweb

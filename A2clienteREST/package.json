@@ -11,7 +11,7 @@
     "astro": "astro",
     "fmt": "prettier --write src/components src/layouts src/pages src/styles src/*.ts",
     "prebuild": "npm run openapi",
-    "openapi": "npm run openapi-reservas && npm run openapi-datosabiertos",
+    "openapi": "npm run openapi-reservas && npm run openapi-datosabiertos && npm run openapi-viviendas",
     "openapi-datosabiertos": "openapi-generator-cli generate -i ../A2datosabiertosREST/openapi.json -g typescript-fetch -o src/api/A2datosabiertosREST",
     "openapi-reservas": "openapi-generator-cli generate -i ../A2reservasREST/openapi.json -g typescript-fetch -o src/api/A2reservasREST",
     "openapi-viviendas": "openapi-generator-cli generate -i ../A2viviendasREST/openapi.json -g typescript-fetch -o src/api/A2viviendasREST"
@@ -30,6 +30,7 @@
     "@openapitools/openapi-generator-cli": "^2.5.2",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.8.0",
-    "sass": "^1.55.0"
+    "sass": "^1.55.0",
+    "vercel": "^28.4.15"
   }
 }

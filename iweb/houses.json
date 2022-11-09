@@ -1,1 +1,54 @@
-[{}]
+[
+    {
+      "_id": "63669989a3b506264a134014",
+      "title": "Casa en Alcobendas",
+      "description": "Vivienda situada en la zona norte de Alcobendas, cerca de la estación",
+      "user_id": "1",
+      "location": "Alcobendas",
+      "url_photo": [
+        "https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado--1024x629.jpg"
+      ],
+      "longitude": "40.4165",
+      "latitude": "3.70256",
+      "state": "available"
+    },
+    {
+      "_id": "636699cea3b506264a134015",
+      "title": "Casa en Algeciras",
+      "description": "Vivienda situada cerca de la playa con vistas al mar",
+      "user_id": "2",
+      "location": "Algeciras",
+      "url_photo": [
+        "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
+      ],
+      "longitude": "20.121",
+      "latitude": "1.221",
+      "state": "available"
+    },
+    {
+      "_id": "63669aeba3b506264a134016",
+      "title": "Casa en Los Barrios",
+      "description": "Vivienda situado en lo alto de la colina",
+      "user_id": "3",
+      "location": "Los Barrios",
+      "url_photo": [
+        "https://facilhouse.com/wp-content/uploads/2022/02/casas-acero-homecenter-cadaques-5-385x258.jpg"
+      ],
+      "longitude": "2.34",
+      "latitude": "43.22",
+      "state": "available"
+    },
+    {
+      "_id": "63669b58a3b506264a134017",
+      "title": "Casa en Malaga",
+      "description": "Vivienda cercana al metro de Ciudad de la Justicia",
+      "user_id": "1",
+      "location": "Malaga",
+      "url_photo": [
+        "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2021/10/14/16342350207408.jpg"
+      ],
+      "longitude": "12.2323",
+      "latitude": "11.9",
+      "state": "deleted"
+    }
+  ]
