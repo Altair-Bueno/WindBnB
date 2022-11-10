@@ -13,7 +13,7 @@ export async function post(context: APIContext) {
   const { bookingId } = context.params;
 
   if (!bookingId) {
-    throw new Error("Invalid booking id");
+    return context.redirect("/");
   }
 
   const config = new Configuration(AppConfig.reservas);

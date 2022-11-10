@@ -15,7 +15,7 @@ export async function post(context: APIContext) {
   const url = formData.get(FormDataKeys.origin) ?? "/";
 
   if (!userid) {
-    throw new Error("Missing userid");
+    return context.redirect("/");
   }
 
   context.cookies.set(Cookies.USER_ID_KEY, userid.toString(), { path: "/" });

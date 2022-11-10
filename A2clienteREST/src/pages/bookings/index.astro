@@ -1,58 +1,176 @@
 ---
 import {
   BookingApi,
+  BookingStateEnum,
   Configuration as BookingConfiguration,
   GetBookingsRequest,
+  SortBookingEnum,
 } from "../../api/A2reservasREST";
+import {
+  Configuration as ViviendaConfiguration,
+  ViviendaApi,
+} from "../../api/A2viviendasREST";
 import AppConfig from "../../config";
 import { getUri } from "./[bookingId]";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 
-const config = new BookingConfiguration(AppConfig.reservas);
-const api = new BookingApi(config);
+const params = Astro.url.searchParams;
 
-const filter = Astro.url.searchParams as GetBookingsRequest;
+const beforeDate = params.get("beforeDate");
+const afterDate = params.get("afterDate");
+const sortBy = params.get("sortBy") as null | SortBookingEnum;
+const ascending = params.get("ascending");
+const state = params.get("state") as null | BookingStateEnum;
 
-const model = await api.getBookings(filter);
+const filter: GetBookingsRequest = {
+  beforeDate: beforeDate ? new Date(Date.parse(beforeDate)) : undefined,
+  afterDate: afterDate ? new Date(Date.parse(afterDate)) : undefined,
+  sortBy: sortBy ? sortBy : undefined,
+  ascending: ascending === "on",
+  state: state ? state : undefined,
+  // userId?: string;
+  // skip?: number;
+  // houseId?: string;
+  // ownerId?: string;
+  // state?: BookingStateEnum;
+};
+
+const bookingConfig = new BookingConfiguration(AppConfig.reservas);
+const bookingApi = new BookingApi(bookingConfig);
+
+const viviendaConfig = new ViviendaConfiguration(AppConfig.viviendas);
+const viviendaApi = new ViviendaApi(viviendaConfig);
+
+// We join both entities
+const bookings = await bookingApi.getBookings(filter);
+const futures = bookings.map(async (x) => {
+  const house = await viviendaApi.getHouseById({ idCasa: x.houseId });
+  return { ...x, house };
+});
+
+const model = await Promise.all(futures);
 ---
 
 <WindbnbLayout title="Bookings" page={"BOOKING"}>
-  <h1>Bookings</h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">House</th>
-        <th scope="col">Start date</th>
-        <th scope="col">End date</th>
-        <th scope="col">State</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {
-        model.map((booking, idx) => (
+  <div class="row">
+    <h1>Bookings</h1>
+    <aside class="col-md-12 col-lg-2">
+      <form>
+        <div class="mb-3">
+          <label class="form-check-label" for="flexCheckDefault"
+            >Before date</label
+          >
+          <input
+            type="date"
+            name="beforeDate"
+            value={beforeDate}
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-check-label" for="flexCheckDefault"
+            >After date</label
+          >
+          <input
+            type="date"
+            name="afterDate"
+            value={afterDate}
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-check-label" for="flexCheckDefault">Sort by</label>
+          <select
+            class="form-select form-select-sm"
+            aria-label="Sort by"
+            name="sortBy"
+          >
+            <option></option>
+            {
+              Object.values(SortBookingEnum).map((x) => (
+                <option value={x} selected={sortBy === x}>
+                  {x}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              checked={ascending}
+              name="ascending"
+              id="flexCheckDefault"
+            />
+            <label class="form-check-label" for="flexCheckDefault"
+              >Ascending</label
+            >
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-check-label" for="flexCheckDefault">State</label>
+          <select
+            class="form-select form-select-sm"
+            aria-label="Sort by"
+            name="state"
+          >
+            <option></option>
+            {
+              Object.values(BookingStateEnum).map((x) => (
+                <option value={x} selected={state === x}>
+                  {x}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </form>
+    </aside>
+
+    <main class="col">
+      <table class="table">
+        <thead>
           <tr>
-            <td>{idx + 1}</td>
-            <td>
-              <a href={`/houses/${booking.houseId}`}>{booking.houseId}</a>
-            </td>
-            <td>{booking.startDate.toLocaleDateString()}</td>
-            <td>{booking.endDate.toLocaleDateString()}</td>
-            <td>{booking.state}</td>
-            <td>
-              <form method="POST" action={getUri(booking.id)}>
-                <input hidden />
-                <input
-                  type="submit"
-                  value="Cancel booking"
-                  disabled={booking.state !== "reserved"}
-                />
-              </form>
-            </td>
+            <th scope="col">#</th>
+            <th scope="col">House</th>
+            <th scope="col">Start date</th>
+            <th scope="col">End date</th>
+            <th scope="col">State</th>
+            <th scope="col">Actions</th>
           </tr>
-        ))
-      }
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+          {
+            model.map((booking, idx) => (
+              <tr>
+                <td>{idx + 1}</td>
+                <td>
+                  <a href={`/houses/${booking.houseId}`}>
+                    {booking.house.title}
+                  </a>
+                </td>
+                <td>{booking.startDate.toLocaleDateString()}</td>
+                <td>{booking.endDate.toLocaleDateString()}</td>
+                <td>{booking.state}</td>
+                <td>
+                  <form method="POST" action={getUri(booking.id)}>
+                    <input hidden />
+                    <input
+                      type="submit"
+                      value="Cancel booking"
+                      disabled={booking.state !== "reserved"}
+                    />
+                  </form>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </main>
+  </div>
 </WindbnbLayout>

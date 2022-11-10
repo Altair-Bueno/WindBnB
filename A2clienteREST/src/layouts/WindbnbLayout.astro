@@ -4,10 +4,7 @@ import {
   FormDataKeys as LogoutPostFormDataKeys,
   URI as LogoutURI,
 } from "../pages/auth/logoutHandler";
-import {
-  FormDataKeys as LoginFormDataKeys,
-  URI as LoginURI,
-} from "../pages/auth/loginHandler";
+import { FormDataKeys as LoginFormDataKeys } from "../pages/auth/loginHandler";
 import cookies from "../cookies";
 
 export type Page = "HOME" | "BOOKING";
@@ -17,7 +14,19 @@ export interface Props {
   page?: Page;
 }
 
+const websiteName = "WindBnb";
+
+const navbarPages = [
+  { id: "HOME", text: "Home", uri: "/", requiresAuth: false },
+  { id: "BOOKING", text: "Bookings", uri: "/bookings", requiresAuth: false },
+];
+
 const { title, page } = Astro.props;
+
+const info = Astro.url.searchParams.get("info");
+const warning = Astro.url.searchParams.get("warning");
+const danger = Astro.url.searchParams.get("danger");
+
 const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
 ---
 
@@ -26,41 +35,109 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
-    <!-- TODO navbar and footer -->
+    <!-- From https://getbootstrap.com/docs/5.2/components/navbar -->
     <div>
-      <p>Navbar placeholder</p>
-      {
-        hasUserid ? (
-          <form method="post" action={LogoutURI}>
-            <input
-              hidden
-              type="text"
-              name={LogoutPostFormDataKeys.origin}
-              value={Astro.url.pathname}
-            />
-            <input type="submit" value="Logout" />
-          </form>
-        ) : (
-          <form method="get" action={LoginURI}>
-            <input
-              hidden
-              type="text"
-              name={LoginFormDataKeys.origin}
-              value={Astro.url.pathname}
-            />
-            <input type="submit" name="" value="Login" />
-          </form>
-        )
-      }
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">{websiteName}</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              {
+                navbarPages
+                  .filter((x) => {
+                    return !(x.requiresAuth && !hasUserid);
+                  })
+                  .map((x) => {
+                    return (
+                      <li class="nav-item">
+                        <a
+                          class={`nav-link ${x.id === page ? "active" : ""}`}
+                          aria-current="page"
+                          href={x.uri}
+                        >
+                          {x.text}
+                        </a>
+                      </li>
+                    );
+                  })
+              }
+            </ul>
+            <div>
+              {
+                hasUserid ? (
+                  <form method="post" action={LogoutURI}>
+                    <input
+                      hidden
+                      type="text"
+                      name={LogoutPostFormDataKeys.origin}
+                      value={Astro.url.pathname}
+                    />
+                    <input
+                      type="submit"
+                      value="Logout"
+                      class="btn btn-danger"
+                    />
+                  </form>
+                ) : (
+                  <form method="get" action="/auth/login">
+                    <input
+                      hidden
+                      type="text"
+                      name={LoginFormDataKeys.origin}
+                      value={Astro.url.pathname}
+                    />
+                    <input
+                      type="submit"
+                      value="Login"
+                      class="btn btn-primary"
+                    />
+                  </form>
+                )
+              }
+            </div>
+          </div>
+        </div>
+      </nav>
     </div>
     <div class="container">
+      {
+        danger && (
+          <div class="alert alert-danger" role="alert">
+            {danger}
+          </div>
+        )
+      }
+      {
+        warning && (
+          <div class="alert alert-warning" role="alert">
+            {warning}
+          </div>
+        )
+      }
+      {
+        info && (
+          <div class="alert alert-info" role="alert">
+            {info}
+          </div>
+        )
+      }
       <slot />
-      <div>Footer placeholder</div>
     </div>
   </body>
 </html>

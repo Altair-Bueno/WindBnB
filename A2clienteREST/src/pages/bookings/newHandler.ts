@@ -19,7 +19,9 @@ export async function post(context: APIContext) {
   const formData = await context.request.formData();
   const userId = context.cookies.get(cookies.USER_ID_KEY).value;
 
-  if (!userId) throw new Error("Missing userId cookie");
+  if (!userId) {
+    return context.redirect("/");
+  }
 
   const config = new Configuration(AppConfig.reservas);
   const api = new BookingApi(config);
@@ -36,7 +38,9 @@ export async function post(context: APIContext) {
     ),
     userId,
   };
-  const response = await api.newBooking({ newBooking });
 
-  return context.redirect(`/houses/${response.houseId}`);
+  const response = await api.newBooking({ newBooking });
+  const params = new URLSearchParams();
+  params.set("info", "Booked!");
+  return context.redirect(`/houses/${response.houseId}?${params}`);
 }
