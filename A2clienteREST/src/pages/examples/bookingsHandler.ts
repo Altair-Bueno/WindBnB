@@ -7,8 +7,6 @@ export async function get(context: APIContext) {
   const api = new BookingApi(c);
   const response = await api.getBookings();
 
-  console.log(response);
-
   return {
     body: JSON.stringify(response),
   };

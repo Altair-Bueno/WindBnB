@@ -1,6 +1,8 @@
 import type { APIContext } from "astro";
 import Cookies from "../../cookies";
 
+export const URI = "/auth/logoutHandler";
+
 export const FormDataKeys = {
   origin: "origin",
 };

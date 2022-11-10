@@ -1,0 +1,58 @@
+---
+import {
+  BookingApi,
+  Configuration as BookingConfiguration,
+  GetBookingsRequest,
+} from "../../api/A2reservasREST";
+import AppConfig from "../../config";
+import { getUri } from "./[bookingId]";
+import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+
+const config = new BookingConfiguration(AppConfig.reservas);
+const api = new BookingApi(config);
+
+const filter = Astro.url.searchParams as GetBookingsRequest;
+
+const model = await api.getBookings(filter);
+---
+
+<WindbnbLayout title="Bookings" page={"BOOKING"}>
+  <h1>Bookings</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">House</th>
+        <th scope="col">Start date</th>
+        <th scope="col">End date</th>
+        <th scope="col">State</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        model.map((booking, idx) => (
+          <tr>
+            <td>{idx + 1}</td>
+            <td>
+              <a href={`/houses/${booking.houseId}`}>{booking.houseId}</a>
+            </td>
+            <td>{booking.startDate.toLocaleDateString()}</td>
+            <td>{booking.endDate.toLocaleDateString()}</td>
+            <td>{booking.state}</td>
+            <td>
+              <form method="POST" action={getUri(booking.id)}>
+                <input hidden />
+                <input
+                  type="submit"
+                  value="Cancel booking"
+                  disabled={booking.state !== "reserved"}
+                />
+              </form>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</WindbnbLayout>

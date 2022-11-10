@@ -1,7 +1,13 @@
 ---
 import "../styles/bootstrap.scss";
-import { FormDataKeys as LogoutPostFormDataKeys } from "../pages/auth/logoutHandler";
-import { FormDataKeys as LoginFormDataKeys } from "../pages/auth/loginHandler";
+import {
+  FormDataKeys as LogoutPostFormDataKeys,
+  URI as LogoutURI,
+} from "../pages/auth/logoutHandler";
+import {
+  FormDataKeys as LoginFormDataKeys,
+  URI as LoginURI,
+} from "../pages/auth/loginHandler";
 import cookies from "../cookies";
 
 export type Page = "HOME" | "BOOKING";
@@ -30,7 +36,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
       <p>Navbar placeholder</p>
       {
         hasUserid ? (
-          <form method="post" action="/auth/logoutHandler">
+          <form method="post" action={LogoutURI}>
             <input
               hidden
               type="text"
@@ -40,7 +46,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
             <input type="submit" value="Logout" />
           </form>
         ) : (
-          <form method="get" action="/auth/login">
+          <form method="get" action={LoginURI}>
             <input
               hidden
               type="text"
