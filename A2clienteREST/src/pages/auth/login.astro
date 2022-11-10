@@ -1,0 +1,30 @@
+---
+import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import { FormDataKeys } from "./loginHandler";
+
+const origin = Astro.url.searchParams.get(FormDataKeys.origin) ?? "/";
+---
+
+<WindbnbLayout title="Booking gateway">
+  <main>
+    <h1>Simple login to get the user id required for queries</h1>
+    <form method="post" action="/auth/loginHandler">
+      <input
+        hidden
+        id={FormDataKeys.origin}
+        name={FormDataKeys.origin}
+        value={origin}
+      />
+      <div class="mb-3">
+        <label for={FormDataKeys.userid} class="form-label">User id</label>
+        <input
+          type="text"
+          name={FormDataKeys.userid}
+          class="form-control"
+          id={FormDataKeys.userid}
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+  </main>
+</WindbnbLayout>

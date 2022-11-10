@@ -1,0 +1,60 @@
+---
+import "../styles/bootstrap.scss";
+import { FormDataKeys as LogoutPostFormDataKeys } from "../pages/auth/logoutHandler";
+import { FormDataKeys as LoginFormDataKeys } from "../pages/auth/loginHandler";
+import cookies from "../cookies";
+
+export type Page = "HOME" | "BOOKING";
+
+export interface Props {
+  title: string;
+  page?: Page;
+}
+
+const { title, page } = Astro.props;
+const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- TODO navbar and footer -->
+    <div>
+      <p>Navbar placeholder</p>
+      {
+        hasUserid ? (
+          <form method="post" action="/auth/logoutHandler">
+            <input
+              hidden
+              type="text"
+              name={LogoutPostFormDataKeys.origin}
+              value={Astro.url.pathname}
+            />
+            <input type="submit" value="Logout" />
+          </form>
+        ) : (
+          <form method="get" action="/auth/login">
+            <input
+              hidden
+              type="text"
+              name={LoginFormDataKeys.origin}
+              value={Astro.url.pathname}
+            />
+            <input type="submit" name="" value="Login" />
+          </form>
+        )
+      }
+    </div>
+    <div class="container">
+      <slot />
+      <div>Footer placeholder</div>
+    </div>
+  </body>
+</html>
