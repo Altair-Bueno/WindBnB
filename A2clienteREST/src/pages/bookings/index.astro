@@ -14,6 +14,8 @@ import AppConfig from "../../config";
 import { getUri } from "./[bookingId]";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 
+const ITEMS_PER_PAGE = 10;
+
 const params = Astro.url.searchParams;
 
 const beforeDate = params.get("beforeDate");
@@ -29,11 +31,10 @@ const filter: GetBookingsRequest = {
   sortBy: sortBy ? sortBy : undefined,
   ascending: ascending === "on",
   state: state ? state : undefined,
-  skip: page && page != "0" ? parseInt(page) * 10 : undefined,
+  skip: page && page != "0" ? parseInt(page) * ITEMS_PER_PAGE : undefined,
   // userId?: string;
   // houseId?: string;
   // ownerId?: string;
-  // state?: BookingStateEnum;
 };
 
 const bookingApi = new BookingApi(new BookingConfiguration(AppConfig.reservas));
@@ -176,7 +177,9 @@ const model = await Promise.all(futures);
           </li>
           <li class="page-item">
             <a
-              class={`page-link ${model.length === 0 ? "disabled" : ""}`}
+              class={`page-link ${
+                model.length < ITEMS_PER_PAGE ? "disabled" : ""
+              }`}
               href={nextUrl}>Next</a
             >
           </li>

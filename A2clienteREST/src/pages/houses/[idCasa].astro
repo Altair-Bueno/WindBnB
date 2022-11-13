@@ -1,15 +1,18 @@
 ---
+import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import {
   URI as NewBookingHandlerURI,
   FormDataKeys as NewBookingFormDataKeys,
 } from "../bookings/newHandler";
-const { idCasa } = Astro.params;
+const { idCasa } = Astro.params as { idCasa: string };
 ---
 
-<!--TODO this code is used for booking a house. Put this on the house page :P -->
-<form action={NewBookingHandlerURI} method="post">
-  <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
-  <input name={NewBookingFormDataKeys.endDate} type="date" />
-  <input name={NewBookingFormDataKeys.startDate} type="date" />
-  <input type="submit" value="Book!" />
-</form>
+<WindbnbLayout title={idCasa}>
+  <!--TODO this code is used for booking a house. Put this on the house page :P -->
+  <form action={NewBookingHandlerURI} method="post">
+    <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
+    <input name={NewBookingFormDataKeys.startDate} type="date" />
+    <input name={NewBookingFormDataKeys.endDate} type="date" />
+    <input type="submit" value="Book!" />
+  </form>
+</WindbnbLayout>

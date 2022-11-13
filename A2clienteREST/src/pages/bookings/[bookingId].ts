@@ -1,5 +1,9 @@
 import type { APIContext } from "astro";
-import { BookingApi, Configuration } from "../../api/A2reservasREST";
+import {
+  BookingApi,
+  Configuration,
+  ResponseError,
+} from "../../api/A2reservasREST";
 import AppConfig from "../../config";
 
 export function getUri(bookingId: string) {
@@ -10,16 +14,25 @@ export function getUri(bookingId: string) {
  * Cancel a Booking
  */
 export async function post(context: APIContext) {
-  const { bookingId } = context.params;
+  const { bookingId } = context.params as { bookingId: string };
 
-  if (!bookingId) {
-    return context.redirect("/");
-  }
+  const referer = new URL(
+    context.request.headers.get("referer") ?? context.url
+  );
 
   const config = new Configuration(AppConfig.reservas);
   const api = new BookingApi(config);
 
-  const response = await api.cancelBooking({ bookingId: bookingId.toString() });
+  try {
+    const response = await api.cancelBooking({
+      bookingId: bookingId.toString(),
+    });
+    referer.searchParams.set("info", response.message);
+  } catch (e) {
+    const error = e as ResponseError;
+    const msg = await error.response.json().then((x) => x.detail);
+    referer.searchParams.set("danger", msg);
+  }
 
-  return context.redirect("/bookings");
+  return context.redirect(referer.toString());
 }

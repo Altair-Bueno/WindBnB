@@ -1,6 +1,10 @@
 // I love ts...
 import type { APIContext } from "astro";
-import { BookingApi, Configuration } from "../../api/A2reservasREST";
+import {
+  BookingApi,
+  Configuration,
+  ResponseError,
+} from "../../api/A2reservasREST";
 import AppConfig from "../../config";
 import cookies from "../../cookies";
 
@@ -16,11 +20,16 @@ export const FormDataKeys = {
  * Creates a new booking
  */
 export async function post(context: APIContext) {
+  const referer = new URL(
+    context.request.headers.get("referer") ?? context.url
+  );
+
   const formData = await context.request.formData();
   const userId = context.cookies.get(cookies.USER_ID_KEY).value;
 
   if (!userId) {
-    return context.redirect("/");
+    referer.searchParams.set("danger", "User isn't log in");
+    return context.redirect(referer.toString());
   }
 
   const config = new Configuration(AppConfig.reservas);
@@ -39,8 +48,15 @@ export async function post(context: APIContext) {
     userId,
   };
 
-  const response = await api.newBooking({ newBooking });
-  const params = new URLSearchParams();
-  params.set("info", "Booked!");
-  return context.redirect(`/houses/${response.houseId}?${params}`);
+  try {
+    const response = await api.newBooking({ newBooking });
+    const params = new URLSearchParams();
+    params.set("info", "Booked!");
+    return context.redirect(`/houses/${response.houseId}?${params}`);
+  } catch (e) {
+    const error = e as ResponseError;
+    const msg = await error.response.json().then((x) => x.detail);
+    referer.searchParams.set("danger", msg);
+    return context.redirect(referer.toString());
+  }
 }
