@@ -21,6 +21,7 @@ const afterDate = params.get("afterDate");
 const sortBy = params.get("sortBy") as null | SortBookingEnum;
 const ascending = params.get("ascending");
 const state = params.get("state") as null | BookingStateEnum;
+const page = params.get("page");
 
 const filter: GetBookingsRequest = {
   beforeDate: beforeDate ? new Date(Date.parse(beforeDate)) : undefined,
@@ -28,18 +29,17 @@ const filter: GetBookingsRequest = {
   sortBy: sortBy ? sortBy : undefined,
   ascending: ascending === "on",
   state: state ? state : undefined,
+  skip: page && page != "0" ? parseInt(page) * 10 : undefined,
   // userId?: string;
-  // skip?: number;
   // houseId?: string;
   // ownerId?: string;
   // state?: BookingStateEnum;
 };
 
-const bookingConfig = new BookingConfiguration(AppConfig.reservas);
-const bookingApi = new BookingApi(bookingConfig);
-
-const viviendaConfig = new ViviendaConfiguration(AppConfig.viviendas);
-const viviendaApi = new ViviendaApi(viviendaConfig);
+const bookingApi = new BookingApi(new BookingConfiguration(AppConfig.reservas));
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
 
 // We join both entities
 const bookings = await bookingApi.getBookings(filter);
@@ -47,6 +47,18 @@ const futures = bookings.map(async (x) => {
   const house = await viviendaApi.getHouseById({ idCasa: x.houseId });
   return { ...x, house };
 });
+
+const prevUrl = new URL(Astro.url);
+const nextUrl = new URL(Astro.url);
+
+if (page) {
+  const pageNumber = parseInt(page);
+  prevUrl.searchParams.set("page", (pageNumber - 1).toString());
+  nextUrl.searchParams.set("page", (pageNumber + 1).toString());
+} else {
+  prevUrl.searchParams.delete("page");
+  nextUrl.searchParams.set("page", "1");
+}
 
 const model = await Promise.all(futures);
 ---
@@ -57,9 +69,7 @@ const model = await Promise.all(futures);
     <aside class="col-md-12 col-lg-2">
       <form>
         <div class="mb-3">
-          <label class="form-check-label" for="flexCheckDefault"
-            >Before date</label
-          >
+          <label class="form-check-label">Before date</label>
           <input
             type="date"
             name="beforeDate"
@@ -68,9 +78,7 @@ const model = await Promise.all(futures);
           />
         </div>
         <div class="mb-3">
-          <label class="form-check-label" for="flexCheckDefault"
-            >After date</label
-          >
+          <label class="form-check-label">After date</label>
           <input
             type="date"
             name="afterDate"
@@ -79,12 +87,8 @@ const model = await Promise.all(futures);
           />
         </div>
         <div class="mb-3">
-          <label class="form-check-label" for="flexCheckDefault">Sort by</label>
-          <select
-            class="form-select form-select-sm"
-            aria-label="Sort by"
-            name="sortBy"
-          >
+          <label class="form-check-label">Sort by</label>
+          <select class="form-select form-select-sm" name="sortBy">
             <option></option>
             {
               Object.values(SortBookingEnum).map((x) => (
@@ -102,21 +106,14 @@ const model = await Promise.all(futures);
               type="checkbox"
               checked={ascending}
               name="ascending"
-              id="flexCheckDefault"
             />
-            <label class="form-check-label" for="flexCheckDefault"
-              >Ascending</label
-            >
+            <label class="form-check-label">Ascending</label>
           </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-check-label" for="flexCheckDefault">State</label>
-          <select
-            class="form-select form-select-sm"
-            aria-label="Sort by"
-            name="state"
-          >
+          <label class="form-check-label">State</label>
+          <select class="form-select form-select-sm" name="state">
             <option></option>
             {
               Object.values(BookingStateEnum).map((x) => (
@@ -147,7 +144,7 @@ const model = await Promise.all(futures);
           {
             model.map((booking, idx) => (
               <tr>
-                <td>{idx + 1}</td>
+                <td>{idx + 1 + (filter.skip ?? 0)}</td>
                 <td>
                   <a href={`/houses/${booking.houseId}`}>
                     {booking.house.title}
@@ -162,6 +159,7 @@ const model = await Promise.all(futures);
                     <input
                       type="submit"
                       value="Cancel booking"
+                      class="btn btn-danger"
                       disabled={booking.state !== "reserved"}
                     />
                   </form>
@@ -171,6 +169,19 @@ const model = await Promise.all(futures);
           }
         </tbody>
       </table>
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class={`page-item ${page == "0" || !page ? "disabled" : ""}`}>
+            <a class="page-link" href={prevUrl}>Previous</a>
+          </li>
+          <li class="page-item">
+            <a
+              class={`page-link ${model.length === 0 ? "disabled" : ""}`}
+              href={nextUrl}>Next</a
+            >
+          </li>
+        </ul>
+      </nav>
     </main>
   </div>
 </WindbnbLayout>

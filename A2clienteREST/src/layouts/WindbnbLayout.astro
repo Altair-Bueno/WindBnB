@@ -44,7 +44,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
     <div>
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">{websiteName}</a>
+          <a class="navbar-brand" href="/">{websiteName}</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -115,7 +115,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
         </div>
       </nav>
     </div>
-    <div class="container">
+    <div class="container mt-3">
       {
         danger && (
           <div class="alert alert-danger" role="alert">
