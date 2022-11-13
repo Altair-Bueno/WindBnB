@@ -1,8 +1,8 @@
-from pydantic import BaseModel, BaseSettings
+from pydantic import BaseModel, BaseSettings, MongoDsn
 
 
 class MongoConfig(BaseModel):
-    url: str
+    url: MongoDsn
     collection: str
     database: str
 

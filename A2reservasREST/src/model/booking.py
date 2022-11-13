@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Optional
 
 from bson.objectid import ObjectId
-from pydantic import BaseModel, root_validator, validator
+from pydantic import BaseModel, root_validator, FutureDate
 
 from src.model.types import PyObjectId
 
@@ -30,8 +30,8 @@ class NewBooking(BaseModel):
     """Payload for creating new bookings"""
     house_id: PyObjectId
     user_id: str
-    start_date: date
-    end_date: date
+    start_date: FutureDate
+    end_date: FutureDate
 
     @root_validator
     def valid_date(cls, values):
@@ -42,13 +42,6 @@ class NewBooking(BaseModel):
             raise ValueError("Cannot end booking on a past date")
 
         return values
-
-    @validator("start_date")
-    def no_past_reservations(cls, v):
-        if date.today() <= v:
-            return v
-        else:
-            raise ValueError("Cannot book on a past date")
 
     class Config:
         json_encoders = {ObjectId: str}
