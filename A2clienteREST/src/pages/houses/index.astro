@@ -12,9 +12,13 @@ import {
 import AppConfig from "../../config";
 
 const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+const viviendas = await viviendaApi.getViviendas()
 
 ---
 
 <WindbnbLayout title="Viviendas">
-  <ViviendaComponent/>
+  {
+    viviendas.map(vivienda=> <ViviendaComponent vivienda = {vivienda} />)
+    }
+
 </WindbnbLayout>
