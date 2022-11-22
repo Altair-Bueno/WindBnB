@@ -1,8 +1,20 @@
 ---
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
-import Vivienda from "../../components/Vivienda.astro";
+import ViviendaComponent from "../../components/ViviendaComponent.astro";
+
+import { ViviendaApi } from "../../api/A2viviendasREST/apis";
+
+import {
+  Configuration as ViviendaConfiguration,
+  Vivienda,
+} from "../../api/A2viviendasREST"
+
+import AppConfig from "../../config";
+
+const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+
 ---
 
 <WindbnbLayout title="Viviendas">
-  <Vivienda/>
+  <ViviendaComponent/>
 </WindbnbLayout>

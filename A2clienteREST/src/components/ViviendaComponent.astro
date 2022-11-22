@@ -1,0 +1,24 @@
+---
+import { ViviendaApi } from "../api/A2viviendasREST/apis";
+
+import {
+  Configuration as ViviendaConfiguration,
+  Vivienda,
+} from "../api/A2viviendasREST"
+
+import AppConfig from "../config";
+
+const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+
+const {idCasa} = Astro.params as {idCasa: string};
+const viv = await viviendaApi.getHouseById({idCasa});
+---
+<div class="card mb-5" style="width: 50rem;">
+    <img src="https://s37805.pcdn.co/fotocasa-life/wp-content/uploads/2019/11/bancos-4.jpg" class="card-img-top" alt="foto de la vivienda">
+    <div class="card-body">
+      <h5 class="card-title"><a href="/{bookings}">{viv.title}</a></h5>
+      <p class="card-text">Descripción de la vivienda{viv.description}</p>
+      <p class="card-text">Localización{viv.location}</p>
+      <p class="card-text">Precio/mes</p>
+    </div>
+  </div>
