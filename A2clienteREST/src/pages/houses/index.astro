@@ -1,24 +1,20 @@
 ---
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import ViviendaComponent from "../../components/ViviendaComponent.astro";
+
+import { ViviendaApi } from "../../api/A2viviendasREST/apis";
+
+import {
+  Configuration as ViviendaConfiguration,
+  Vivienda,
+} from "../../api/A2viviendasREST"
+
+import AppConfig from "../../config";
+
+const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+
 ---
 
 <WindbnbLayout title="Viviendas">
-  <div class="card mb-5" style="width: 50rem;">
-    <img src="https://s37805.pcdn.co/fotocasa-life/wp-content/uploads/2019/11/bancos-4.jpg" class="card-img-top" alt="foto de la vivienda">
-    <div class="card-body">
-      <h5 class="card-title"><a href="/bookings">Titulo vivienda</a></h5>
-      <p class="card-text">Descripción de la vivienda</p>
-      <p class="card-text">Localización</p>
-      <p class="card-text">Precio/mes</p>
-    </div>
-  </div>
-
-  <div class="card" style="width: 60rem;">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">Vivienda 2</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div>
+  <ViviendaComponent/>
 </WindbnbLayout>
