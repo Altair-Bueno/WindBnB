@@ -1,18 +1,74 @@
 ---
+import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import AppConfig from "../../config";
+import {
+  Configuration as ViviendaConfiguration,
+  Vivienda,
+} from "../../api/A2viviendasREST";
+import Carousel from "../../components/Carousel.astro";
 import {
   URI as NewBookingHandlerURI,
   FormDataKeys as NewBookingFormDataKeys,
 } from "../bookings/newHandler";
 const { idCasa } = Astro.params as { idCasa: string };
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
+
+const viv: Vivienda = await viviendaApi.getHouseById({ idCasa });
 ---
 
-<WindbnbLayout title={idCasa}>
-  <!--TODO this code is used for booking a house. Put this on the house page :P -->
-  <form action={NewBookingHandlerURI} method="post">
-    <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
-    <input name={NewBookingFormDataKeys.startDate} type="date" />
-    <input name={NewBookingFormDataKeys.endDate} type="date" />
-    <input type="submit" value="Book!" />
-  </form>
+<WindbnbLayout title={viv?.title}>
+  <body>
+    <div
+      class="position-relative overflow-hidden p-3 p-md-2 m-md-2 text-center bg-light"
+    >
+      <div class="col-md-10 p-lg-2 mx-auto">
+        <h1 class="display-6 fw-normal">{viv?.title}</h1>
+        <p class="lead fw-normal">{viv?.description}</p>
+      </div>
+    </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+      <div
+        class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
+      >
+        <div class="my-3 p-3">
+          <h2 class="display-5">¡Reserva ya!</h2>
+          <p class="lead">Consulta las fechas disponibles.</p>
+          <small class="lead">En este momento se encuentra {viv?.state == "available" ? "disponible" : "ocupada"}</small>
+        </div>
+        <div
+          class="bg-body shadow-sm mx-auto"
+          style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"
+        >
+          <div class="text-center pt-3 mx-auto" style="width: 90%;">
+            <form>
+              <div class="mb-3">
+                <label for="fromDateInput" class="form-label">Desde:</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fromDateInput"
+                  aria-describedby="from date input"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="toDateInput" class="form-label">Hasta:</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="toDateInput"
+                  aria-describedby="to date input"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Reservar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <Carousel urls={viv?.urlPhoto}/>
+    </div>
+  </body>
 </WindbnbLayout>
