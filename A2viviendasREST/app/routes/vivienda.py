@@ -1,3 +1,4 @@
+from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.openapi.models import Response
@@ -19,6 +20,11 @@ vivienda = APIRouter(tags=["Vivienda"])
 NOT_FOUND_RESPONSE = {
     404: {"model": ApiError}
 }
+
+"""Get all viviendas"""
+@vivienda.get("/viviendas", response_model=List[Vivienda], operation_id="getViviendas")
+async def get_viviendas(service: ViviendaService = Depends(get_vivienda_service)):
+    return await service.get_viviendas()
 
 
 @vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_house")

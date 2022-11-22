@@ -41,3 +41,4 @@ def get_vivienda_service(collection=Depends(get_windbnb_collection)) -> Vivienda
 def get_booking_service(collection=Depends(get_windbnb_collection)) -> BookingService:
     return BookingService(collection)
 """
+
