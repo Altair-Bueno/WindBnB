@@ -21,6 +21,7 @@ class Vivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -34,6 +35,7 @@ class NewVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -46,6 +48,7 @@ class EditVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: Optional[str]
     latitude: Optional[str]
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}
