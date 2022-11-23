@@ -13,6 +13,6 @@ const { vivienda } = Astro.props as {vivienda:Vivienda};
       <h5 class="card-title"><a href={`/houses/${vivienda.id}`}>{vivienda.title}</a></h5>
       <p class="card-text">{vivienda.description}</p>
       <p class="card-text">{vivienda.location}</p>
-      <p class="card-text">Precio/mes</p>
+      <p class="card-text">{vivienda.price}€/mes</p>
     </div>
   </div>
