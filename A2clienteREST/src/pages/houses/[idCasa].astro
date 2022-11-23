@@ -16,7 +16,15 @@ const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
 );
 
-const viv: Vivienda = await viviendaApi.getHouseById({ idCasa });
+let viv : Vivienda;
+
+try{
+  viv = await viviendaApi.getHouseById({ idCasa });
+} catch (error){
+  return Astro.redirect("/?" + new URLSearchParams({danger: "Cant find house with that ID"}));
+}
+
+
 ---
 
 <WindbnbLayout title={viv?.title}>
@@ -44,11 +52,13 @@ const viv: Vivienda = await viviendaApi.getHouseById({ idCasa });
           style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"
         >
           <div class="text-center pt-3 mx-auto" style="width: 90%;">
-            <form>
+            <form action={NewBookingHandlerURI} method="post">
+              <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
               <div class="mb-3">
                 <label for="fromDateInput" class="form-label">Desde:</label>
                 <input
                   type="date"
+                  name={NewBookingFormDataKeys.startDate}
                   class="form-control"
                   id="fromDateInput"
                   aria-describedby="from date input"
@@ -58,6 +68,7 @@ const viv: Vivienda = await viviendaApi.getHouseById({ idCasa });
                 <label for="toDateInput" class="form-label">Hasta:</label>
                 <input
                   type="date"
+                  name={NewBookingFormDataKeys.endDate}
                   class="form-control"
                   id="toDateInput"
                   aria-describedby="to date input"

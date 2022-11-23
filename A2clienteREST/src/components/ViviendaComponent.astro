@@ -7,9 +7,7 @@ import {
 } from "../api/A2viviendasREST"
 
 import AppConfig from "../config";
-
 const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
-
 const {idCasa} = Astro.params as {idCasa: string};
 const viv = await viviendaApi.getHouseById({idCasa});
 ---

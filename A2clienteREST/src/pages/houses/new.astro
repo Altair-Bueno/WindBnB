@@ -1,0 +1,52 @@
+---
+import { NewHouseRequest, ViviendaApi } from "../../api/A2viviendasREST/apis/ViviendaApi";
+import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import AppConfig from "../../config";
+import {
+  Configuration as ViviendaConfiguration,
+  NewVivienda,
+  Vivienda
+} from "../../api/A2viviendasREST";
+
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
+
+let newHouseRequest : NewHouseRequest;
+let newVivienda : NewVivienda;
+
+/*
+newVivienda = {
+    title: Astro.url.searchParams.get("title"),
+    userId: "123",
+    location : ,
+    latitude: ,
+    longitude : ,
+}
+*/
+
+//viviendaApi.newHouse({newVivienda});
+
+
+---
+<WindbnbLayout title="New house">
+    <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
+        <form action="/houses/newHandler" method="post">
+            <input hidden value="EXAMPLE_USER_HARDCODED" name="userId" />
+            <div class="mb-3">
+              <label for="title" class="form-label">Título</label>
+              <input type="text" name="title" class="form-control" id="title" aria-describedby="emailHelp" required>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <input type="text" name="description" class="form-control" id="description">
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Ubicación</label>
+                <input type="text" name="location" class="form-control" id="location" required>
+            </div>
+            <p>TODO: Upload photos.</p>
+            <button type="submit" class="btn btn-primary">Crear</button>
+          </form>
+    </div>
+</WindbnbLayout>
