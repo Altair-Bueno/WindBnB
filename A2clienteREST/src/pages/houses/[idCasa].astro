@@ -2,11 +2,19 @@
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import Map from "../../components/Map.svelte";
+import Layout from "../../layouts/Layout.astro";
+import cookies from "../../cookies"
 import AppConfig from "../../config";
 import {
   Configuration as ViviendaConfiguration,
   Vivienda,
 } from "../../api/A2viviendasREST";
+import { 
+    EESSPrecio, 
+    GasStationsApi, 
+    GetGasStationsByRadiusRequest,
+    Configuration as DatosAbiertosConfiguration,
+} from "../../api/A2datosabiertosREST";
 import Carousel from "../../components/Carousel.astro";
 import {
   URI as NewBookingHandlerURI,
@@ -28,6 +36,16 @@ try{
 const deleteHouseURI = "/houses/delete/" + idCasa;
 const editHouseURI = "/houses/edit/" + idCasa;
 
+const requestParameters: GetGasStationsByRadiusRequest = {
+    latitude: parseFloat(viv?.latitude),
+    longitude: parseFloat(viv?.longitude)
+}
+
+const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
+const gasStationsInRadius: EESSPrecio[] = await gasStationApi.getGasStationsByRadius(requestParameters);
+
+const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
+
 
 ---
 
@@ -39,13 +57,21 @@ const editHouseURI = "/houses/edit/" + idCasa;
         <p class="lead fw-normal">{viv?.description}</p>
         <p class="lead fw-normal">{viv?.price} euros/noche.</p>
       </div>
-      <form action={deleteHouseURI} method="post">
-        <button class="btn btn-danger" type="submit">Eliminar vivienda</button>
-      </form>
+      {
+        userId === viv?.userId && (
+        <div>
+                    <form action={deleteHouseURI} method="post">
+                    <button class="btn btn-danger" type="submit">Eliminar vivienda</button>
+                    </form>
 
-      <form class="pt-2" action={editHouseURI} method="post">
-        <button class="btn btn-warning" type="submit">Modificar vivienda</button>
-      </form>
+                    <form class="pt-2" action={editHouseURI} method="post">
+                    <button class="btn btn-warning" type="submit">Modificar vivienda</button>
+                    </form>
+                  </div>
+        )
+      }
+        
+      
     </div>
 
     <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
@@ -92,8 +118,11 @@ const editHouseURI = "/houses/edit/" + idCasa;
       <div class="col-lg-7 col-sm-12">
         <Carousel urls={viv?.urlPhoto}/>
       </div>
-      
     </div>
-    <!-- <Map coordinates={{latitude: parseFloat(viv?.latitude), longitude: parseFloat(viv?.longitude)}} ></Map> -->
+    <div class="col-12">
+      <Layout title="Map">
+        <Map client:load coordinates={requestParameters} gasStations={gasStationsInRadius} />
+      </Layout>
+    </div>
   </body>
 </WindbnbLayout>
