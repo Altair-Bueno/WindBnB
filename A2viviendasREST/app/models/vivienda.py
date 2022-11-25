@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 from bson import ObjectId
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PositiveFloat
 from app.models.types import PyObjectId
 from typing import List
 
@@ -21,7 +21,7 @@ class Vivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
-    price: int
+    price: PositiveFloat
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -35,7 +35,7 @@ class NewVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
-    price: int
+    price: PositiveFloat
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -48,7 +48,7 @@ class EditVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: Optional[str]
     latitude: Optional[str]
-    price: Optional[int]
+    price: Optional[PositiveFloat]
 
     class Config:
         json_encoders = {ObjectId: str}
