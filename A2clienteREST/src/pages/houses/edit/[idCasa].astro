@@ -1,0 +1,65 @@
+---
+import { ViviendaApi } from "../../../api/A2viviendasREST/apis";
+import WindbnbLayout from "../../../layouts/WindbnbLayout.astro";
+import AppConfig from "../../../config";
+import {
+  Configuration as ViviendaConfiguration,
+  Vivienda,
+} from "../../../api/A2viviendasREST";
+import Carousel from "../../../components/Carousel.astro";
+import {
+  URI as NewBookingHandlerURI,
+  FormDataKeys as NewBookingFormDataKeys,
+} from "../../bookings/newHandler";
+const { idCasa } = Astro.params as { idCasa: string };
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
+
+let viv : Vivienda;
+
+try{
+  viv = await viviendaApi.getHouseById({ idCasa });
+} catch (error){
+  return Astro.redirect("/?" + new URLSearchParams({danger: "Cant find house with that ID"}));
+}
+
+const loc = viv?.location;
+console.log(loc);
+const loc_splitted = loc.split(", ");
+
+---
+
+<WindbnbLayout title="Edit house">
+    <form action="/houses/edit/editHandler" method="post">
+      <input type="text" value={idCasa} name="idCasa" hidden>
+        <div class="mb-3">
+          <label for="title" class="form-label">Título</label>
+          <input type="text" value={viv?.title} name="title" class="form-control" id="title" aria-describedby="title">
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Descripción</label>
+          <input type="text" value={viv?.description} name="description" class="form-control" id="description">
+        </div>
+        <div class="mb-3">
+          <label for="street" class="form-label">Calle</label>
+          <input type="text" value={loc_splitted[0]} name="street" class="form-control" id="street">
+          <label for="number" class="form-label">Número</label>
+          <input type="text" value={loc_splitted[1]} name="number" class="form-control" id="number">
+          <label for="number" class="form-label">Ciudad</label>
+          <input type="text" value={loc_splitted[2]} name="ciudad" class="form-control" id="ciudad">
+          <label for="province" class="form-label">Provincia</label>
+          <input type="text" value={loc_splitted[3]} name="province" class="form-control" id="province">
+          <label for="cp" class="form-label">Código postal</label>
+          <input type="text" value={loc_splitted[4]} name="cp" class="form-control" id="cp">
+          <label for="country" class="form-label">País</label>
+          <input type="text" value={loc_splitted[5]} name="country" class="form-control" id="country">
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Precio por noche</label>
+          <input type="number" value={viv?.price} name="price" class="form-control" id="price">
+      </div>
+        <p>TODO: Upload photos.</p>
+        <button type="submit" class="btn btn-primary">Modificar datos</button>
+    </form>
+</WindbnbLayout>

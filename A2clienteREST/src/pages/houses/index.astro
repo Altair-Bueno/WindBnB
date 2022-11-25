@@ -17,11 +17,11 @@ const viviendas = await viviendaApi.getViviendas()
 ---
 
 <WindbnbLayout title="Viviendas">
-<<<<<<< HEAD
-=======
+  <form class="pb-3" method="post" action="/houses/new"> 
+    <button class="btn btn-primary">Crear vivienda</button>
+  </form>
   {
     viviendas.map(vivienda=> <ViviendaComponent vivienda = {vivienda} />)
-    }
+  }
 
->>>>>>> ae06192d64ea2f93336af122c2a03a8fe6204b91
 </WindbnbLayout>

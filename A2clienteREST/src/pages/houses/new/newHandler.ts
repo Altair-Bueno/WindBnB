@@ -1,7 +1,7 @@
 import type { APIContext } from "astro";
-import { Configuration, NewHouseRequest, NewVivienda, ResponseError, ViviendaApi } from "../../api/A2viviendasREST";
-import cookies from "../../cookies";
-import AppConfig from "../../config";
+import { Configuration, NewHouseRequest, NewVivienda, ResponseError, ViviendaApi } from "../../../api/A2viviendasREST";
+import cookies from "../../../cookies";
+import AppConfig from "../../../config";
 
 interface GeoCodingData{
     latitude : string,
@@ -22,15 +22,19 @@ async function getGeocoding(calle : string){
             return res;
         }
     )
-
-    
-
 }
 
 export const FormDataKeys = {
     title: "title",
     description: "description",
-    location: "location"
+    street: "street",
+    number: "number",
+    city: "city",
+    province: "province",
+    cp: "cp",
+    country: "country",
+    //location: "location",
+    price: "price"
   };
   
   /**
@@ -54,16 +58,24 @@ export const FormDataKeys = {
     const config = new Configuration(AppConfig.viviendas);
     const api = new ViviendaApi(config);
 
-    const loc : string = formData.get(FormDataKeys.location)?.toString() ?? "";
+    const calle = formData.get(FormDataKeys.street)?.toString() ?? "";
+    const numero = formData.get(FormDataKeys.number)?.toString() ?? "";
+    const ciudad = formData.get(FormDataKeys.city)?.toString() ?? "";
+    const provincia = formData.get(FormDataKeys.province)?.toString() ?? "";
+    const cp = formData.get(FormDataKeys.cp)?.toString() ?? "";
+    const pais = formData.get(FormDataKeys.country)?.toString() ?? "";
 
-    const geoRes : GeoCodingResult = await getGeocoding(loc);
+    
+    const loc : string = calle + ", " + numero + ", " + ciudad + ", " + provincia + ", " + cp + ", " + pais;
 
-    console.log(geoRes.data);
+    //const geoRes : GeoCodingResult = await getGeocoding(loc);
+    const geoRes = await getGeocoding(loc);
 
 
     let newHouse : NewVivienda = {
         title: formData.get(FormDataKeys.title)?.toString() ?? "",
         description: formData.get(FormDataKeys.description)?.toString() ?? "",
+        price: parseInt(formData.get(FormDataKeys.price)?.toString() ?? "0"),
         location: loc,
         userId : userId,
         latitude: geoRes.data[0].latitude,

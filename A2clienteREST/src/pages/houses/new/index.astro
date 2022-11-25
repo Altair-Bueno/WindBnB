@@ -1,0 +1,71 @@
+---
+import { NewHouseRequest, ViviendaApi } from "../../../api/A2viviendasREST/apis/ViviendaApi";
+import WindbnbLayout from "../../../layouts/WindbnbLayout.astro";
+import AppConfig from "../../../config";
+import {
+  Configuration as ViviendaConfiguration,
+  NewVivienda,
+  Vivienda
+} from "../../../api/A2viviendasREST";
+
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
+
+let newHouseRequest : NewHouseRequest;
+let newVivienda : NewVivienda;
+
+/*
+newVivienda = {
+    title: Astro.url.searchParams.get("title"),
+    userId: "123",
+    location : ,
+    latitude: ,
+    longitude : ,
+}
+*/
+
+//viviendaApi.newHouse({newVivienda});
+
+
+---
+<WindbnbLayout title="New house">
+    <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
+        <form action="/houses/new/newHandler" method="post">
+            <input hidden value="EXAMPLE_USER_HARDCODED" name="userId" />
+            <div class="mb-3">
+              <label for="title" class="form-label">Título</label>
+              <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" required>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <input type="text" name="description" class="form-control" id="description">
+            </div>
+            <div class="mb-3">
+              <!-- 
+                <label for="location" class="form-label">Ubicación</label>
+                <input type="text" name="location" class="form-control" id="location" required>
+                
+              -->
+              <label for="street" class="form-label">Calle</label>
+              <input type="text" name="street" class="form-control" id="street" required>
+              <label for="number" class="form-label">Número</label>
+              <input type="text" name="number" class="form-control" id="number" required>
+              <label for="city" class="form-label">Ciudad</label>
+              <input type="text" name="city" class="form-control" id="city" required>
+              <label for="province" class="form-label">Provincia</label>
+              <input type="text" name="province" class="form-control" id="province" required>
+              <label for="cp" class="form-label">Código postal</label>
+              <input type="text" name="cp" class="form-control" id="cp" required>
+              <label for="country" class="form-label">País</label>
+              <input type="text" name="country" class="form-control" id="country" required>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Precio por noche</label>
+              <input type="number" name="price" class="form-control" id="price" required>
+          </div>
+            <p>TODO: Upload photos.</p>
+            <button type="submit" class="btn btn-primary">Crear</button>
+          </form>
+    </div>
+</WindbnbLayout>

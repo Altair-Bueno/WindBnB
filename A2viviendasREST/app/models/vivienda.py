@@ -48,7 +48,7 @@ class EditVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: Optional[str]
     latitude: Optional[str]
-    price: int
+    price: Optional[int]
 
     class Config:
         json_encoders = {ObjectId: str}
