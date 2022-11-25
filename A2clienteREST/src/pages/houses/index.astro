@@ -17,9 +17,24 @@ const viviendas = await viviendaApi.getViviendas()
 ---
 
 <WindbnbLayout title="Viviendas">
-  <form class="pb-3" method="post" action="/houses/new"> 
-    <button class="btn btn-primary">Crear vivienda</button>
+
+  <div class="row">
+    <h1>Filtros</h1>
+    <aside class="col-md-1 col-lg-2">
+      <form>
+        <div class="mb-3">
+          <label class="form-check-label">Buscar por título de la vivienda</label>
+          <input
+            type="text"
+            name="nombreVivienda"
+            value=""
+            class="form-control"
+          />
+    </div>
   </form>
+  </aside>
+  </div>
+
   {
     viviendas.map(vivienda=> <ViviendaComponent vivienda = {vivienda} />)
   }
