@@ -7,6 +7,7 @@ import {
   NewVivienda,
   Vivienda
 } from "../../../api/A2viviendasREST";
+import Cloudinary from "../../../components/Cloudinary.svelte";
 
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
@@ -15,38 +16,12 @@ const viviendaApi = new ViviendaApi(
 let newHouseRequest : NewHouseRequest;
 let newVivienda : NewVivienda;
 ---
-<WindbnbLayout title="New house">
+<WindbnbLayout title="New house" page={"NEW_HOUSE"}>
     <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
-        <form action="/houses/new/newHandler" method="post">
-            <input hidden value="EXAMPLE_USER_HARDCODED" name="userId" />
-            <div class="mb-3">
-              <label for="title" class="form-label">Título</label>
-              <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" required>
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <input type="text" name="description" class="form-control" id="description">
-            </div>
-            <div class="mb-3">
-              <label for="street" class="form-label">Calle</label>
-              <input type="text" name="street" class="form-control" id="street" required>
-              <label for="number" class="form-label">Número</label>
-              <input type="text" name="number" class="form-control" id="number" required>
-              <label for="city" class="form-label">Ciudad</label>
-              <input type="text" name="city" class="form-control" id="city" required>
-              <label for="province" class="form-label">Provincia</label>
-              <input type="text" name="province" class="form-control" id="province" required>
-              <label for="cp" class="form-label">Código postal</label>
-              <input type="text" name="cp" class="form-control" id="cp" required>
-              <label for="country" class="form-label">País</label>
-              <input type="text" name="country" class="form-control" id="country" required>
-            </div>
-            <div class="mb-3">
-              <label for="price" class="form-label">Precio por noche</label>
-              <input type="number" name="price" class="form-control" id="price" required>
-          </div>
-            <p>TODO: Upload photos.</p>
-            <button type="submit" class="btn btn-primary">Crear</button>
-          </form>
+      <Cloudinary
+        cloudName= {import.meta.env.CLOUDINARY_CLOUD_NAME}
+        uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
+        client:load
+      />
     </div>
 </WindbnbLayout>

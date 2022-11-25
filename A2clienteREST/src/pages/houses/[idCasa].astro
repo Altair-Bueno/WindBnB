@@ -1,6 +1,7 @@
 ---
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import Map from "../../components/Map.svelte";
 import AppConfig from "../../config";
 import {
   Configuration as ViviendaConfiguration,
@@ -30,11 +31,9 @@ const editHouseURI = "/houses/edit/" + idCasa;
 
 ---
 
-<WindbnbLayout title={viv?.title}>
+<WindbnbLayout title={viv?.title} page={"HOME"}>
   <body>
-    <div
-      class="position-relative overflow-hidden p-3 p-md-2 m-md-2 text-center bg-light"
-    >
+    <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 text-center bg-light">
       <div class="col-md-10 p-lg-2 mx-auto">
         <h1 class="display-6 fw-normal">{viv?.title}</h1>
         <p class="lead fw-normal">{viv?.description}</p>
@@ -90,7 +89,11 @@ const editHouseURI = "/houses/edit/" + idCasa;
           </div>
         </div>
       </div>
-      <Carousel urls={viv?.urlPhoto}/>
+      <div class="col-lg-7 col-sm-12">
+        <Carousel urls={viv?.urlPhoto}/>
+      </div>
+      
     </div>
+    <!-- <Map coordinates={{latitude: parseFloat(viv?.latitude), longitude: parseFloat(viv?.longitude)}} ></Map> -->
   </body>
 </WindbnbLayout>

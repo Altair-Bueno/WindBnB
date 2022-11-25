@@ -44,8 +44,8 @@ export const FormDataKeys = {
         context.request.headers.get("referer") ?? context.url
     );
   
-    const formData = await context.request.formData();
-    const userId = context.cookies.get(cookies.USER_ID_KEY).value;
+    //const formData = await context.request.formData();
+   const userId = context.cookies.get(cookies.USER_ID_KEY).value;
 
     if (!userId) {
         referer.searchParams.set("danger", "User isn't log in");
@@ -55,33 +55,56 @@ export const FormDataKeys = {
     const config = new Configuration(AppConfig.viviendas);
     const api = new ViviendaApi(config);
 
+
+    /*
     const calle = formData.get(FormDataKeys.street)?.toString() ?? "";
     const numero = formData.get(FormDataKeys.number)?.toString() ?? "";
     const ciudad = formData.get(FormDataKeys.city)?.toString() ?? "";
     const provincia = formData.get(FormDataKeys.province)?.toString() ?? "";
     const cp = formData.get(FormDataKeys.cp)?.toString() ?? "";
     const pais = formData.get(FormDataKeys.country)?.toString() ?? "";
+    */
 
-    
-    const loc : string = calle + ", " + numero + ", " + ciudad + ", " + provincia + ", " + cp + ", " + pais;
+    const data = await context.request.json();
+    const {
+        title,
+        description,
+        street,
+        number,
+        city,
+        province,
+        cp,
+        country,
+        price,
+        image
+    } = data;
+
+    const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
     const geoRes = await getGeocoding(loc);
 
+    
     let newHouse : NewVivienda = {
-        title: formData.get(FormDataKeys.title)?.toString() ?? "",
-        description: formData.get(FormDataKeys.description)?.toString() ?? "",
-        price: parseInt(formData.get(FormDataKeys.price)?.toString() ?? "0"),
+        title,
+        description,
+        price,
         location: loc,
-        userId : userId,
+        userId,
         latitude: geoRes.data[0].latitude,
-        longitude: geoRes.data[0].longitude
+        longitude: geoRes.data[0].longitude,
+        urlPhoto: image
     };
-  
+    
     try {
         const newHouseRequest : NewHouseRequest = {
             newVivienda : newHouse
         } 
         const response = await api.newHouse(newHouseRequest);
-        return context.redirect(`/houses/${response.id}`);
+        //return context.redirect(`/houses/${response.id}`);
+        return {
+            body: JSON.stringify({
+                redirect: `/houses/${response.id}`
+            })
+            }
         } catch (e) {
         const error = e as ResponseError;
         const msg = await error.response.json().then((x) => x.detail[0]);

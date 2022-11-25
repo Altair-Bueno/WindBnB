@@ -5,10 +5,10 @@ export interface Props{
 
 const { urls } = Astro.props;
 ---
+<!--
 
-<!DOCTYPE html>
-<html lang="en">
-    <script src="bootstrap/js/dist/carousel.js"/>
+<div class="container">
+  <script src="bootstrap/js/dist/carousel.js"/>
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
     {
         urls?.map((url : string, index : number) => {
@@ -16,6 +16,28 @@ const { urls } = Astro.props;
                         <img src={url} class="d-block w-100" style="height: 500px;" />
                     </div>
         })
+    }
+    </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+-->
+<script src="bootstrap/js/dist/carousel.js"/>
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {
+      urls?.map((url : string, index : number) => {
+          return <div class={index === 0 ? "carousel-item active" : "carousel-item"} style="height: 500px;">
+                      <img src={url} class="d-block w-100" style="height: 500px;" />
+                  </div>
+      })
     }
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -26,5 +48,4 @@ const { urls } = Astro.props;
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
-
-</html>
+</div>
