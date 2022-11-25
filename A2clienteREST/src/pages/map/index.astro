@@ -1,0 +1,31 @@
+---
+import Map from "../../components/Map.svelte";
+import Layout from "../../layouts/Layout.astro";
+import 'leaflet/dist/leaflet.css';
+import { 
+    EESSPrecio, 
+    GasStationsApi, 
+    GetGasStationsByRadiusRequest,
+    Configuration as DatosAbiertosConfiguration,
+} from "../../api/A2datosabiertosREST";
+import AppConfig from "../../config";
+import type { Coordinates } from "../../data/types/map";
+
+const coordinates: Coordinates = {
+    latitude: 39, 
+    longitude: -1.85
+}
+
+const requestParameters: GetGasStationsByRadiusRequest = {
+    latitude: coordinates.latitude,
+    longitude: coordinates.longitude
+}
+
+const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
+const gasStationsInRadius: EESSPrecio[] = await gasStationApi.getGasStationsByRadius(requestParameters);
+---
+
+<Layout title="Map">
+    <h1>Mapa:</h1>
+    <Map client:load coordinates={coordinates} gasStations={gasStationsInRadius}/>
+</Layout>
