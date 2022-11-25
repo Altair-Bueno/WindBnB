@@ -21,11 +21,7 @@ ALREADY_BOOKED_RESPONSE = {
     409: {"model": ApiError}
 }
 
-@router.get(
-    "", 
-    response_model=List[Booking], 
-    operation_id="get_bookings"
-)
+@router.get("", response_model=List[Booking], operation_id="get_bookings")
 async def get_bookings(
     user_id: Optional[str] = None,
     before_date: Optional[date] = None,

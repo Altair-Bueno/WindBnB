@@ -6,5 +6,9 @@ def viviendaEntity(item) -> dict:
         "user_id": item["user_id"],
         "location": item["location"],
         "state": item["state"],
-        "bookings": item["bookings"]
+        "bookings": item["bookings"],
+        "url_photo": item["url_photo"],
+        "longitude": item["longitude"],
+        "latitude": item["latitude"],
+        "price": item["price"]
     }

@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 from bson import ObjectId
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.models.types import PyObjectId
 from typing import List
 
@@ -12,7 +12,7 @@ class viviendaStateEnum(str, Enum):
 
 
 class Vivienda(BaseModel):
-    id: PyObjectId
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
     description: Optional[str]
     user_id: str
@@ -21,6 +21,7 @@ class Vivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -34,6 +35,7 @@ class NewVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: str
     latitude: str
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -46,6 +48,7 @@ class EditVivienda(BaseModel):
     url_photo: Optional[List[str]]
     longitude: Optional[str]
     latitude: Optional[str]
+    price: int
 
     class Config:
         json_encoders = {ObjectId: str}

@@ -1,9 +1,8 @@
 
-from typing import Collection, Optional
+from typing import Collection, List, Optional
 from bson import ObjectId
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
-from requests import request
 from app.service.error import NotFoundError
 from app.models.types import PyObjectId
 from app.models.vivienda import viviendaStateEnum
@@ -15,6 +14,10 @@ class ViviendaService:
 
     def __init__(self, collection: AsyncIOMotorCollection):
         self.collection = collection
+
+    async def get_viviendas(self) -> List[Vivienda]:
+        res = [x async for x in self.collection.find()]
+        return res
 
     async def new_vivienda(self, request: NewVivienda) -> Vivienda:
         document = request.dict()
