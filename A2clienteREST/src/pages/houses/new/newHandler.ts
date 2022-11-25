@@ -33,7 +33,6 @@ export const FormDataKeys = {
     province: "province",
     cp: "cp",
     country: "country",
-    //location: "location",
     price: "price"
   };
   
@@ -46,15 +45,13 @@ export const FormDataKeys = {
     );
   
     const formData = await context.request.formData();
-    //const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-    const userId = "HARDCODED_USERNAME";
-    
+    const userId = context.cookies.get(cookies.USER_ID_KEY).value;
+
     if (!userId) {
         referer.searchParams.set("danger", "User isn't log in");
         return context.redirect(referer.toString());
     }
     
-  
     const config = new Configuration(AppConfig.viviendas);
     const api = new ViviendaApi(config);
 
@@ -67,10 +64,7 @@ export const FormDataKeys = {
 
     
     const loc : string = calle + ", " + numero + ", " + ciudad + ", " + provincia + ", " + cp + ", " + pais;
-
-    //const geoRes : GeoCodingResult = await getGeocoding(loc);
     const geoRes = await getGeocoding(loc);
-
 
     let newHouse : NewVivienda = {
         title: formData.get(FormDataKeys.title)?.toString() ?? "",
@@ -90,8 +84,10 @@ export const FormDataKeys = {
         return context.redirect(`/houses/${response.id}`);
         } catch (e) {
         const error = e as ResponseError;
-        const msg = await error.response.json().then((x) => x.detail);
-        referer.searchParams.set("danger", msg);
+        const msg = await error.response.json().then((x) => x.detail[0]);
+        if(msg.type === "value_error.number.not_gt"){
+            referer.searchParams.set("danger", "El precio debe ser mayor que 0");
+        }
         return context.redirect(referer.toString());
     }
   }
