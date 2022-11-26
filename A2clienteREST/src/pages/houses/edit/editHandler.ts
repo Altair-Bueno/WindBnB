@@ -33,9 +33,26 @@ export async function post(context: APIContext) {
 
 
     const referer = new URL(context.request.headers.get("referer") ?? context.url);
-    const formData = await context.request.formData();
-    const idCasa  = formData.get("idCasa")?.toString() ?? "";
     const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+
+    const data = await context.request.json();
+    const {
+        idCasa,
+        title,
+        description,
+        street,
+        number,
+        city,
+        province,
+        cp,
+        country,
+        price,
+        image
+    } = data;
+    
+    /*
+    
+    
 
     const titulo = formData.get("title")?.toString() ?? "";
     const descripcion = formData.get("description")?.toString() ?? "";
@@ -46,38 +63,35 @@ export async function post(context: APIContext) {
     const cp = formData.get("cp")?.toString() ?? "";
     const pais = formData.get("country")?.toString() ?? "";
     const precio = formData.get("price")?.toString() ?? "";
+    */
 
     viv = await viviendaApi.getHouseById({ idCasa });
 
 
-    const loc : string = calle + ", " + numero + ", " + ciudad + ", " + provincia + ", " + cp + ", " + pais;
+    const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
+    const geoRes = await getGeocoding(loc);
+    const lat = geoRes.data[0].latitude;
+    const lon = geoRes.data[0].longitude;   
 
-    let lat;
-    let lon;    
-    if(calle != "" && numero != "" && ciudad != "" && provincia != "" && cp != "" && pais != ""){
-        const geoRes = await getGeocoding(loc);
-        lat = geoRes.data[0].latitude;
-        lon = geoRes.data[0].longitude; 
-    } else {
-        lat = "";
-        lon = "";
-    }
 
     const editVivienda : EditVivienda = {
-        title : titulo == "" ? viv?.title : titulo,
-        description : descripcion == "" ? viv?.description : descripcion,
-        price: precio != null ? viv?.price : parseInt(precio),
-        location : loc == "" ? viv?.location : loc,
-        latitude : lat == "" ? viv?.latitude : lat,
-        longitude : lon == "" ? viv?.longitude : lon,
-        urlPhoto : [] //TODO
+        title : title,
+        description : description,
+        price: parseInt(price),
+        location : loc,
+        latitude : lat,
+        longitude : lon,
+        urlPhoto : image
     }
-    console.log(viv?.location);
     try {
         const response = await viviendaApi.updateHouse({idCasa, editVivienda});
-        return context.redirect("/houses/" + idCasa + "?" + new URLSearchParams({warning: "Vivienda modificada correctamente"}));
+        //return context.redirect("/houses/" + idCasa + "?" + new URLSearchParams({warning: "Vivienda modificada correctamente"}));
+        return {
+            body: JSON.stringify({
+                redirect: `/houses/${response.id}`
+            })
+        }
     } catch (e) {
-        console.log(e);
         return context.redirect("/?" + new URLSearchParams({danger: "Algo salió mal..."}));
     }
 }

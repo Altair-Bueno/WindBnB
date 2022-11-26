@@ -36,9 +36,6 @@ export const FormDataKeys = {
     price: "price"
   };
   
-  /**
-   * Creates a new booking
-   */
   export async function post(context: APIContext) {
     const referer = new URL(
         context.request.headers.get("referer") ?? context.url

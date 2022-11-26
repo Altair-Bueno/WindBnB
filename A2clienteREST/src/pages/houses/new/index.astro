@@ -8,7 +8,7 @@ import {
   NewVivienda,
   Vivienda
 } from "../../../api/A2viviendasREST";
-import Cloudinary from "../../../components/Cloudinary.svelte";
+import CloudinaryNew from "../../../components/CloudinaryNew.svelte";
 
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
@@ -19,7 +19,7 @@ let newVivienda : NewVivienda;
 ---
 <WindbnbLayout title="New house" page={"NEW_HOUSE"}>
     <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
-      <Cloudinary
+      <CloudinaryNew
         cloudName= {import.meta.env.CLOUDINARY_CLOUD_NAME}
         uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
         client:load

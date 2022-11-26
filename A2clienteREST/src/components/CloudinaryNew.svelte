@@ -94,10 +94,3 @@
   <input bind:files type="file" multiple/>
   <button type="submit" class="btn btn-primary">Crear</button>
 </form>
-
-<!--
-<form on:submit|preventDefault={handleOnSubmit}>
-  <input bind:files type="file" />
-  <input type="submit" />
-</form>
--->
