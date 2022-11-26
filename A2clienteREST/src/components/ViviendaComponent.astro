@@ -12,7 +12,11 @@ const { vivienda } = Astro.props as {vivienda:Vivienda};
 {
   vivienda.state == "available" && (
   <div class="card mb-5" style="width: 50rem;">
-    <img src="" class="card-img-top" alt="foto de la vivienda">
+    {
+      vivienda.urlPhoto == null ? (
+      <img src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png" height="400" class="card-img-top" alt="foto de la vivienda">
+      ) : <img src={vivienda.urlPhoto[0]} class="card-img-top" alt="foto de la vivienda">
+    }
     <div class="card-body">
       <h5 class="card-title"><a href={`/houses/${vivienda.id}`}>{vivienda.title}</a></h5>
       <p class="card-text">{vivienda.description}</p>
