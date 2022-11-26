@@ -1,13 +1,17 @@
 ---
-import type {
+  import type {
   Vivienda,
 } from "../api/A2viviendasREST"
 
 import AppConfig from "../config";
 
 const { vivienda } = Astro.props as {vivienda:Vivienda};
+
 ---
-<div class="card mb-5" style="width: 50rem;">
+
+{
+  vivienda.state == "available" && (
+  <div class="card mb-5" style="width: 50rem;">
     <img src="" class="card-img-top" alt="foto de la vivienda">
     <div class="card-body">
       <h5 class="card-title"><a href={`/houses/${vivienda.id}`}>{vivienda.title}</a></h5>
@@ -16,3 +20,7 @@ const { vivienda } = Astro.props as {vivienda:Vivienda};
       <p class="card-text">{vivienda.price}€/mes</p>
     </div>
   </div>
+  )
+}
+
+
