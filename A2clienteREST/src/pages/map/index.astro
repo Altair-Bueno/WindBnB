@@ -22,7 +22,13 @@ const requestParameters: GetGasStationsByRadiusRequest = {
 }
 
 const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
-const gasStationsInRadius: EESSPrecio[] = await gasStationApi.getGasStationsByRadius(requestParameters);
+let gasStationsInRadius: EESSPrecio[] = [];
+try {
+    // Done with getGasStationsByRadiusRaw so response can be handled by hand
+    const response = await gasStationApi.getGasStationsByRadiusRaw(requestParameters);
+    gasStationsInRadius = await response.value();
+} catch (error) { }
+
 ---
 
 <Layout title="Map">

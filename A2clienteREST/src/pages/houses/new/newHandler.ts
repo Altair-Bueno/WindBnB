@@ -36,9 +36,6 @@ export const FormDataKeys = {
     price: "price"
   };
   
-  /**
-   * Creates a new booking
-   */
   export async function post(context: APIContext) {
     const referer = new URL(
         context.request.headers.get("referer") ?? context.url
@@ -56,15 +53,6 @@ export const FormDataKeys = {
     const api = new ViviendaApi(config);
 
 
-    /*
-    const calle = formData.get(FormDataKeys.street)?.toString() ?? "";
-    const numero = formData.get(FormDataKeys.number)?.toString() ?? "";
-    const ciudad = formData.get(FormDataKeys.city)?.toString() ?? "";
-    const provincia = formData.get(FormDataKeys.province)?.toString() ?? "";
-    const cp = formData.get(FormDataKeys.cp)?.toString() ?? "";
-    const pais = formData.get(FormDataKeys.country)?.toString() ?? "";
-    */
-
     const data = await context.request.json();
     const {
         title,
@@ -79,8 +67,42 @@ export const FormDataKeys = {
         image
     } = data;
 
+    if(data.price === 0){
+        referer.searchParams.set("danger", "Price can't be zero");
+        return {
+            body: JSON.stringify(
+                {
+                    redirect: `/houses/new?danger=Price can't be zero`
+                }
+            )
+        }
+    } else if(data.price < 0){
+        referer.searchParams.set("danger", "Price can't be negative");
+        return {
+            body: JSON.stringify(
+                {
+                    redirect: `/houses/new?danger=Price can't be negative`
+                }
+            )
+        }
+    }
+
     const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
     const geoRes = await getGeocoding(loc);
+    
+
+    if(geoRes.data.length === 0){
+        console.log("entra al if lol");
+        referer.searchParams.set("danger", "Invalid address");
+        return {
+            body : JSON.stringify(
+                {
+                    redirect: `/houses/new?danger=Invalid address`
+                }
+            )
+        }
+    }
+    
 
     
     let newHouse : NewVivienda = {
@@ -99,7 +121,6 @@ export const FormDataKeys = {
             newVivienda : newHouse
         } 
         const response = await api.newHouse(newHouseRequest);
-        //return context.redirect(`/houses/${response.id}`);
         return {
             body: JSON.stringify({
                 redirect: `/houses/${response.id}`

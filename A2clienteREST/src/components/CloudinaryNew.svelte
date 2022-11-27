@@ -83,7 +83,7 @@
     <label for="province" class="form-label">Provincia</label>
     <input bind:value={province} type="text" name="province" class="form-control" id="province" required>
     <label for="cp" class="form-label">Código postal</label>
-    <input bind:value={cp} type="text" name="cp" class="form-control" id="cp" required>
+    <input bind:value={cp} type="number" name="cp" class="form-control" id="cp" required>
     <label for="country" class="form-label">País</label>
     <input bind:value={country} type="text" name="country" class="form-control" id="country" required>
   </div>
@@ -94,10 +94,3 @@
   <input bind:files type="file" multiple/>
   <button type="submit" class="btn btn-primary">Crear</button>
 </form>
-
-<!--
-<form on:submit|preventDefault={handleOnSubmit}>
-  <input bind:files type="file" />
-  <input type="submit" />
-</form>
--->

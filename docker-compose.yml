@@ -34,3 +34,17 @@ services:
     build: A2datosabiertosREST
     ports:
       - "8003:8000"
+  # http://localhost
+  # a2cliente:
+  #   build: A2clienteREST
+  #   ports:
+  #     - "80:3000"
+  #   environment:
+  #     RESERVAS_BASE_PATH: "http://a2reservasrest:8000"
+  #     VIVIENDAS_BASE_PATH: "http://a2viviendasrest:8000"
+  #     DATOSABIERTOS_BASE_PATH: "http://a2datosabiertosrest:8000"
+  #     CLOUDINARY_CLOUD_NAME: "demo"
+  #     CLOUDINARY_UPLOAD_PRESET: "docs_upload_example_us_preset"
+  #   volumes:
+  #     - ./A2datosabiertosREST:/A2datosabiertosREST
+  

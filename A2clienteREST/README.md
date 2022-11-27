@@ -8,6 +8,7 @@ Contiene el cliente web para acceder a los microservicios desarrollados
 
 - Node 19+
 - npm 8+
+- Java JDK 1.8+
 
 ### Instrucciones
 
