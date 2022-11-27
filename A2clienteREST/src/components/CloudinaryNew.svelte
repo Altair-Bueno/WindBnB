@@ -65,33 +65,33 @@
   <form on:submit|preventDefault={handleOnSubmit}>
   <!-- <input hidden value="EXAMPLE_USER_HARDCODED" name="userId" /> TODO -->
   <div class="mb-3">
-    <label for="title" class="form-label">Título</label>
+    <label for="title" class="form-label">Title</label>
     <input bind:value={title} type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" required>
 
   </div>
   <div class="mb-3">
-    <label for="description" class="form-label">Descripción</label>
+    <label for="description" class="form-label">Description</label>
     <input bind:value={description} type="text" name="description" class="form-control" id="description">
   </div>
   <div class="mb-3">
-    <label for="street" class="form-label">Calle</label>
+    <label for="street" class="form-label">Street</label>
     <input bind:value={street} type="text" name="street" class="form-control" id="street" required>
-    <label for="number" class="form-label">Número</label>
+    <label for="number" class="form-label">Number</label>
     <input bind:value={number} type="text" name="number" class="form-control" id="number" required>
-    <label for="city" class="form-label">Ciudad</label>
+    <label for="city" class="form-label">City</label>
     <input bind:value={city} type="text" name="city" class="form-control" id="city" required>
-    <label for="province" class="form-label">Provincia</label>
+    <label for="province" class="form-label">Province</label>
     <input bind:value={province} type="text" name="province" class="form-control" id="province" required>
-    <label for="cp" class="form-label">Código postal</label>
+    <label for="cp" class="form-label">Postal code</label>
     <input bind:value={cp} type="number" name="cp" class="form-control" id="cp" required>
-    <label for="country" class="form-label">País</label>
+    <label for="country" class="form-label">Country</label>
     <input bind:value={country} type="text" name="country" class="form-control" id="country" required>
   </div>
   <div class="mb-3">
-    <label for="price" class="form-label">Precio por noche</label>
+    <label for="price" class="form-label">Price per night</label>
     <input bind:value={price} type="number" name="price" class="form-control" id="price" required>
 </div>
   <input bind:files type="file" class="form-control" multiple/>
   <br>
-  <button type="submit" class="btn btn-primary">Crear</button>
+  <button type="submit" class="btn btn-primary">Create</button>
 </form>

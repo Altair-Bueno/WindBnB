@@ -61,33 +61,33 @@
     <form on:submit|preventDefault={handleOnSubmit}>
     <input type="text" value={vivienda.id} name="idCasa" hidden>
         <div class="mb-3">
-          <label for="title" class="form-label">Título</label>
+          <label for="title" class="form-label">Title</label>
           <input bind:value={vivienda.title} type="text" name="title" class="form-control" id="title" aria-describedby="title" required>
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label">Descripción</label>
+          <label for="description" class="form-label">Description</label>
           <input type="text" bind:value={vivienda.description} name="description" class="form-control" id="description">
         </div>
         <div class="mb-3">
-          <label for="street" class="form-label">Calle</label>
+          <label for="street" class="form-label">Street</label>
           <input type="text" bind:value={loc_splitted[0]} name="street" class="form-control" id="street" required>
-          <label for="number" class="form-label">Número</label>
+          <label for="number" class="form-label">Number</label>
           <input type="text" bind:value={loc_splitted[1]} name="number" class="form-control" id="number" required>
-          <label for="number" class="form-label">Ciudad</label>
+          <label for="number" class="form-label">City</label>
           <input type="text" bind:value={loc_splitted[2]} name="city" class="form-control" id="city"  required>
-          <label for="province" class="form-label">Provincia</label>
+          <label for="province" class="form-label">Province</label>
           <input type="text" bind:value={loc_splitted[3]} name="province" class="form-control" id="province"  required>
-          <label for="cp" class="form-label">Código postal</label>
+          <label for="cp" class="form-label">Postal code</label>
           <input type="text" bind:value={loc_splitted[4]} name="cp" class="form-control" id="cp"  required>
-          <label for="country" class="form-label">País</label>
+          <label for="country" class="form-label">Country</label>
           <input type="text" bind:value={loc_splitted[5]} name="country" class="form-control" id="country" required>
         </div>
         <div class="mb-3">
-          <label for="price" class="form-label">Precio por noche</label>
+          <label for="price" class="form-label">Price per night</label>
           <input type="number" bind:value={vivienda.price} name="price" class="form-control" id="price" required>
       </div>
         
     <input bind:files type="file" multiple/>
-    <button type="submit" class="btn btn-primary">Modificar datos</button>
+    <button type="submit" class="btn btn-primary">Edit data</button>
   </form>
   
