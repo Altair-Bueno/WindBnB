@@ -12,14 +12,16 @@ import {
 import AppConfig from "../../config";
 
 const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
-const viviendas = await viviendaApi.getViviendas()
+const viviendas = await viviendaApi.getViviendas();
 
 ---
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <WindbnbLayout title="Viviendas" page={"HOME"}>
   <div class="row">
     <h1>Filtros</h1>
-    <aside class="col-md-1 col-lg-2">
+    <aside class="col-md-12 col-lg-2">
       <form>
         <div class="mb-3">
           <label class="form-check-label">Buscar por título de la vivienda</label>
@@ -30,6 +32,7 @@ const viviendas = await viviendaApi.getViviendas()
             class="form-control"
           />
     </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
   </form>
   </aside>
   </div>
