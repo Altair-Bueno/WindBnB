@@ -27,10 +27,10 @@ try{
 
 <WindbnbLayout title="Delete house {idCasa}">
     <div class="alert alert-warning" role="alert">
-        Vas a eliminar la vivienda con id: {idCasa}, ¿estás seguro?
+        You will delete the house with id: {idCasa}, are you sure?
         <form class="mt-1" method="post" action="/houses/delete/deleteHandler">
             <input type="text" name="idCasa" value={idCasa} hidden/>
-            <button type="submit" class="btn btn-warning">Eliminar</button>
+            <button type="submit" class="btn btn-warning">Delete</button>
         </form>
     </div>
 </WindbnbLayout>

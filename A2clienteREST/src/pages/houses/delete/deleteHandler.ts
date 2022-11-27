@@ -15,8 +15,8 @@ export async function post(context: APIContext) {
 
     try {
         const response = await viviendaApi.deleteHouse({idCasa});
-        return context.redirect("/?" + new URLSearchParams({warning: "Vivienda eliminada"}));
+        return context.redirect("/?" + new URLSearchParams({warning: "House deleted"}));
     } catch (e) {
-        return context.redirect("/?" + new URLSearchParams({danger: "Algo salió mal..."}));
+        return context.redirect("/?" + new URLSearchParams({danger: "Something went wrong..."}));
     }
 }

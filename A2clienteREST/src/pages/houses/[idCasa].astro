@@ -55,18 +55,18 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
       <div class="col-md-10 p-lg-2 mx-auto">
         <h1 class="display-6 fw-normal">{viv?.title}</h1>
         <p class="lead fw-normal">{viv?.description}</p>
-        <p class="lead fw-normal">{viv?.price} euros/noche.</p>
-        <p class="lead fw-normal">Dueño: {viv?.userId}</p>
+        <p class="lead fw-normal">{viv?.price} euros/night.</p>
+        <p class="lead fw-normal">Owner: {viv?.userId}</p>
       </div>
       {
         userId === viv?.userId && (
         <div>
                     <form action={deleteHouseURI} method="post">
-                    <button class="btn btn-danger" type="submit">Eliminar vivienda</button>
+                    <button class="btn btn-danger" type="submit">Delete house</button>
                     </form>
 
                     <form class="pt-2" action={editHouseURI} method="post">
-                    <button class="btn btn-warning" type="submit">Modificar vivienda</button>
+                    <button class="btn btn-warning" type="submit">Edit house</button>
                     </form>
                   </div>
         )
@@ -80,9 +80,9 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
         class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
       >
         <div class="my-3 p-3">
-          <h2 class="display-5">¡Reserva ya!</h2>
-          <p class="lead">Consulta las fechas disponibles.</p>
-          <small class="lead">En este momento se encuentra {viv?.state == "available" ? "disponible" : "ocupada"}</small>
+          <h2 class="display-5">Book now!</h2>
+          <p class="lead">Check the available dates.</p>
+          <small class="lead">This house is {viv?.state == "available" ? "available" : "reserved"}</small>
         </div>
         <div
           class="bg-body shadow-sm mx-auto"
@@ -92,7 +92,7 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
             <form action={NewBookingHandlerURI} method="post">
               <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
               <div class="mb-3">
-                <label for="fromDateInput" class="form-label">Desde:</label>
+                <label for="fromDateInput" class="form-label">From:</label>
                 <input
                   type="date"
                   name={NewBookingFormDataKeys.startDate}
@@ -102,7 +102,7 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
                 />
               </div>
               <div class="mb-3">
-                <label for="toDateInput" class="form-label">Hasta:</label>
+                <label for="toDateInput" class="form-label">To:</label>
                 <input
                   type="date"
                   name={NewBookingFormDataKeys.endDate}
@@ -111,7 +111,7 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
                   aria-describedby="to date input"
                 />
               </div>
-              <button type="submit" class="btn btn-primary">Reservar</button>
+              <button type="submit" class="btn btn-primary">Book</button>
             </form>
           </div>
         </div>

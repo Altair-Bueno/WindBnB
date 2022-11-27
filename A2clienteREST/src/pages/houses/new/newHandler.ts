@@ -130,7 +130,7 @@ export const FormDataKeys = {
         const error = e as ResponseError;
         const msg = await error.response.json().then((x) => x.detail[0]);
         if(msg.type === "value_error.number.not_gt"){
-            referer.searchParams.set("danger", "El precio debe ser mayor que 0");
+            referer.searchParams.set("danger", "Price must be greater than 0");
         }
         return context.redirect(referer.toString());
     }

@@ -92,6 +92,6 @@ export async function post(context: APIContext) {
             })
         }
     } catch (e) {
-        return context.redirect("/?" + new URLSearchParams({danger: "Algo salió mal..."}));
+        return context.redirect("/?" + new URLSearchParams({danger: "Something went wrong..."}));
     }
 }
