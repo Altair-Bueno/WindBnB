@@ -91,6 +91,7 @@
     <label for="price" class="form-label">Precio por noche</label>
     <input bind:value={price} type="number" name="price" class="form-control" id="price" required>
 </div>
-  <input bind:files type="file" multiple/>
+  <input bind:files type="file" class="form-control" multiple/>
+  <br>
   <button type="submit" class="btn btn-primary">Crear</button>
 </form>
