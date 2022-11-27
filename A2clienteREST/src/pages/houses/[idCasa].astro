@@ -42,7 +42,13 @@ const requestParameters: GetGasStationsByRadiusRequest = {
 }
 
 const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
-const gasStationsInRadius: EESSPrecio[] = await gasStationApi.getGasStationsByRadius(requestParameters);
+let gasStationsInRadius: EESSPrecio[];
+try{
+   gasStationsInRadius = await gasStationApi.getGasStationsByRadius(requestParameters);
+} catch (error){
+  gasStationsInRadius = [];
+}
+
 
 const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
 
