@@ -26,9 +26,7 @@ let gasStationsInRadius: EESSPrecio[] = [];
 try {
     // Done with getGasStationsByRadiusRaw so response can be handled by hand
     const response = await gasStationApi.getGasStationsByRadiusRaw(requestParameters);
-    if (response.raw.ok) {
-        gasStationsInRadius = await response.value();
-    }
+    gasStationsInRadius = await response.value();
 } catch (error) { }
 
 ---
