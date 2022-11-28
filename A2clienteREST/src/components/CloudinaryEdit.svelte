@@ -87,7 +87,7 @@
           <input type="number" bind:value={vivienda.price} name="price" class="form-control" id="price" required>
       </div>
         
-    <input bind:files type="file" multiple/>
+    <input bind:files type="file" class="form-control" multiple/>
     <button type="submit" class="btn btn-primary">Edit data</button>
   </form>
   

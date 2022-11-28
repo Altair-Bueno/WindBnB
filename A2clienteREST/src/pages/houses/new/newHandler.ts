@@ -90,9 +90,7 @@ export const FormDataKeys = {
     const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
     const geoRes = await getGeocoding(loc);
     
-
     if(geoRes.data.length === 0){
-        console.log("entra al if lol");
         referer.searchParams.set("danger", "Invalid address");
         return {
             body : JSON.stringify(
