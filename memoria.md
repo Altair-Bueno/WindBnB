@@ -51,20 +51,18 @@ el servidor REST, y para el servicio cloud de almacenaje de imágenes
 
 # Instrucciones de Despliegue
 
-Se facilita el fichero `docker-compose.yml` para poder hacer un despliegue de
-todos los microservicios utilizando la herramienta
-[Docker Compose](https://docs.docker.com/compose/compose-v2/). Instrucciones más
-detalladas están disponibles en el fichero `README.md`
+Los todos los microservicios que conforman el backend de la aplicación pueden ser 
+desplegados a través de 
+[Docker Compose](https://docs.docker.com/compose/compose-v2/), o bien 
+desplegarlos individualmente mediante [Docker](https://docker.com) o 
+[uvicorn](https://www.uvicorn.org) (más información sobre el despliegue de cada
+uno de los servicios se puede encontrar en el fichero `README.md` en la carpeta
+de cada microservicio)
 
-Para facilitar el despliegue de cada aplicación de forma individual, se
-proporciona un fichero `Dockerfile` para construir un contenedor de
-[Docker](https://docker.com). Las instrucciones detalladas sobre como utilizar
-la imagen y las opciones de configuración disponibles se pueden encontrar en el
-fichero `README.md`, dentro del directorio correspondiente a cada microservicio.
-
-En caso de no disponer de las herramientas mencionadas, dentro del mismo fichero
-`README.md` en cada microservicio, se indica paso a paso cómo realizar un
-despliegue con [uvicorn](https://www.uvicorn.org).
+El cliente web está configurado para ser desplegado en Vercel, por lo que no se
+proporciona un método para lanzar el servicio en producción localmente. Para más
+información sobre como desplegar el servicio en modo desarrollo, visite el 
+fichero `A2clienteREST/README.md`
 
 ## Datos de prueba para Mongo
 
