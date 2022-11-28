@@ -37,11 +37,11 @@ Se han considerado los siguientes requisitos para la realización del cliente RE
 
 # Tecnologías Utilizadas
 
-Para la interfaz del cliente se ha usado los frameworks 
-[Astro](https://astro.build/) junto a [Svelte](https://svelte.dev/) para 
-la generación de las páginas y componentes usando Typescript. Para los mapas
-se ha usado la librería [Leaflet](https://leafletjs.com/) que hace a su vez uso
-de OpenStreetMaps.
+Para la interfaz del cliente se ha usado los frameworks
+[Astro](https://astro.build/), [Svelte](https://svelte.dev/) y
+[Bootstrap](https://getbootstrap.com) para la generación de las páginas y
+componentes usando Typescript. Para los mapas se ha usado la librería
+[Leaflet](https://leafletjs.com/) que hace a su vez uso de OpenStreetMaps.
 
 Para la persistencia de datos se ha optado por la base de datos de
 [MongoDB](https://www.mongodb.com/), conectada a través del driver asíncrono
