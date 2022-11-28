@@ -18,6 +18,8 @@ toc: true
 Para la realización del cliente REST propuesto en el documento 
 _Práctica de servicios Web (II): cliente_, se ha optado por usar un cliente de
 tipo [Server-Side Rendering con Astro](https://docs.astro.build/en/guides/server-side-rendering/).
+A continuación se especifican las tecnologías utilizadas, requisitos implementados,
+instrucciones de despliegue y explicación del funcionamiento de la aplicación.
 
 # Replanteamiento de decisiones anteriores
 
@@ -99,17 +101,17 @@ sesión ya iniciada.
 
 La página de una vivienda tiene distintas funciones:
 
-- Botón `Modificar vivienda`: Redirige a una página para completar la acción de 
+- Botón `Edit house`: Redirige a una página para completar la acción de 
   editar. 
   Sólo disponible si el usuario es el dueño.
-- Botón `Eliminar vivienda`: Realiza la acción de borrar la vivienda de la base 
+- Botón `Delete house`: Realiza la acción de borrar la vivienda de la base 
   de datos y redirige a la página principal. Sólo disponible si el usuario es 
   el dueño.
 - Visualización de **datos** de la vivienda.
 - Visualización de **imágenes** de la vivienda.
 - Formulario para reservar la vivienda: Muestra dos campos de fecha de 
   calendario para indicar el rango de días que quiere reservar el usuario y
-  un botón `Reservar` para realizar la acción y añadir la reserva a la base de
+  un botón `Book` para realizar la acción y añadir la reserva a la base de
   datos.
 - Visualización de un **mapa**: Muestra la localización de la vivienda a 
   partir de la latitud y longitud almacenados en la base de datos, y las 
@@ -159,7 +161,7 @@ para crear una nueva vivienda y almacenarla en la base de datos:
   archivos donde se puede realizar una selección múltiple de imágenes. Es
   obligatorio seleccionar al menos 1 imagen.
 
-Mediante el botón `Crear` se añade a la base de datos con los datos rellenados
+Mediante el botón `Create` se añade a la base de datos con los datos rellenados
 en el formulario y se redirige a la página de esa vivienda. Las fotos 
 seleccionadas se almacenan en Cloudinary.
 
@@ -180,6 +182,6 @@ ya autocompletados:
 - Precio por noche
 - Imágenes
 
-Mediante el botón `Modificar datos` se actualiza la vivienda de la base de datos
+Mediante el botón `Edit data` se actualiza la vivienda de la base de datos
 si se ha cambiado algún campo y redirige a la página de la vivienda. Si se han
 modificado imágenes, de la misma manera se actualiza en Cloudinary.
