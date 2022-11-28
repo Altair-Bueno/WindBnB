@@ -14,12 +14,16 @@ import {
     GasStationsApi, 
     GetGasStationsByRadiusRequest,
     Configuration as DatosAbiertosConfiguration,
+AverageStayApi,
+Data,
+GetAverageStayRequest,
 } from "../../api/A2datosabiertosREST";
 import Carousel from "../../components/Carousel.astro";
 import {
   URI as NewBookingHandlerURI,
   FormDataKeys as NewBookingFormDataKeys,
 } from "../bookings/newHandler";
+import { MONTHS } from "../../utils/months";
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
@@ -53,6 +57,21 @@ try{
 
 const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
 
+const averageStayParameters: GetAverageStayRequest = {
+    provincia: viv.location.split(", ")[3],
+    mes: MONTHS[(new Date()).getMonth() - 1]
+}
+console.log(viv.location.split(", ")[4]);
+
+const averageStayApi = new AverageStayApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
+let averageStay: Data;
+try{
+  averageStay = await averageStayApi.getAverageStay(averageStayParameters);
+} catch (error){
+  averageStay = {
+    valor: undefined
+  };
+}
 
 ---
 
@@ -90,6 +109,7 @@ const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
           <h2 class="display-5">Book now!</h2>
           <p class="lead">Check the available dates.</p>
           <small class="lead">This house is {viv?.state == "available" ? "available" : "reserved"}</small>
+          {averageStay.valor && (<p>The average stay this month is {averageStay.valor} days</p>)}
         </div>
         <div
           class="bg-body shadow-sm mx-auto"
