@@ -3,6 +3,7 @@ from typing import Collection, List, Optional
 from bson import ObjectId
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
+from app.models.vivienda import FilterVivienda
 from app.service.error import NotFoundError
 from app.models.types import PyObjectId
 from app.models.vivienda import viviendaStateEnum
@@ -15,9 +16,26 @@ class ViviendaService:
     def __init__(self, collection: AsyncIOMotorCollection):
         self.collection = collection
 
-    async def get_viviendas(self) -> List[Vivienda]:
+    '''async def get_viviendas(self) -> List[Vivienda]:
         res = [x async for x in self.collection.find()]
-        return res
+        return res'''
+    async def get_viviendas(self, f: FilterVivienda) -> List[Vivienda]:
+        pipeline = []
+
+        if f.title:
+            pipeline.append({"$match": {"title": {"$regex": f.title}}})
+        
+        if f.priceMax:
+            pipeline.append({"$match": {"price": {"$lte":f.priceMax}}})
+
+        if f.priceMin:
+            pipeline.append({"$match": {"price": {"$gte":f.priceMin}}}) 
+
+        return [
+            Vivienda(**document)
+            async for document in self.collection.aggregate(pipeline)
+
+        ]
 
     async def new_vivienda(self, request: NewVivienda) -> Vivienda:
         document = request.dict()

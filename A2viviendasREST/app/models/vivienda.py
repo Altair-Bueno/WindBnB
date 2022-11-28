@@ -52,3 +52,11 @@ class EditVivienda(BaseModel):
 
     class Config:
         json_encoders = {ObjectId: str}
+
+class FilterVivienda(BaseModel):
+    title: Optional[str]
+    priceMax: Optional[PositiveFloat]
+    priceMin: Optional[PositiveFloat]
+
+    class Config:
+        json_encoders = {ObjectId: str}

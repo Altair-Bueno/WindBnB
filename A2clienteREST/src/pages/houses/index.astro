@@ -2,7 +2,7 @@
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import ViviendaComponent from "../../components/ViviendaComponent.astro";
 
-import { ViviendaApi } from "../../api/A2viviendasREST/apis";
+import { GetViviendasRequest, ViviendaApi } from "../../api/A2viviendasREST/apis";
 
 import {
   Configuration as ViviendaConfiguration,
@@ -11,8 +11,20 @@ import {
 
 import AppConfig from "../../config";
 
+const params = Astro.url.searchParams;
+
+const titleFilter = params.get("title");
+const priceMaxFilter = params.get("priceMax");
+const priceMinFilter = params.get("priceMin");
+
+const filter: GetViviendasRequest = {
+  title: titleFilter ? titleFilter : undefined,
+  priceMax: priceMaxFilter ? parseInt(priceMaxFilter) : undefined,
+  priceMin: priceMinFilter ? parseInt(priceMinFilter) : undefined,
+};
+
 const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
-const viviendas = await viviendaApi.getViviendas();
+const viviendas = await viviendaApi.getViviendas(filter);
 
 ---
 
@@ -24,15 +36,37 @@ const viviendas = await viviendaApi.getViviendas();
     <aside class="col-md-12 col-lg-2">
       <form>
         <div class="mb-3">
-          <label class="form-check-label">Search by</label>
+          <label class="form-check-label">Search by title</label>
           <input
             type="text"
-            name="nombreVivienda"
+            name="title"
             value=""
             class="form-control"
           />
     </div>
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <div class="mb-3 h-100"></div>
+      <label class="form-check-label">Price</label>
+      <div class="row">
+        <div class="col">
+          <input
+            type="number"
+            name="priceMin"
+            value=""
+            placeholder="min"
+            class="form-control"
+          />
+        </div>
+        <div class="col">
+          <input
+            type="number"
+            name="priceMax"
+            value=""
+            placeholder="max"
+            class="form-control"
+          />
+        </div>
+      </div>
+    <button type="submit" class="btn btn-primary mt-3">Filter</button>
   </form>
   </aside>
   </div>

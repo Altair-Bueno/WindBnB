@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Optional
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.openapi.models import Response
 from fastapi.responses import Response
 from pymongo import ReturnDocument
+from pydantic import PositiveFloat
+from app.models.vivienda import FilterVivienda
 from app.models.types import PyObjectId
 from app.service.error import NotFoundError
 from app.models.types import ApiError
@@ -22,10 +24,23 @@ NOT_FOUND_RESPONSE = {
 }
 
 """Get all viviendas"""
-@vivienda.get("/viviendas", response_model=List[Vivienda], operation_id="getViviendas")
+'''@vivienda.get("/viviendas", response_model=List[Vivienda], operation_id="getViviendas")
 async def get_viviendas(service: ViviendaService = Depends(get_vivienda_service)):
-    return await service.get_viviendas()
+    return await service.get_viviendas()'''
 
+@vivienda.get("/viviendas", response_model=List[Vivienda], operation_id="getViviendas")
+async def get_viviendas(
+    title: Optional[str] = None,
+    priceMax: Optional[PositiveFloat] = None,
+    priceMin: Optional[PositiveFloat] = None, 
+    service: ViviendaService = Depends(get_vivienda_service),
+):
+   f = FilterVivienda(
+    title=title,
+    priceMax=priceMax,
+    priceMin=priceMin 
+   )
+   return await service.get_viviendas(f)
 
 @vivienda.post("/viviendas", response_model=Vivienda, operation_id="new_house")
 async def create_house(request: NewVivienda, service: ViviendaService = Depends(get_vivienda_service)):
