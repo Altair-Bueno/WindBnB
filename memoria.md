@@ -23,7 +23,11 @@ instrucciones de despliegue y explicación del funcionamiento de la aplicación.
 
 # Replanteamiento de decisiones anteriores
 
-<!--TODO: - cualquier replanteamiento de decisiones anteriores (de tecnologías a utilizar u otros) o cambios en el diseño de la base de datos o la implementación de los servidores web.-->
+Se han realizado varios cambios al backend:
+- Se ha añadido al modelo un campo `price` a la clase Vivienda, que se corresponde con el precio de la vivienda al mes.
+- Se ha añadido una clase `FiltroVivienda` para poder filtrar las viviendas por determinados campos con mas facilidad
+- Se ha cambiado el método `getViviendas` para que acepte unos filtros de búsqueda
+- `openapi.json` actualizado
 
 # Requisitos considerados
 
@@ -87,6 +91,7 @@ almacenados en la base de datos.
   - `Login/Logout`: Redirige a una página de inicio de sesión si no se ha
     iniciado sesión aún, o directamente sale de la sesión si se estaba en una
 - Buscador de viviendas mediante un filtro que busca por título de la vivienda. 
+- Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
 
 ## Página de inicio de sesión `/auth/login`
 
@@ -183,3 +188,4 @@ ya autocompletados:
 Mediante el botón `Edit data` se actualiza la vivienda de la base de datos
 si se ha cambiado algún campo y redirige a la página de la vivienda. Si se han
 modificado imágenes, de la misma manera se actualiza en Cloudinary.
+
