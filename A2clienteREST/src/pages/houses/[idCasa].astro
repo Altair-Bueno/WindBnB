@@ -38,7 +38,8 @@ const editHouseURI = "/houses/edit/" + idCasa;
 
 const requestParameters: GetGasStationsByRadiusRequest = {
     latitude: parseFloat(viv?.latitude),
-    longitude: parseFloat(viv?.longitude)
+    longitude: parseFloat(viv?.longitude),
+    limit: 50 
 }
 
 const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
