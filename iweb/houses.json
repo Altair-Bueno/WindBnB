@@ -1,54 +1,48 @@
 [
     {
-      "_id": "63669989a3b506264a134014",
-      "title": "Casa en Alcobendas",
-      "description": "Vivienda situada en la zona norte de Alcobendas, cerca de la estación",
-      "user_id": "1",
-      "location": "Alcobendas",
-      "url_photo": [
-        "https://www.bbva.com/wp-content/uploads/2021/04/casas-ecolo%CC%81gicas_apertura-hogar-sostenibilidad-certificado--1024x629.jpg"
-      ],
-      "longitude": "40.4165",
-      "latitude": "3.70256",
-      "state": "available"
-    },
-    {
-      "_id": "636699cea3b506264a134015",
-      "title": "Casa en Algeciras",
-      "description": "Vivienda situada cerca de la playa con vistas al mar",
-      "user_id": "2",
-      "location": "Algeciras",
-      "url_photo": [
-        "https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"
-      ],
-      "longitude": "20.121",
-      "latitude": "1.221",
-      "state": "available"
-    },
-    {
-      "_id": "63669aeba3b506264a134016",
-      "title": "Casa en Los Barrios",
-      "description": "Vivienda situado en lo alto de la colina",
-      "user_id": "3",
-      "location": "Los Barrios",
-      "url_photo": [
-        "https://facilhouse.com/wp-content/uploads/2022/02/casas-acero-homecenter-cadaques-5-385x258.jpg"
-      ],
-      "longitude": "2.34",
-      "latitude": "43.22",
-      "state": "available"
-    },
-    {
-      "_id": "63669b58a3b506264a134017",
-      "title": "Casa en Malaga",
-      "description": "Vivienda cercana al metro de Ciudad de la Justicia",
-      "user_id": "1",
-      "location": "Malaga",
-      "url_photo": [
-        "https://e00-expansion.uecdn.es/assets/multimedia/imagenes/2021/10/14/16342350207408.jpg"
-      ],
-      "longitude": "12.2323",
-      "latitude": "11.9",
-      "state": "deleted"
-    }
-  ]
+    "_id": "638532d3ef8db7ef0def9c3e",
+    "title": "vivienda prueba",
+    "description": "Descripción vivienda prueba",
+    "user_id": "user",
+    "location": "Sumatra, 17, Málaga, Málaga, 29591, España",
+    "url_photo": [
+      "http://res.cloudinary.com/dwedkz8ad/image/upload/v1669673679/wm4t1ajfqkodtguhv5c8.jpg"
+    ],
+    "longitude": "-4.468097",
+    "latitude": "36.733197",
+    "price": 290,
+    "state": "available",
+    "bookings": [
+      {
+        "_id":  "638537557961673b09d620e7",
+        "user_id": "user",
+        "state": "reserved",
+        "start_date": "2022-11-29",
+        "end_date": "2022-11-30"
+      }
+    ]
+  },
+  {
+    "_id": "63853698ef8db7ef0def9c3f",
+    "title": "casa amueblada",
+    "description": "Casa amueblada en el centro de Málaga",
+    "user_id": "user",
+    "location": "Carretería, 84, Málaga, Málaga, 29008, España",
+    "url_photo": [
+      "http://res.cloudinary.com/dwedkz8ad/image/upload/v1669674638/nvvnze7mysgbj2tsk2jv.jpg"
+    ],
+    "longitude": "-4.421989",
+    "latitude": "36.723814",
+    "price": 800,
+    "state": "available",
+    "bookings": [
+      {
+        "_id": "638537627961673b09d620e8",
+        "user_id": "user",
+        "state": "reserved",
+        "start_date": "2022-12-07",
+        "end_date": "2022-12-23"
+      }
+    ]
+  }
+]
