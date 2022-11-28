@@ -70,6 +70,18 @@ export async function post(context: APIContext) {
 
     const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
     const geoRes = await getGeocoding(loc);
+
+    if(geoRes.data.length === 0){
+        referer.searchParams.set("danger", "Invalid address");
+        return {
+            body : JSON.stringify(
+                {
+                    redirect: `/houses/new?danger=Invalid address`
+                }
+            )
+        }
+    }
+
     const lat = geoRes.data[0].latitude;
     const lon = geoRes.data[0].longitude;   
 

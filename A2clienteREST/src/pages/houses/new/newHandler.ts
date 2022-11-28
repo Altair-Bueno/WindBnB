@@ -92,7 +92,6 @@ export const FormDataKeys = {
     
 
     if(geoRes.data.length === 0){
-        console.log("entra al if lol");
         referer.searchParams.set("danger", "Invalid address");
         return {
             body : JSON.stringify(
