@@ -37,7 +37,7 @@ Se han considerado los siguientes requisitos para la realización del cliente RE
 
 # Tecnologías Utilizadas
 
-Para la interfaz del ciente se ha usado los frameworks 
+Para la interfaz del cliente se ha usado los frameworks 
 [Astro](https://astro.build/) junto a [Svelte](https://svelte.dev/) para 
 la generación de las páginas y componentes usando Typescript. Para los mapas
 se ha usado la librería [Leaflet](https://leafletjs.com/) que hace a su vez uso
