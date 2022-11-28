@@ -23,7 +23,11 @@ instrucciones de despliegue y explicación del funcionamiento de la aplicación.
 
 # Replanteamiento de decisiones anteriores
 
-<!--TODO: - cualquier replanteamiento de decisiones anteriores (de tecnologías a utilizar u otros) o cambios en el diseño de la base de datos o la implementación de los servidores web.-->
+Se han realizado varios cambios al backend:
+- Se ha añadido al modelo un campo `price` a la clase Vivienda, que se corresponde con el precio de la vivienda al mes.
+- Se ha añadido una clase `FiltroVivienda` para poder filtrar las viviendas por determinados campos con mas facilidad
+- Se ha cambiado el método `getViviendas` para que acepte unos filtros de búsqueda
+- `openapi.json` actualizado
 
 # Requisitos considerados
 
@@ -37,11 +41,11 @@ Se han considerado los siguientes requisitos para la realización del cliente RE
 
 # Tecnologías Utilizadas
 
-Para la interfaz del ciente se ha usado los frameworks 
-[Astro](https://astro.build/) junto a [Svelte](https://svelte.dev/) para 
-la generación de las páginas y componentes usando Typescript. Para los mapas
-se ha usado la librería [Leaflet](https://leafletjs.com/) que hace a su vez uso
-de OpenStreetMaps.
+Para la interfaz del cliente se ha usado los frameworks
+[Astro](https://astro.build/), [Svelte](https://svelte.dev/) y
+[Bootstrap](https://getbootstrap.com) para la generación de las páginas y
+componentes usando Typescript. Para los mapas se ha usado la librería
+[Leaflet](https://leafletjs.com/) que hace a su vez uso de OpenStreetMaps.
 
 Para la persistencia de datos se ha optado por la base de datos de
 [MongoDB](https://www.mongodb.com/), conectada a través del driver asíncrono
@@ -51,20 +55,18 @@ el servidor REST, y para el servicio cloud de almacenaje de imágenes
 
 # Instrucciones de Despliegue
 
-Se facilita el fichero `docker-compose.yml` para poder hacer un despliegue de
-todos los microservicios utilizando la herramienta
-[Docker Compose](https://docs.docker.com/compose/compose-v2/). Instrucciones más
-detalladas están disponibles en el fichero `README.md`
+Los todos los microservicios que conforman el backend de la aplicación pueden ser 
+desplegados a través de 
+[Docker Compose](https://docs.docker.com/compose/compose-v2/), o bien 
+desplegarlos individualmente mediante [Docker](https://docker.com) o 
+[uvicorn](https://www.uvicorn.org) (más información sobre el despliegue de cada
+uno de los servicios se puede encontrar en el fichero `README.md` en la carpeta
+de cada microservicio)
 
-Para facilitar el despliegue de cada aplicación de forma individual, se
-proporciona un fichero `Dockerfile` para construir un contenedor de
-[Docker](https://docker.com). Las instrucciones detalladas sobre como utilizar
-la imagen y las opciones de configuración disponibles se pueden encontrar en el
-fichero `README.md`, dentro del directorio correspondiente a cada microservicio.
-
-En caso de no disponer de las herramientas mencionadas, dentro del mismo fichero
-`README.md` en cada microservicio, se indica paso a paso cómo realizar un
-despliegue con [uvicorn](https://www.uvicorn.org).
+El cliente web está configurado para ser desplegado en Vercel, por lo que no se
+proporciona un método para lanzar el servicio en producción localmente. Para más
+información sobre como desplegar el servicio en modo desarrollo, visite el 
+fichero `A2clienteREST/README.md`
 
 ## Datos de prueba para Mongo
 
@@ -89,6 +91,7 @@ almacenados en la base de datos.
   - `Login/Logout`: Redirige a una página de inicio de sesión si no se ha
     iniciado sesión aún, o directamente sale de la sesión si se estaba en una
 - Buscador de viviendas mediante un filtro que busca por título de la vivienda. 
+- Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
 
 ## Página de inicio de sesión `/auth/login`
 
@@ -185,3 +188,4 @@ ya autocompletados:
 Mediante el botón `Edit data` se actualiza la vivienda de la base de datos
 si se ha cambiado algún campo y redirige a la página de la vivienda. Si se han
 modificado imágenes, de la misma manera se actualiza en Cloudinary.
+

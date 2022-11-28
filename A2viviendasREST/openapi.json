@@ -1,1 +1,583 @@
-{"openapi":"3.0.2","info":{"title":"A2viviendasREST","description":"Gestión de viviendas. Ingeniería web","version":"0.1.0"},"paths":{"/viviendas":{"get":{"tags":["Vivienda"],"summary":"Get Viviendas","operationId":"getViviendas","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"title":"Response Getviviendas","type":"array","items":{"$ref":"#/components/schemas/Vivienda"}}}}}}},"post":{"tags":["Vivienda"],"summary":"Create House","description":"Creates a new house","operationId":"new_house","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/NewVivienda"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Vivienda"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/viviendas/{idCasa}":{"get":{"tags":["Vivienda"],"summary":"Get House By Id","operationId":"get_house_by_id","parameters":[{"required":true,"schema":{"title":"Idcasa","type":"string"},"name":"idCasa","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Vivienda"}}}},"404":{"description":"Not Found","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ApiError"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"put":{"tags":["Vivienda"],"summary":"Update House","operationId":"update_house","parameters":[{"required":true,"schema":{"title":"Idcasa","type":"string"},"name":"idCasa","in":"path"}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/EditVivienda"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Vivienda"}}}},"404":{"description":"Not Found","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ApiError"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}},"delete":{"tags":["Vivienda"],"summary":"Delete House","description":"Cancels the house identified by the given `idCasa`","operationId":"delete house","parameters":[{"required":true,"schema":{"title":"Idcasa","type":"string"},"name":"idCasa","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Message"}}}},"404":{"description":"Not Found","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ApiError"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/viviendas/{idCasa}/getBookingsAmount":{"get":{"tags":["Vivienda"],"summary":"Get House Amount Bookings","description":"Gives you the amount of bookings of a house","operationId":"bookings amount","parameters":[{"required":true,"schema":{"title":"Idcasa","type":"string"},"name":"idCasa","in":"path"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Message"}}}},"404":{"description":"Not Found","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ApiError"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}}},"components":{"schemas":{"ApiError":{"title":"ApiError","required":["detail"],"type":"object","properties":{"detail":{"title":"Detail","type":"string"}},"description":"An error response"},"EditVivienda":{"title":"EditVivienda","required":["price"],"type":"object","properties":{"title":{"title":"Title","type":"string"},"description":{"title":"Description","type":"string"},"user_id":{"title":"User Id","type":"string"},"location":{"title":"Location","type":"string"},"url_photo":{"title":"Url Photo","type":"array","items":{"type":"string"}},"longitude":{"title":"Longitude","type":"string"},"latitude":{"title":"Latitude","type":"string"},"price":{"title":"Price","type":"integer"}}},"HTTPValidationError":{"title":"HTTPValidationError","type":"object","properties":{"detail":{"title":"Detail","type":"array","items":{"$ref":"#/components/schemas/ValidationError"}}}},"Message":{"title":"Message","required":["message"],"type":"object","properties":{"message":{"title":"Message","type":"string"}},"description":"A single message payload"},"NewVivienda":{"title":"NewVivienda","required":["title","user_id","location","longitude","latitude","price"],"type":"object","properties":{"title":{"title":"Title","type":"string"},"description":{"title":"Description","type":"string"},"user_id":{"title":"User Id","type":"string"},"location":{"title":"Location","type":"string"},"url_photo":{"title":"Url Photo","type":"array","items":{"type":"string"}},"longitude":{"title":"Longitude","type":"string"},"latitude":{"title":"Latitude","type":"string"},"price":{"title":"Price","type":"integer"}}},"ValidationError":{"title":"ValidationError","required":["loc","msg","type"],"type":"object","properties":{"loc":{"title":"Location","type":"array","items":{"anyOf":[{"type":"string"},{"type":"integer"}]}},"msg":{"title":"Message","type":"string"},"type":{"title":"Error Type","type":"string"}}},"Vivienda":{"title":"Vivienda","required":["title","user_id","location","longitude","latitude","price"],"type":"object","properties":{"_id":{"title":" Id","type":"string"},"title":{"title":"Title","type":"string"},"description":{"title":"Description","type":"string"},"user_id":{"title":"User Id","type":"string"},"location":{"title":"Location","type":"string"},"state":{"allOf":[{"$ref":"#/components/schemas/viviendaStateEnum"}],"default":"available"},"url_photo":{"title":"Url Photo","type":"array","items":{"type":"string"}},"longitude":{"title":"Longitude","type":"string"},"latitude":{"title":"Latitude","type":"string"},"price":{"title":"Price","type":"integer"}}},"viviendaStateEnum":{"title":"viviendaStateEnum","enum":["available","deleted"],"type":"string","description":"An enumeration."}}},"servers":[{"url":"/","description":"Default"},{"url":"http://localhost:8002","description":"Docker compose"}]}
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "A2viviendasREST",
+        "description": "GestiÃ³n de viviendas. IngenierÃ­a web",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/viviendas": {
+            "get": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Get Viviendas",
+                "operationId": "getViviendas",
+                "parameters": [
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Title",
+                            "type": "string"
+                        },
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Pricemax",
+                            "exclusiveMinimum": 0,
+                            "type": "number"
+                        },
+                        "name": "priceMax",
+                        "in": "query"
+                    },
+                    {
+                        "required": false,
+                        "schema": {
+                            "title": "Pricemin",
+                            "exclusiveMinimum": 0,
+                            "type": "number"
+                        },
+                        "name": "priceMin",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Getviviendas",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Vivienda"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Create House",
+                "description": "Creates a new house",
+                "operationId": "new_house",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewVivienda"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vivienda"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/viviendas/{idCasa}": {
+            "get": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Get House By Id",
+                "operationId": "get_house_by_id",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Idcasa",
+                            "type": "string"
+                        },
+                        "name": "idCasa",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vivienda"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Update House",
+                "operationId": "update_house",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Idcasa",
+                            "type": "string"
+                        },
+                        "name": "idCasa",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EditVivienda"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vivienda"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Delete House",
+                "description": "Cancels the house identified by the given `idCasa`",
+                "operationId": "delete house",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Idcasa",
+                            "type": "string"
+                        },
+                        "name": "idCasa",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/viviendas/{idCasa}/getBookingsAmount": {
+            "get": {
+                "tags": [
+                    "Vivienda"
+                ],
+                "summary": "Get House Amount Bookings",
+                "description": "Gives you the amount of bookings of a house",
+                "operationId": "bookings amount",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Idcasa",
+                            "type": "string"
+                        },
+                        "name": "idCasa",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiError": {
+                "title": "ApiError",
+                "required": [
+                    "detail"
+                ],
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "string"
+                    }
+                },
+                "description": "An error response"
+            },
+            "EditVivienda": {
+                "title": "EditVivienda",
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string"
+                    },
+                    "url_photo": {
+                        "title": "Url Photo",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "longitude": {
+                        "title": "Longitude",
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "title": "Latitude",
+                        "type": "string"
+                    },
+                    "price": {
+                        "title": "Price",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Message": {
+                "title": "Message",
+                "required": [
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    }
+                },
+                "description": "A single message payload"
+            },
+            "NewVivienda": {
+                "title": "NewVivienda",
+                "required": [
+                    "title",
+                    "user_id",
+                    "location",
+                    "longitude",
+                    "latitude",
+                    "price"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string"
+                    },
+                    "url_photo": {
+                        "title": "Url Photo",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "longitude": {
+                        "title": "Longitude",
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "title": "Latitude",
+                        "type": "string"
+                    },
+                    "price": {
+                        "title": "Price",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            },
+            "Vivienda": {
+                "title": "Vivienda",
+                "required": [
+                    "title",
+                    "user_id",
+                    "location",
+                    "longitude",
+                    "latitude",
+                    "price"
+                ],
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "title": " Id",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "type": "string"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string"
+                    },
+                    "state": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/viviendaStateEnum"
+                            }
+                        ],
+                        "default": "available"
+                    },
+                    "url_photo": {
+                        "title": "Url Photo",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "longitude": {
+                        "title": "Longitude",
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "title": "Latitude",
+                        "type": "string"
+                    },
+                    "price": {
+                        "title": "Price",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                    }
+                }
+            },
+            "viviendaStateEnum": {
+                "title": "viviendaStateEnum",
+                "enum": [
+                    "available",
+                    "deleted"
+                ],
+                "type": "string",
+                "description": "An enumeration."
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Default"
+        },
+        {
+            "url": "http://localhost:8002",
+            "description": "Docker compose"
+        }
+    ]
+}
