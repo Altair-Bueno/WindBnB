@@ -12,6 +12,7 @@ import {
   URI as NewBookingHandlerURI,
   FormDataKeys as NewBookingFormDataKeys,
 } from "../../bookings/newHandler";
+
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)

@@ -9,6 +9,7 @@ import {
   Vivienda
 } from "../../../api/A2viviendasREST";
 import CloudinaryNew from "../../../components/CloudinaryNew.svelte";
+import cookies from "../../../cookies";
 
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
@@ -16,6 +17,11 @@ const viviendaApi = new ViviendaApi(
 
 let newHouseRequest : NewHouseRequest;
 let newVivienda : NewVivienda;
+
+const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
+if(userId === undefined){
+  return Astro.redirect('/?danger=User is not logged in');
+}
 ---
 <WindbnbLayout title="New house" page={"NEW_HOUSE"}>
     <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
