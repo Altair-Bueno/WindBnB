@@ -7,4 +7,5 @@ interface ImportMetaEnv {
   readonly POSITION_STACK_API_KEY: string;
   readonly CLOUDINARY_CLOUD_NAME: string;
   readonly CLOUDINARY_UPLOAD_PRESET: string;
+  readonly PUBLIC_PAYPAL_CLIENTID: string;
 }
