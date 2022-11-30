@@ -3,20 +3,20 @@ import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import Map from "../../components/Map.svelte";
 import Layout from "../../layouts/Layout.astro";
-import cookies from "../../cookies"
+import cookies from "../../cookies";
 import AppConfig from "../../config";
 import {
   Configuration as ViviendaConfiguration,
   Vivienda,
 } from "../../api/A2viviendasREST";
-import { 
-    EESSPrecio, 
-    GasStationsApi, 
-    GetGasStationsByRadiusRequest,
-    Configuration as DatosAbiertosConfiguration,
-AverageStayApi,
-Data,
-GetAverageStayRequest,
+import {
+  EESSPrecio,
+  GasStationsApi,
+  GetGasStationsByRadiusRequest,
+  Configuration as DatosAbiertosConfiguration,
+  AverageStayApi,
+  Data,
+  GetAverageStayRequest,
 } from "../../api/A2datosabiertosREST";
 import Carousel from "../../components/Carousel.astro";
 import {
@@ -24,60 +24,69 @@ import {
   FormDataKeys as NewBookingFormDataKeys,
 } from "../bookings/newHandler";
 import { MONTHS } from "../../utils/months";
+import Checkout from "../../components/Checkout.svelte";
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
 );
 
-let viv : Vivienda;
+let viv: Vivienda;
 
-try{
+try {
   viv = await viviendaApi.getHouseById({ idCasa });
-} catch (error){
-  return Astro.redirect("/?" + new URLSearchParams({danger: "Cant find house with that ID"}));
+} catch (error) {
+  return Astro.redirect(
+    "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })
+  );
 }
 
 const deleteHouseURI = "/houses/delete/" + idCasa;
 const editHouseURI = "/houses/edit/" + idCasa;
 
 const requestParameters: GetGasStationsByRadiusRequest = {
-    latitude: parseFloat(viv?.latitude),
-    longitude: parseFloat(viv?.longitude),
-    limit: 50 
-}
+  latitude: parseFloat(viv?.latitude),
+  longitude: parseFloat(viv?.longitude),
+  limit: 50,
+};
 
-const gasStationApi = new GasStationsApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
+const gasStationApi = new GasStationsApi(
+  new DatosAbiertosConfiguration(AppConfig.datosAbiertos)
+);
 let gasStationsInRadius: EESSPrecio[];
-try{
-   gasStationsInRadius = await gasStationApi.getGasStationsByRadius(requestParameters);
-} catch (error){
+try {
+  gasStationsInRadius = await gasStationApi.getGasStationsByRadius(
+    requestParameters
+  );
+} catch (error) {
   gasStationsInRadius = [];
 }
-
 
 const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
 
 const averageStayParameters: GetAverageStayRequest = {
-    provincia: viv.location.split(", ")[3],
-    mes: MONTHS[(new Date()).getMonth() - 1]
-}
+  provincia: viv.location.split(", ")[3],
+  mes: MONTHS[new Date().getMonth() - 1],
+};
 console.log(viv.location.split(", ")[4]);
 
-const averageStayApi = new AverageStayApi(new DatosAbiertosConfiguration(AppConfig.datosAbiertos));
+const averageStayApi = new AverageStayApi(
+  new DatosAbiertosConfiguration(AppConfig.datosAbiertos)
+);
 let averageStay: Data;
-try{
+try {
   averageStay = await averageStayApi.getAverageStay(averageStayParameters);
-} catch (error){
+} catch (error) {
   averageStay = {
-    valor: undefined
+    valor: undefined,
   };
 }
-
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
   <body>
-    <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 text-center bg-light">
+    <div
+      class="position-relative overflow-hidden p-3 p-md-2 m-md-2 text-center bg-light"
+    >
       <div class="col-md-10 p-lg-2 mx-auto">
         <h1 class="display-6 fw-normal">{viv?.title}</h1>
         <p class="lead fw-normal">{viv?.description}</p>
@@ -86,19 +95,21 @@ try{
       </div>
       {
         userId === viv?.userId && (
-        <div>
-                    <form action={deleteHouseURI} method="post">
-                    <button class="btn btn-danger" type="submit">Delete house</button>
-                    </form>
+          <div>
+            <form action={deleteHouseURI} method="post">
+              <button class="btn btn-danger" type="submit">
+                Delete house
+              </button>
+            </form>
 
-                    <form class="pt-2" action={editHouseURI} method="post">
-                    <button class="btn btn-warning" type="submit">Edit house</button>
-                    </form>
-                  </div>
+            <form class="pt-2" action={editHouseURI} method="post">
+              <button class="btn btn-warning" type="submit">
+                Edit house
+              </button>
+            </form>
+          </div>
         )
       }
-        
-      
     </div>
 
     <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
@@ -108,49 +119,45 @@ try{
         <div class="my-3 p-3">
           <h2 class="display-5">Book now!</h2>
           <p class="lead">Check the available dates.</p>
-          <small class="lead">This house is {viv?.state == "available" ? "available" : "reserved"}</small>
-          {averageStay.valor && (<p>The average stay this month in {averageStayParameters.provincia} is {averageStay.valor} days</p>)}
+          <small class="lead"
+            >This house is {
+              viv?.state == "available" ? "available" : "reserved"
+            }</small
+          >
+          {
+            averageStay.valor && (
+              <p>
+                The average stay this month in {averageStayParameters.provincia}{" "}
+                is {averageStay.valor} days
+              </p>
+            )
+          }
         </div>
         <div
           class="bg-body shadow-sm mx-auto"
           style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"
         >
           <div class="text-center pt-3 mx-auto" style="width: 90%;">
-            <form action={NewBookingHandlerURI} method="post">
-              <input hidden value={idCasa} name={NewBookingFormDataKeys.houseId} />
-              <div class="mb-3">
-                <label for="fromDateInput" class="form-label">From:</label>
-                <input
-                  type="date"
-                  name={NewBookingFormDataKeys.startDate}
-                  class="form-control"
-                  id="fromDateInput"
-                  aria-describedby="from date input"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="toDateInput" class="form-label">To:</label>
-                <input
-                  type="date"
-                  name={NewBookingFormDataKeys.endDate}
-                  class="form-control"
-                  id="toDateInput"
-                  aria-describedby="to date input"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary">Book</button>
-            </form>
+            <Checkout
+              client:load
+              vivienda={viv}
+              paypalClientId={import.meta.env.PUBLIC_PAYPAL_CLIENTID}
+            />
           </div>
         </div>
       </div>
       <div class="col-lg-7 col-sm-12">
-        <Carousel urls={viv?.urlPhoto}/>
+        <Carousel urls={viv?.urlPhoto} />
       </div>
     </div>
     <div class="col-12">
       <Layout title="Map">
         <p class="lead fw-normal">{viv?.location}</p>
-        <Map client:load coordinates={requestParameters} gasStations={gasStationsInRadius} />
+        <Map
+          client:load
+          coordinates={requestParameters}
+          gasStations={gasStationsInRadius}
+        />
       </Layout>
     </div>
   </body>
