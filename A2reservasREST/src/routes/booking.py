@@ -67,6 +67,24 @@ async def create_booking(
             detail=e.error_code
         )
 
+@router.put(
+    "/{booking_id}", 
+    response_model=Booking, 
+    operation_id="update_booking",
+    responses=NOT_FOUND_RESPONSE
+)
+async def update_booking(
+    booking_id:PyObjectId,request: UpdateBooking, service: BookingService = Depends(get_booking_service)
+):
+    """Updates an existing booking"""
+    try:
+        return await service.update_booking(booking_id,request)
+    except UpdateBookingError as e:
+        raise HTTPException(
+            status_code=404, 
+            detail=e.error_code
+        )
+
 
 @router.get(
     "/{booking_id}", 

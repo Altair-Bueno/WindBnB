@@ -3,7 +3,7 @@ from typing import List
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from .error import AlreadyBookedError, NotFoundError
+from .error import AlreadyBookedError, NotFoundError, UpdateBookingError
 from ..model.booking import *
 from ..model import PyObjectId
 from ..model.house import HouseStateEnum
@@ -127,6 +127,23 @@ class BookingService:
             )
         else:
             raise AlreadyBookedError("A booking already exists")
+
+    async def update_booking(self, booking_id: PyObjectId, payload: UpdateBooking):
+        result = await self.collection.update_one(
+            {"bookings._id": booking_id},
+            {"$set": {"bookings.$[booking].paypal_transaction_id": payload.paypal_transaction_id}},
+            array_filters=[{
+                "booking._id": booking_id,
+                "booking.state": BookingStateEnum.reserved.value,
+                "booking.user_id": payload.user_id,
+                "booking.paypal_transaction_id": None
+            }]
+        )
+
+        if result.modified_count == 1:
+            return await self.get_booking_by_id(booking_id)
+        else: 
+            raise UpdateBookingError("Couldn't update booking")
 
     async def cancel_booking(self, booking_id: PyObjectId):
         result = await self.collection.update_one(
