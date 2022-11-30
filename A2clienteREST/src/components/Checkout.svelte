@@ -7,6 +7,7 @@
   } from "@paypal/paypal-js";
   import type { Vivienda } from "../api/A2viviendasREST";
   import PaypalButton from "./PaypalButton.svelte";
+  import { URI } from "../pages/bookings/newHandler";
 
   export let vivienda: Vivienda;
   export let paypalClientId: string;
@@ -18,8 +19,24 @@
     data: CreateOrderData,
     actions: CreateOrderActions
   ) {
+    const fromTimestamp = Date.parse(from);
+    const toTimestamp = Date.parse(to);
+
+    const response = await fetch(URI, {
+      method: "POST",
+      body: JSON.stringify({
+        houseId: vivienda.id,
+        startDate: new Date(fromTimestamp),
+        endDate: new Date(toTimestamp),
+      }),
+    });
+    console.log(response);
+    if (!response.ok) {
+      throw new Error("Create order error");
+    }
+
     const days = Math.abs(
-      (Date.parse(from) - Date.parse(to)) / (1000 * 60 * 60 * 24)
+      (fromTimestamp - toTimestamp) / (1000 * 60 * 60 * 24)
     );
     const value = vivienda.price * days;
     return await actions.order.create({
@@ -33,8 +50,18 @@
     });
   }
   async function onApprove(data: OnApproveData, actions: OnApproveActions) {
-    return await actions.order?.capture().then((orderData) => {
-      console.log(orderData);
+    return await actions.order?.capture().then(async (orderData) => {
+      const response = await fetch(URI, {
+        method: "PUT",
+        body: JSON.stringify({
+          paypalTransactionId: orderData.id,
+          bookingId: vivienda.id,
+        }),
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("Create order error");
+      }
     });
   }
 </script>

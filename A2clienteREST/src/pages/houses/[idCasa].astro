@@ -138,11 +138,17 @@ try {
           style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"
         >
           <div class="text-center pt-3 mx-auto" style="width: 90%;">
-            <Checkout
-              client:load
-              vivienda={viv}
-              paypalClientId={import.meta.env.PUBLIC_PAYPAL_CLIENTID}
-            />
+            {
+              userId !== viv.userId ? (
+                <Checkout
+                  client:load
+                  vivienda={viv}
+                  paypalClientId={import.meta.env.PUBLIC_PAYPAL_CLIENTID}
+                />
+              ) : (
+                <div>Placeholder</div>
+              )
+            }
           </div>
         </div>
       </div>
