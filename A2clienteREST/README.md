@@ -38,9 +38,11 @@ Se encuentra disponible en la url: <https://example.org>
 La aplicación admite las siguientes opciones de configuración mediante ficheros
 `.env` o variables de entorno
 
-| Variable                  | Descripción                                                                | Valor por defecto |
-| ------------------------- | -------------------------------------------------------------------------- | ----------------- |
-| `RESERVAS_BASE_PATH`      | Url del servidor donde se encuentra el microservicio `A2reservasREST`      |
-| `VIVIENDAS_BASE_PATH`     | Url del servidor donde se encuentra el microservicio `A2viviendasREST`     |
-| `DATOSABIERTOS_BASE_PATH` | Url del servidor donde se encuentra el microservicio `A2datosabiertosREST` |
-| `POSITION_STACK_API_KEY`  | ApiKey de http://api.positionstack.com                                     |
+| Variable                   | Descripción                                                                | Valor por defecto |
+| -------------------------- | -------------------------------------------------------------------------- | ----------------- |
+| `RESERVAS_BASE_PATH`       | Url del servidor donde se encuentra el microservicio `A2reservasREST`      |
+| `VIVIENDAS_BASE_PATH`      | Url del servidor donde se encuentra el microservicio `A2viviendasREST`     |
+| `DATOSABIERTOS_BASE_PATH`  | Url del servidor donde se encuentra el microservicio `A2datosabiertosREST` |
+| `POSITION_STACK_API_KEY`   | ApiKey de http://api.positionstack.com                                     |
+| `CLOUDINARY_CLOUD_NAME`    | Cloud name de Cloudinary                                                   |
+| `CLOUDINARY_UPLOAD_PRESET` | Upload preset de Cloudinary                                                |
