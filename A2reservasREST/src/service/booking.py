@@ -84,6 +84,7 @@ class BookingService:
             {
                 "_id": request.house_id,
                 "state": HouseStateEnum.available.value,
+                "user_id" : {"$ne": request.user_id},
                 "bookings": {
                     "$not": {
                         "$elemMatch": {
