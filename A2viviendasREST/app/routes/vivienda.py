@@ -5,6 +5,7 @@ from fastapi.openapi.models import Response
 from fastapi.responses import Response
 from pymongo import ReturnDocument
 from pydantic import PositiveFloat
+from app.models.vivienda import Valoracion
 from app.models.vivienda import FilterVivienda
 from app.models.types import PyObjectId
 from app.service.error import NotFoundError
@@ -84,6 +85,11 @@ async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(ge
             status_code=404, 
             detail=e.error_code
         )
+
+
+#@vivienda.post("/viviendas/{idCasa}/valoraciones", response_model=Valoracion, operation_id="new_valoracion", responses=NOT_FOUND_RESPONSE)
+
+
 
 @vivienda.get("/viviendas/{idCasa}/getBookingsAmount", response_model=Message, operation_id="bookings amount", responses=NOT_FOUND_RESPONSE)
 async def get_house_amount_bookings(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
