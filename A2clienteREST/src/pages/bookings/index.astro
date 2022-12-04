@@ -13,11 +13,15 @@ import {
 import AppConfig from "../../config";
 import { getUri } from "./[bookingId]";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import cookies from "../../cookies";
+
+const userId = Astro.cookies.get(cookies.USER_ID_KEY).value
+
+if (!userId) return Astro.redirect("/")
 
 const ITEMS_PER_PAGE = 10;
 
 const params = Astro.url.searchParams;
-
 const beforeDate = params.get("beforeDate");
 const afterDate = params.get("afterDate");
 const sortBy = params.get("sortBy") as null | SortBookingEnum;
@@ -32,6 +36,7 @@ const filter: GetBookingsRequest = {
   ascending: ascending === "on",
   state: state ? state : undefined,
   skip: page && page != "0" ? parseInt(page) * ITEMS_PER_PAGE : undefined,
+  userId
   // userId?: string;
   // houseId?: string;
   // ownerId?: string;
@@ -64,7 +69,7 @@ if (page) {
 const model = await Promise.all(futures);
 ---
 
-<WindbnbLayout title="Bookings" page={"BOOKING"}>
+<WindbnbLayout title="My bookings" page={"BOOKING"}>
   <div class="row">
     <h1>Bookings</h1>
     <aside class="col-md-12 col-lg-2">

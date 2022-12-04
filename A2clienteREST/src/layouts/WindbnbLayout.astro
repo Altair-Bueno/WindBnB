@@ -18,8 +18,13 @@ const websiteName = "WindBnb";
 
 const navbarPages = [
   { id: "HOME", text: "Home", uri: "/", requiresAuth: false },
-  { id: "BOOKING", text: "Bookings", uri: "/bookings", requiresAuth: false },
-  { id: "NEW_HOUSE", text: "New house", uri:"/houses/new", requiresAuth: true},
+  { id: "BOOKING", text: "My Bookings", uri: "/bookings", requiresAuth: true },
+  {
+    id: "NEW_HOUSE",
+    text: "New house",
+    uri: "/houses/new",
+    requiresAuth: true,
+  },
 ];
 
 const { title, page } = Astro.props;
