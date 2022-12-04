@@ -54,6 +54,8 @@
     console.log(error);
     if (!from || !to) {
       msg = "Missing from and/or to fields";
+    } else {
+      msg = "The house isn't available for that period";
     }
   }
 </script>
