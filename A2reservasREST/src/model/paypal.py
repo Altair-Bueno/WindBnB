@@ -11,7 +11,7 @@ class PaypalAmount(BaseModel):
 
 class PaypalPurchaseUnit(BaseModel):
     amount: PaypalAmount
-    custom_id: str
+    invoice_id: str
 
 class PaypalCreateOrderRequestBody(BaseModel):
     purchase_units: List[PaypalPurchaseUnit]
