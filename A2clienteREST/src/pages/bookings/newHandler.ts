@@ -3,57 +3,61 @@ import type { APIContext } from "astro";
 import { BookingApi, Configuration } from "../../api/A2reservasREST";
 import AppConfig from "../../config";
 import cookies from "../../cookies";
-import { CreateOrderRequestBody } from "@paypal/paypal-js";
+import { object, date, string } from "yup";
 
 export const URI = "/bookings/newHandler";
+
+function getUserId(context: APIContext) {
+  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
+  return string().required("User isn't logged in").validate(userId);
+}
+
+const postScheme = object({
+  houseId: string().required(),
+  startDate: date().required(),
+  endDate: date().required(),
+});
 
 /**
  * Creates a new booking
  */
 export async function post(context: APIContext) {
-  const payload = await context.request.json();
-  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-
-  if (!userId) {
-    return { body: JSON.stringify({ error: "User is not logged in" }) };
-  }
-
-  const config = new Configuration(AppConfig.reservas);
-  const api = new BookingApi(config);
-
   try {
-    const response = await api.newBooking({
-      newBooking: {
-        userId,
-        houseId: payload.houseId,
-        startDate: new Date(Date.parse(payload.startDate)),
-        endDate: new Date(Date.parse(payload.endDate)),
-      },
-    });
-    const body: CreateOrderRequestBody = {
-      purchase_units: response.purchaseUnits,
-    };
-    return {
-      body: JSON.stringify(body),
-    };
+    const userId = await getUserId(context);
+    const payload = await context.request
+      .json()
+      .then((x) => postScheme.validate(x));
+
+    const config = new Configuration(AppConfig.reservas);
+    const api = new BookingApi(config);
+
+    const body = await api
+      .newBookingRaw({
+        newBooking: { ...payload, userId },
+      })
+      .then((x) => x.raw.text());
+    return { body };
   } catch (e: any) {
-    const error = await e.response.json().then((x: any) => x.detail);
-    return { body: JSON.stringify({ error }) };
+    throw new Error(e);
   }
 }
 
+const putScheme = object({
+  paypalTransactionId: string().required(),
+  bookingId: string().required(),
+});
+
 export async function put(context: APIContext) {
-  const { paypalTransactionId, bookingId } = await context.request.json();
-  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-
-  if (!userId) {
-    return { body: JSON.stringify({ error: "User is not logged in" }) };
-  }
-
-  const config = new Configuration(AppConfig.reservas);
-  const api = new BookingApi(config);
-
   try {
+    const payload = await context.request.json();
+    const userId = await getUserId(context);
+    const { paypalTransactionId, bookingId } = await putScheme.validate(
+      payload
+    );
+
+    const config = new Configuration(AppConfig.reservas);
+    const api = new BookingApi(config);
+
     const response = await api.updateBooking({
       bookingId,
       updateBooking: { paypalTransactionId, userId },
@@ -62,7 +66,6 @@ export async function put(context: APIContext) {
     params.set("info", "Booked!");
     return context.redirect(`/houses/${response.houseId}?${params}`);
   } catch (e: any) {
-    const error = await e.response.json().then((x: any) => x.detail);
-    return { body: JSON.stringify({ error }) };
+    throw new Error(e);
   }
 }

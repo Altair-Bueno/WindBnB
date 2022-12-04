@@ -15,21 +15,32 @@
 
   let from: string;
   let to: string;
-  let msg: string | undefined;
+  let bookingId: undefined | string;
+
+  let danger: string | undefined;
+  let info: string | undefined;
 
   async function createOrder(
     data: CreateOrderData,
     actions: CreateOrderActions
   ) {
-    const createOrderRequest = await fetch(URI, {
+    danger = undefined;
+    info = undefined;
+    const response = await fetch(URI, {
       method: "POST",
       body: JSON.stringify({
         houseId: vivienda.id,
         startDate: from,
         endDate: to,
       }),
-    }).then((x) => x.json());
-    return await actions.order.create(createOrderRequest);
+    });
+    const payload = await response.json();
+    if (response.ok) {
+      bookingId = payload.purchase_units[0].invoice_id;
+      return await actions.order.create(payload);
+    } else {
+      throw new Error(payload);
+    }
   }
   async function onApprove(data: OnApproveData, actions: OnApproveActions) {
     return await actions.order?.capture().then(async (orderData) => {
@@ -37,11 +48,13 @@
         method: "PUT",
         body: JSON.stringify({
           paypalTransactionId: orderData.id,
-          bookingId: vivienda.id,
+          bookingId,
         }),
       });
-      if (!response.ok) {
-        msg = await response.json().then((x) => x.detail);
+      if (response.ok) {
+        info = "Booked sucessfully!";
+      } else {
+        danger = await response.json().then((x) => x.detail);
         throw new Error("Create order error");
       }
     });
@@ -53,17 +66,22 @@
   async function onError(error: Record<string, any>) {
     console.log(error);
     if (!from || !to) {
-      msg = "Missing from and/or to fields";
+      danger = "Missing from and/or to fields";
     } else {
-      msg = "The house isn't available for that period";
+      danger = "The house isn't available for that period";
     }
   }
 </script>
 
 <form>
-  {#if msg}
+  {#if danger}
     <div class="alert alert-danger" role="alert">
-      {msg}
+      {danger}
+    </div>
+  {/if}
+  {#if info}
+    <div class="alert alert-info" role="alert">
+      {info}
     </div>
   {/if}
   <div class="mb-3">
