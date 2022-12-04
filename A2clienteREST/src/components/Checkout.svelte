@@ -4,6 +4,7 @@
     CreateOrderData,
     OnApproveActions,
     OnApproveData,
+    OnCancelledActions,
   } from "@paypal/paypal-js";
   import type { Vivienda } from "../api/A2viviendasREST";
   import PaypalButton from "./PaypalButton.svelte";
@@ -11,6 +12,7 @@
 
   export let vivienda: Vivienda;
   export let paypalClientId: string;
+
   let from: string;
   let to: string;
   let msg: string | undefined;
@@ -19,35 +21,15 @@
     data: CreateOrderData,
     actions: CreateOrderActions
   ) {
-    const fromTimestamp = Date.parse(from);
-    const toTimestamp = Date.parse(to);
-
-    const response = await fetch(URI, {
+    const createOrderRequest = await fetch(URI, {
       method: "POST",
       body: JSON.stringify({
         houseId: vivienda.id,
-        startDate: new Date(fromTimestamp),
-        endDate: new Date(toTimestamp),
+        startDate: from,
+        endDate: to,
       }),
-    });
-    console.log(response);
-    if (!response.ok) {
-      throw new Error("Create order error");
-    }
-
-    const days = Math.abs(
-      (fromTimestamp - toTimestamp) / (1000 * 60 * 60 * 24)
-    );
-    const value = vivienda.price * days;
-    return await actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            value: value.toString(),
-          },
-        },
-      ],
-    });
+    }).then((x) => x.json());
+    return await actions.order.create(createOrderRequest);
   }
   async function onApprove(data: OnApproveData, actions: OnApproveActions) {
     return await actions.order?.capture().then(async (orderData) => {
@@ -58,17 +40,29 @@
           bookingId: vivienda.id,
         }),
       });
-      console.log(response);
       if (!response.ok) {
+        msg = await response.json().then((x) => x.detail);
         throw new Error("Create order error");
       }
     });
+  }
+  async function onCancel(
+    data: Record<string, any>,
+    actions: OnCancelledActions
+  ) {}
+  async function onError(error: Record<string, any>) {
+    console.log(error);
+    if (!from || !to) {
+      msg = "Missing from and/or to fields";
+    }
   }
 </script>
 
 <form>
   {#if msg}
-    {msg}
+    <div class="alert alert-danger" role="alert">
+      {msg}
+    </div>
   {/if}
   <div class="mb-3">
     <label for="fromDateInput" class="form-label">From:</label>
@@ -90,7 +84,11 @@
       bind:value={to}
     />
   </div>
-  {#if from && to}
-    <PaypalButton {paypalClientId} {createOrder} {onApprove} />
-  {/if}
+  <PaypalButton
+    {paypalClientId}
+    {createOrder}
+    {onApprove}
+    {onError}
+    {onCancel}
+  />
 </form>

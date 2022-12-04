@@ -5,6 +5,7 @@
     loadScript,
     OnApproveActions,
     OnApproveData,
+    OnCancelledActions,
   } from "@paypal/paypal-js";
 
   export let paypalClientId: string;
@@ -16,12 +17,20 @@
     data: OnApproveData,
     actions: OnApproveActions
   ) => Promise<void>;
+  export let onError: undefined | ((error: Record<string, any>) => void) =
+    undefined;
+  export let onCancel:
+    | undefined
+    | ((data: Record<string, any>, actions: OnCancelledActions) => void) =
+    undefined;
 
   let paypalButtonContainer: HTMLElement;
 
   loadScript({ "client-id": paypalClientId }).then((paypal) => {
     if (paypal && paypal.Buttons) {
-      paypal.Buttons({ createOrder, onApprove }).render(paypalButtonContainer);
+      paypal
+        .Buttons({ createOrder, onApprove, onError, onCancel })
+        .render(paypalButtonContainer);
     }
   });
 </script>
