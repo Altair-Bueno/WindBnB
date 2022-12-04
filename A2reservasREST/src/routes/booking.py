@@ -8,8 +8,7 @@ from ..model.types import ApiError
 from ..service.error import *
 
 from ..beans import get_booking_service
-from ..model import Message
-from ..model.booking import *
+from ..model import *
 from ..service import BookingService
 
 router = APIRouter()
@@ -51,7 +50,7 @@ async def get_bookings(
 
 @router.post(
     "", 
-    response_model=Booking, 
+    response_model=PaypalCreateOrderRequestBody, 
     operation_id="new_booking",
     responses=ALREADY_BOOKED_RESPONSE
 )

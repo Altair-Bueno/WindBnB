@@ -9,20 +9,8 @@ class MongoConfig(BaseModel):
     class Config:
         frozen = True
 
-
-"""
-class AWSConfig(BaseModel):
-    url: str
-
-    class Config:
-        frozen = True
-
-"""
-
-
 class Settings(BaseSettings):
     mongo: MongoConfig
-    # aws: AWSConfig
 
     class Config:
         env_file = ".env"

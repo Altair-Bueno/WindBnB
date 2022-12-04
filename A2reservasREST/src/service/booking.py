@@ -3,10 +3,8 @@ from typing import List
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from .error import AlreadyBookedError, NotFoundError, UpdateBookingError
-from ..model.booking import *
-from ..model import PyObjectId
-from ..model.house import HouseStateEnum
+from .error import *
+from ..model import *
 
 
 class BookingService:
@@ -78,7 +76,7 @@ class BookingService:
             async for document in self.collection.aggregate(pipeline)
         ]
 
-    async def new_booking(self, request: NewBooking) -> Booking:
+    async def new_booking(self, request: NewBooking) -> PaypalCreateOrderRequestBody:
         booking_id = ObjectId()
         result = await self.collection.update_one(
             {
@@ -117,13 +115,14 @@ class BookingService:
         )
 
         if result.modified_count == 1:
-            return Booking(
-                house_id=request.house_id,
-                id=booking_id,
-                user_id=request.user_id,
-                start_date=request.start_date,
-                end_date=request.end_date,
-                state=BookingStateEnum.reserved
+            price_dict = await self.collection.find_one({"_id": request.house_id}, {"price": 1})
+            price = price_dict['price']
+            time = request.end_date - request.start_date
+            value = price * time.days
+            return PaypalCreateOrderRequestBody(
+                purchase_units=[
+                    PaypalPurchaseUnit(amount=PaypalAmount(value=value))
+                ]
             )
         else:
             raise AlreadyBookedError("A booking already exists")
