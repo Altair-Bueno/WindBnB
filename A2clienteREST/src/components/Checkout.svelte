@@ -15,7 +15,6 @@
 
   let from: string;
   let to: string;
-  let bookingId: undefined | string;
 
   let danger: string | undefined;
   let info: string | undefined;
@@ -36,7 +35,6 @@
     });
     const payload = await response.json();
     if (response.ok) {
-      bookingId = payload.purchase_units[0].invoice_id;
       return await actions.order.create(payload);
     } else {
       throw new Error(payload);
@@ -48,7 +46,7 @@
         method: "PUT",
         body: JSON.stringify({
           paypalTransactionId: orderData.id,
-          bookingId,
+          bookingId: orderData.purchase_units[0].invoice_id,
         }),
       });
       if (response.ok) {
