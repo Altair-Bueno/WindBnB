@@ -1,5 +1,8 @@
+from bson import ObjectId
 from pydantic import BaseModel
 from typing import List
+
+from .types import PyObjectId
 
 
 class PaypalAmount(BaseModel):
@@ -8,7 +11,7 @@ class PaypalAmount(BaseModel):
 
 class PaypalPurchaseUnit(BaseModel):
     amount: PaypalAmount
-
+    custom_id: str
 
 class PaypalCreateOrderRequestBody(BaseModel):
     purchase_units: List[PaypalPurchaseUnit]

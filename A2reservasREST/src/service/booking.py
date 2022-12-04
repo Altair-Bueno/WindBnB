@@ -121,7 +121,7 @@ class BookingService:
             value = price * time.days
             return PaypalCreateOrderRequestBody(
                 purchase_units=[
-                    PaypalPurchaseUnit(amount=PaypalAmount(value=value))
+                    PaypalPurchaseUnit(amount=PaypalAmount(value=value), custom_id=str(booking_id))
                 ]
             )
         else:
