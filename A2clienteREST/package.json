@@ -23,6 +23,7 @@
     "astro": "^1.6.0",
     "bootstrap": "^5.2.2",
     "leaflet": "^1.9.3",
+    "nodemailer": "^6.8.0",
     "svelte": "^3.52.0",
     "yup": "^0.32.11"
   },
