@@ -38,7 +38,8 @@ uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 ```sh
 # Compilar el contenedor
 docker build -t a2reservas .
-# Inicializar el contenedor
+# Inicializar el contenedor. Añadir las variables de entorno que faltan
+# Ver la sección Configuración ...
 docker run -p 8080:8000 \
     -e mongo_url=<VALOR> \
     -e mongo_collection=<VALOR> \
