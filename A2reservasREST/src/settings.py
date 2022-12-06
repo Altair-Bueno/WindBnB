@@ -1,4 +1,4 @@
-from pydantic import BaseModel, BaseSettings, MongoDsn
+from pydantic import BaseModel, BaseSettings, MongoDsn, HttpUrl
 
 
 class MongoConfig(BaseModel):
@@ -9,8 +9,16 @@ class MongoConfig(BaseModel):
     class Config:
         frozen = True
 
+class PaypalConfig(BaseModel):
+    url: HttpUrl
+    clientid: str
+    secret: str
+    class Config:
+        frozen = True
+
 class Settings(BaseSettings):
     mongo: MongoConfig
+    paypal: PaypalConfig
 
     class Config:
         env_file = ".env"

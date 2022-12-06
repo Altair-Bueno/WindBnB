@@ -1,7 +1,10 @@
 from typing import List
+from httpx import AsyncClient
 
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
+
+from .paypal import PaypalService
 
 from .error import *
 from ..model import *
@@ -9,9 +12,11 @@ from ..model import *
 
 class BookingService:
     collection: AsyncIOMotorCollection
+    paypal: PaypalService
 
-    def __init__(self, collection: AsyncIOMotorCollection):
+    def __init__(self, collection: AsyncIOMotorCollection, paypal: PaypalService):
         self.collection = collection
+        self.paypal = paypal
 
     async def get_booking_by_id(self, booking_id: PyObjectId) -> Optional[
         Booking]:
@@ -128,9 +133,10 @@ class BookingService:
             raise AlreadyBookedError("A booking already exists")
 
     async def update_booking(self, booking_id: PyObjectId, payload: UpdateBooking):
+        order = await self.paypal.capture_order(payload.paypal_order_id)
         result = await self.collection.update_one(
             {"bookings._id": booking_id},
-            {"$set": {"bookings.$[booking].paypal_transaction_id": payload.paypal_transaction_id}},
+            {"$set": {"bookings.$[booking].paypal_order_id": order['id']}},
             array_filters=[{
                 "booking._id": booking_id,
                 "booking.state": BookingStateEnum.reserved.value,
