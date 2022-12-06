@@ -21,8 +21,8 @@ pip install -r requirements.txt
 
 # Configuración necesaria para arrancar el servicio
 export mongo_url=<VALOR>
-export mongo_collection=<VALOR>
 export mongo_database=<VALOR>
+# Ver la sección Configuración ...
 # Iniciar el servidor
 uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 ```
@@ -56,6 +56,9 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `mongo_url`        | URL de un servidor Mongodb              |                   |
 | `mongo_collection` | Colección donde almacenar los datos     |                   |
 | `mongo_database`   | Base de datos donde buscar la colección |                   |
+| `paypal_clientid`  | Paypal client id                        |                   |
+| `paypal_secret`    | Paypal client secret                    |                   |
+| `paypal_url`       | Paypal API URL                          |                   |
 
 # Documentación
 
