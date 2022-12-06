@@ -43,7 +43,7 @@ export async function post(context: APIContext) {
 }
 
 const putScheme = object({
-  paypalTransactionId: string().required(),
+  paypalOrderId: string().required(),
   bookingId: string().required(),
 });
 
@@ -51,20 +51,18 @@ export async function put(context: APIContext) {
   try {
     const payload = await context.request.json();
     const userId = await getUserId(context);
-    const { paypalTransactionId, bookingId } = await putScheme.validate(
-      payload
-    );
+    const { paypalOrderId, bookingId } = await putScheme.validate(payload);
 
     const config = new Configuration(AppConfig.reservas);
     const api = new BookingApi(config);
 
     const response = await api.updateBooking({
       bookingId,
-      updateBooking: { paypalTransactionId, userId },
+      updateBooking: { paypalOrderId, userId },
     });
-    const params = new URLSearchParams();
-    params.set("info", "Booked!");
-    return context.redirect(`/houses/${response.houseId}?${params}`);
+    return {
+      body: JSON.stringify(response),
+    };
   } catch (e: any) {
     throw new Error(e);
   }

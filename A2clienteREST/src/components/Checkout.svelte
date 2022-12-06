@@ -13,6 +13,8 @@
   export let vivienda: Vivienda;
   export let paypalClientId: string;
 
+  let bookingId = "";
+
   let from: string;
   let to: string;
 
@@ -35,27 +37,26 @@
     });
     const payload = await response.json();
     if (response.ok) {
+      bookingId = payload.purchase_units[0].invoice_id;
       return await actions.order.create(payload);
     } else {
       throw new Error(payload);
     }
   }
   async function onApprove(data: OnApproveData, actions: OnApproveActions) {
-    return await actions.order?.capture().then(async (orderData) => {
-      const response = await fetch(URI, {
-        method: "PUT",
-        body: JSON.stringify({
-          paypalTransactionId: orderData.id,
-          bookingId: orderData.purchase_units[0].invoice_id,
-        }),
-      });
-      if (response.ok) {
-        info = "Booked sucessfully!";
-      } else {
-        danger = await response.json().then((x) => x.detail);
-        throw new Error("Create order error");
-      }
+    const response = await fetch(URI, {
+      method: "PUT",
+      body: JSON.stringify({
+        bookingId,
+        paypalOrderId: data.orderID,
+      }),
     });
+    const orderData = await response.json();
+    if (response.ok) {
+      info = "Booked sucessfully!";
+    } else {
+      throw new Error("Failed to verify order");
+    }
   }
   async function onCancel(
     data: Record<string, any>,
