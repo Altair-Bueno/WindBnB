@@ -2,6 +2,8 @@ from fastapi import Depends
 from functools import lru_cache
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from .service.paypal import PaypalService
+
 from .service import BookingService
 from .settings import Settings
 
@@ -32,5 +34,12 @@ def get_windbnb_collection(
 
 
 @lru_cache
-def get_booking_service(collection=Depends(get_windbnb_collection)) -> BookingService:
-    return BookingService(collection)
+def get_paypal_service(settings: Settings = Depends(get_settings)):
+    return PaypalService(settings.paypal)
+
+@lru_cache
+def get_booking_service(
+    collection=Depends(get_windbnb_collection), 
+    paypal: PaypalService = Depends(get_paypal_service)
+) -> BookingService:
+    return BookingService(collection, paypal)

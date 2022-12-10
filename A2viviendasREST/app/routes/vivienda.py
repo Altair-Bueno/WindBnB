@@ -5,6 +5,8 @@ from fastapi.openapi.models import Response
 from fastapi.responses import Response
 from pymongo import ReturnDocument
 from pydantic import PositiveFloat
+from app.models.vivienda import NewValoracion
+from app.models.vivienda import Valoracion
 from app.models.vivienda import FilterVivienda
 from app.models.types import PyObjectId
 from app.service.error import NotFoundError
@@ -84,6 +86,28 @@ async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(ge
             status_code=404, 
             detail=e.error_code
         )
+
+@vivienda.post("/{idCasa}/valoraciones", response_model=Valoracion, operation_id="new_valoracion", responses=NOT_FOUND_RESPONSE)
+async def create_valoracion(idCasa: PyObjectId, request: NewValoracion, service: ViviendaService = Depends(get_vivienda_service)):
+    """Creates a new valoration"""
+    return await service.new_valoracion(idCasa, request)
+
+@vivienda.delete("/{idCasa}/valoraciones/{idValoracion}", response_model=Message, operation_id="delete_valoracion", responses=NOT_FOUND_RESPONSE)
+async def delete_valoracion(idCasa: PyObjectId, idValoracion: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
+    """Deletes a valoration"""
+    try: 
+        await service.delete_valoracion(idCasa, idValoracion)
+        return Message(message=f"Successfully deleted valoration")
+    except NotFoundError as e:
+        raise HTTPException(
+            status_code=404, 
+            detail=e.error_code
+        )
+    
+'''@vivienda.get("/{idCasa}/valoraciones", response_model=List[Valoracion], operation_id="get_valoraciones", responses=NOT_FOUND_RESPONSE)
+async def get_valoraciones(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
+    """Get all valorations of a house"""
+    return await service.get_valoraciones(idCasa)'''
 
 @vivienda.get("/viviendas/{idCasa}/getBookingsAmount", response_model=Message, operation_id="bookings amount", responses=NOT_FOUND_RESPONSE)
 async def get_house_amount_bookings(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):

@@ -21,8 +21,8 @@ pip install -r requirements.txt
 
 # Configuración necesaria para arrancar el servicio
 export mongo_url=<VALOR>
-export mongo_collection=<VALOR>
 export mongo_database=<VALOR>
+# Ver la sección Configuración ...
 # Iniciar el servidor
 uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 ```
@@ -38,7 +38,8 @@ uvicorn --reload --port 8000 --host 127.0.0.0 src:app
 ```sh
 # Compilar el contenedor
 docker build -t a2reservas .
-# Inicializar el contenedor
+# Inicializar el contenedor. Añadir las variables de entorno que faltan
+# Ver la sección Configuración ...
 docker run -p 8080:8000 \
     -e mongo_url=<VALOR> \
     -e mongo_collection=<VALOR> \
@@ -56,6 +57,9 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `mongo_url`        | URL de un servidor Mongodb              |                   |
 | `mongo_collection` | Colección donde almacenar los datos     |                   |
 | `mongo_database`   | Base de datos donde buscar la colección |                   |
+| `paypal_clientid`  | Paypal client id                        |                   |
+| `paypal_secret`    | Paypal client secret                    |                   |
+| `paypal_url`       | Paypal API URL                          |                   |
 
 # Documentación
 

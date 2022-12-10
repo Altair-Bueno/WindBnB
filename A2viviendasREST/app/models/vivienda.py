@@ -10,6 +10,29 @@ class viviendaStateEnum(str, Enum):
     available = "available"
     deleted = "deleted"
 
+class valoracionStateEnum(str, Enum):
+    available = "available"
+    deleted = "deleted"
+
+class Valoracion(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    vivienda_id: PyObjectId
+    user_id: str
+    state: valoracionStateEnum = valoracionStateEnum.available
+    valoracion: int
+    comentario : str
+
+    class Config:
+        json_encoders = {ObjectId: str}
+
+class NewValoracion(BaseModel):
+    #vivienda_id: str
+    user_id: str
+    valoracion: int
+    comentario : str
+
+    class Config:
+        json_encoders = {ObjectId: str}
 
 class Vivienda(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -22,6 +45,7 @@ class Vivienda(BaseModel):
     longitude: str
     latitude: str
     price: PositiveFloat
+    #valoraciones : List[Valoracion]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -36,6 +60,7 @@ class NewVivienda(BaseModel):
     longitude: str
     latitude: str
     price: PositiveFloat
+   #valoraciones : List[Valoracion]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -49,6 +74,7 @@ class EditVivienda(BaseModel):
     longitude: Optional[str]
     latitude: Optional[str]
     price: Optional[PositiveFloat]
+    #valoraciones : Optional[List[Valoracion]]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -60,3 +86,4 @@ class FilterVivienda(BaseModel):
 
     class Config:
         json_encoders = {ObjectId: str}
+

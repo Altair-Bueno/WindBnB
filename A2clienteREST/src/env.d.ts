@@ -9,4 +9,5 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_UPLOAD_PRESET: string;
   readonly AUTH_CLIENT_ID: string;
   readonly AUTH_CLIENT_SECRET: string;
+  readonly PUBLIC_PAYPAL_CLIENTID: string;
 }

@@ -21,10 +21,15 @@ class Booking(BaseModel):
     start_date: date
     end_date: date
     state: BookingStateEnum = BookingStateEnum.reserved
+    paypal_order_id: Optional[str] = None
 
     class Config:
         json_encoders = {ObjectId: str}
 
+class UpdateBooking(BaseModel):
+    user_id: str
+    paypal_order_id: str
+    
 
 class NewBooking(BaseModel):
     """Payload for creating new bookings"""

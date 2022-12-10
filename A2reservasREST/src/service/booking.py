@@ -1,19 +1,22 @@
 from typing import List
+from httpx import AsyncClient
 
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from .error import AlreadyBookedError, NotFoundError
-from ..model.booking import *
-from ..model import PyObjectId
-from ..model.house import HouseStateEnum
+from .paypal import PaypalService
+
+from .error import *
+from ..model import *
 
 
 class BookingService:
     collection: AsyncIOMotorCollection
+    paypal: PaypalService
 
-    def __init__(self, collection: AsyncIOMotorCollection):
+    def __init__(self, collection: AsyncIOMotorCollection, paypal: PaypalService):
         self.collection = collection
+        self.paypal = paypal
 
     async def get_booking_by_id(self, booking_id: PyObjectId) -> Optional[
         Booking]:
@@ -78,12 +81,13 @@ class BookingService:
             async for document in self.collection.aggregate(pipeline)
         ]
 
-    async def new_booking(self, request: NewBooking) -> Booking:
+    async def new_booking(self, request: NewBooking) -> PaypalCreateOrderRequestBody:
         booking_id = ObjectId()
         result = await self.collection.update_one(
             {
                 "_id": request.house_id,
                 "state": HouseStateEnum.available.value,
+                "user_id" : {"$ne": request.user_id},
                 "bookings": {
                     "$not": {
                         "$elemMatch": {
@@ -116,16 +120,35 @@ class BookingService:
         )
 
         if result.modified_count == 1:
-            return Booking(
-                house_id=request.house_id,
-                id=booking_id,
-                user_id=request.user_id,
-                start_date=request.start_date,
-                end_date=request.end_date,
-                state=BookingStateEnum.reserved
+            price_dict = await self.collection.find_one({"_id": request.house_id}, {"price": 1})
+            price = price_dict['price']
+            time = request.end_date - request.start_date
+            value = price * time.days
+            return PaypalCreateOrderRequestBody(
+                purchase_units=[
+                    PaypalPurchaseUnit(amount=PaypalAmount(value=value), invoice_id=str(booking_id))
+                ]
             )
         else:
             raise AlreadyBookedError("A booking already exists")
+
+    async def update_booking(self, booking_id: PyObjectId, payload: UpdateBooking):
+        order = await self.paypal.capture_order(payload.paypal_order_id)
+        result = await self.collection.update_one(
+            {"bookings._id": booking_id},
+            {"$set": {"bookings.$[booking].paypal_order_id": order['id']}},
+            array_filters=[{
+                "booking._id": booking_id,
+                "booking.state": BookingStateEnum.reserved.value,
+                "booking.user_id": payload.user_id,
+                "booking.paypal_transaction_id": None
+            }]
+        )
+
+        if result.modified_count == 1:
+            return await self.get_booking_by_id(booking_id)
+        else: 
+            raise UpdateBookingError("Couldn't update booking")
 
     async def cancel_booking(self, booking_id: PyObjectId):
         result = await self.collection.update_one(

@@ -1,62 +1,69 @@
 // I love ts...
 import type { APIContext } from "astro";
-import {
-  BookingApi,
-  Configuration,
-  ResponseError,
-} from "../../api/A2reservasREST";
+import { BookingApi, Configuration } from "../../api/A2reservasREST";
 import AppConfig from "../../config";
 import cookies from "../../cookies";
+import { object, date, string } from "yup";
 
 export const URI = "/bookings/newHandler";
 
-export const FormDataKeys = {
-  houseId: "house_id",
-  startDate: "start_date",
-  endDate: "end_date",
-};
+function getUserId(context: APIContext) {
+  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
+  return string().required("User isn't logged in").validate(userId);
+}
+
+const postScheme = object({
+  houseId: string().required(),
+  startDate: date().required(),
+  endDate: date().required(),
+});
 
 /**
  * Creates a new booking
  */
 export async function post(context: APIContext) {
-  const referer = new URL(
-    context.request.headers.get("referer") ?? context.url
-  );
-
-  const formData = await context.request.formData();
-  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-
-  if (!userId) {
-    referer.searchParams.set("danger", "User isn't log in");
-    return context.redirect(referer.toString());
-  }
-
-  const config = new Configuration(AppConfig.reservas);
-  const api = new BookingApi(config);
-
-  // TS is great...
-  // At this point i'm not even mad at this code
-  const newBooking = {
-    houseId: formData.get(FormDataKeys.houseId)?.toString() ?? "",
-    startDate: new Date(
-      Date.parse(formData.get(FormDataKeys.startDate)?.toString() ?? "")
-    ),
-    endDate: new Date(
-      Date.parse(formData.get(FormDataKeys.endDate)?.toString() ?? "")
-    ),
-    userId,
-  };
-
   try {
-    const response = await api.newBooking({ newBooking });
-    const params = new URLSearchParams();
-    params.set("info", "Booked!");
-    return context.redirect(`/houses/${response.houseId}?${params}`);
-  } catch (e) {
-    const error = e as ResponseError;
-    const msg = await error.response.json().then((x) => x.detail);
-    referer.searchParams.set("danger", msg);
-    return context.redirect(referer.toString());
+    const userId = await getUserId(context);
+    const payload = await context.request
+      .json()
+      .then((x) => postScheme.validate(x));
+
+    const config = new Configuration(AppConfig.reservas);
+    const api = new BookingApi(config);
+
+    const body = await api
+      .newBookingRaw({
+        newBooking: { ...payload, userId },
+      })
+      .then((x) => x.raw.text());
+    return { body };
+  } catch (e: any) {
+    throw new Error(e);
+  }
+}
+
+const putScheme = object({
+  paypalOrderId: string().required(),
+  bookingId: string().required(),
+});
+
+export async function put(context: APIContext) {
+  try {
+    const payload = await context.request.json();
+    const userId = await getUserId(context);
+    const { paypalOrderId, bookingId } = await putScheme.validate(payload);
+
+    const config = new Configuration(AppConfig.reservas);
+    const api = new BookingApi(config);
+
+    const response = await api.updateBooking({
+      bookingId,
+      updateBooking: { paypalOrderId, userId },
+    });
+    return {
+      body: JSON.stringify(response),
+    };
+  } catch (e: any) {
+    throw new Error(e);
   }
 }
