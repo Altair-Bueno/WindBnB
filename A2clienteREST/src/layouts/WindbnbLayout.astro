@@ -6,6 +6,8 @@ import {
 } from "../pages/auth/logoutHandler";
 import { FormDataKeys as LoginFormDataKeys } from "../pages/auth/loginHandler";
 import cookies from "../cookies";
+import { Auth0Provider } from "@auth0/auth0-react";
+import LoginButton from "../components/LoginButton.svelte";
 
 export type Page = "HOME" | "BOOKING" | "NEW_HOUSE";
 
@@ -96,19 +98,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
                     />
                   </form>
                 ) : (
-                  <form method="get" action="/auth/login">
-                    <input
-                      hidden
-                      type="text"
-                      name={LoginFormDataKeys.origin}
-                      value={Astro.url.pathname}
-                    />
-                    <input
-                      type="submit"
-                      value="Login"
-                      class="btn btn-primary"
-                    />
-                  </form>
+                <LoginButton client:only/>
                 )
               }
             </div>
