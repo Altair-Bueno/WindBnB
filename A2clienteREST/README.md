@@ -46,3 +46,7 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `POSITION_STACK_API_KEY`   | ApiKey de http://api.positionstack.com                                     |
 | `CLOUDINARY_CLOUD_NAME`    | Cloud name de Cloudinary                                                   |
 | `CLOUDINARY_UPLOAD_PRESET` | Upload preset de Cloudinary                                                |
+| `PUBLIC_HOST_NAME`         |                                                                            |
+| `PUBLIC_AUTH_REDIRECT_URL` |                                                                            |
+| `PUBLIC_AUTH_CLIENT_ID`    |                                                                            |
+| `AUTH_CLIENT_SECRET`       |                                                                            |
