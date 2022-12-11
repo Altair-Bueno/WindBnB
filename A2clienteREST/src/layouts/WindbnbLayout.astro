@@ -103,7 +103,11 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
                     />
                   </form>
                 ) : (
-                <LoginButton client:only/>
+                <LoginButton 
+                    domain={import.meta.env.PUBLIC_AUTH_DOMAIN_URL}
+                    clientId={import.meta.env.PUBLIC_AUTH_CLIENT_ID}
+                    redirectUri={import.meta.env.PUBLIC_AUTH_REDIRECT_URL}
+                />
                 )
               }
             </div>

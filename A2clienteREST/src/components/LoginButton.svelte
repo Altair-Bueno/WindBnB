@@ -1,28 +1,21 @@
 <script>
-import {createAuth0Client} from '@auth0/auth0-spa-js';
-import "../styles/bootstrap.scss";
-
-// Crea una nueva instancia del cliente Auth0
-const auth0 = createAuth0Client({
-    domain: "dev-b24klp0bqjdg0iaq.us.auth0.com",
-	clientId: "wt7qbwCEMdjbZQIkDgYHurw7adhhjoWf"
-});
-
-// Inicia el flujo de inicio de sesión
-async function login() {
-  await (await auth0).loginWithRedirect(
-    {
-      redirect_uri: "http://localhost:3000"
-    }
-  );
-  await auth0.handleRedirectCallback();
-}
-
-// Obtiene información del usuario autenticado
-async function getUser() {
-  const user = await auth0.getUser();
-  console.log(user);
-}
+    export let domain;
+    export let clientId;
+    export let redirectUri;
 </script>
 
-<button class="btn btn-primary" on:click={login}>Iniciar sesión</button>
+<form method="get" action={"https://" + domain + "/authorize"}>
+    <!--
+        GET https://YOUR_DOMAIN/authorize?
+        response_type=code|token&
+        client_id=YOUR_CLIENT_ID&
+        connection=CONNECTION&
+        redirect_uri=https://YOUR_APP/callback&
+        state=STATE&
+        ADDITIONAL_PARAMETERS
+    -->
+    <input hidden name="response_type" value="code"/>
+    <input hidden name="client_id" value={clientId}/>
+    <input hidden name="redirect_uri" value={redirectUri}/>
+    <input type="submit" value="Log in" class="btn btn-primary">
+</form>
