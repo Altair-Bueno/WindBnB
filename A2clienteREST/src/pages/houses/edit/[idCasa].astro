@@ -7,35 +7,31 @@ import {
   Configuration as ViviendaConfiguration,
   Vivienda,
 } from "../../../api/A2viviendasREST";
-import Carousel from "../../../components/Carousel.astro";
-import {
-  URI as NewBookingHandlerURI,
-  FormDataKeys as NewBookingFormDataKeys,
-} from "../../bookings/newHandler";
 
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
 );
 
-let viv : Vivienda;
+let viv: Vivienda;
 
-try{
+try {
   viv = await viviendaApi.getHouseById({ idCasa });
-} catch (error){
-  return Astro.redirect("/?" + new URLSearchParams({danger: "Cant find house with that ID"}));
+} catch (error) {
+  return Astro.redirect(
+    "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })
+  );
 }
 
 const loc = viv?.location;
 const loc_splitted = loc.split(", ");
-
 ---
 
 <WindbnbLayout title="Edit house">
   <CloudinaryEdit
-  cloudName= {import.meta.env.CLOUDINARY_CLOUD_NAME}
-  uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
-  vivienda={viv}
-  client:load
-/>
+    cloudName={import.meta.env.CLOUDINARY_CLOUD_NAME}
+    uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
+    vivienda={viv}
+    client:load
+  />
 </WindbnbLayout>

@@ -6,31 +6,28 @@ import {
   Configuration as ViviendaConfiguration,
   Vivienda,
 } from "../../../api/A2viviendasREST";
-import Carousel from "../../../components/Carousel.astro";
-import {
-  URI as NewBookingHandlerURI,
-  FormDataKeys as NewBookingFormDataKeys,
-} from "../../bookings/newHandler";
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
 );
 
-let viv : Vivienda;
+let viv: Vivienda;
 
-try{
+try {
   viv = await viviendaApi.getHouseById({ idCasa });
-} catch (error){
-  return Astro.redirect("/?" + new URLSearchParams({danger: "Cant find house with that ID"}));
+} catch (error) {
+  return Astro.redirect(
+    "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })
+  );
 }
 ---
 
 <WindbnbLayout title="Delete house {idCasa}">
-    <div class="alert alert-warning" role="alert">
-        You will delete the house with id: {idCasa}, are you sure?
-        <form class="mt-1" method="post" action="/houses/delete/deleteHandler">
-            <input type="text" name="idCasa" value={idCasa} hidden/>
-            <button type="submit" class="btn btn-warning">Delete</button>
-        </form>
-    </div>
+  <div class="alert alert-warning" role="alert">
+    You will delete the house with id: {idCasa}, are you sure?
+    <form class="mt-1" method="post" action="/houses/delete/deleteHandler">
+      <input type="text" name="idCasa" value={idCasa} hidden />
+      <button type="submit" class="btn btn-warning">Delete</button>
+    </form>
+  </div>
 </WindbnbLayout>
