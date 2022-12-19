@@ -1,13 +1,8 @@
 ---
 import "../styles/bootstrap.scss";
-import {
-  FormDataKeys as LogoutPostFormDataKeys,
-  URI as LogoutURI,
-} from "../pages/auth/logoutHandler";
-import { FormDataKeys as LoginFormDataKeys } from "../pages/auth/loginHandler";
-import cookies from "../cookies";
-import { Auth0Provider } from "@auth0/auth0-react";
-import LoginButton from "../components/LoginButton.svelte";
+import LoginButton from "../components/LoginButton.astro";
+import LogoutButton from "../components/LogoutButton.astro";
+import { isLoggedIn } from "../utils/auth0";
 
 export type Page = "HOME" | "BOOKING" | "NEW_HOUSE";
 
@@ -34,8 +29,6 @@ const { title, page } = Astro.props;
 const info = Astro.url.searchParams.get("info");
 const warning = Astro.url.searchParams.get("warning");
 const danger = Astro.url.searchParams.get("danger");
-
-const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
 ---
 
 <!DOCTYPE html>
@@ -69,7 +62,7 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
               {
                 navbarPages
                   .filter((x) => {
-                    return !(x.requiresAuth && !hasUserid);
+                    return !(x.requiresAuth && !isLoggedIn(Astro));
                   })
                   .map((x) => {
                     return (
@@ -88,26 +81,15 @@ const hasUserid = Astro.cookies.has(cookies.USER_ID_KEY);
             </ul>
             <div>
               {
-                hasUserid ? (
-                  <form method="post" action={LogoutURI}>
-                    <input
-                      hidden
-                      type="text"
-                      name={LogoutPostFormDataKeys.origin}
-                      value={Astro.url.pathname}
-                    />
-                    <input
-                      type="submit"
-                      value="Logout"
-                      class="btn btn-danger"
-                    />
-                  </form>
+                isLoggedIn(Astro) ? (
+                  <LogoutButton action="/auth/logout" />
                 ) : (
-                <LoginButton 
-                    domain={import.meta.env.PUBLIC_AUTH_DOMAIN_URL}
-                    clientId={import.meta.env.PUBLIC_AUTH_CLIENT_ID}
-                    redirectUri={import.meta.env.PUBLIC_AUTH_REDIRECT_URL}
-                />
+                  <LoginButton
+                    audience={import.meta.env.PUBLIC_AUTH0_AUDIENCE}
+                    baseUrl={import.meta.env.PUBLIC_AUTH0_BASEURL}
+                    clientId={import.meta.env.PUBLIC_AUTH0_CLIENTID}
+                    callbackUrl={`${Astro.url.origin}/auth/callback`}
+                  />
                 )
               }
             </div>

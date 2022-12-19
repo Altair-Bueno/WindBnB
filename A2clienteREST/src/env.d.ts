@@ -8,9 +8,9 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_CLOUD_NAME: string;
   readonly CLOUDINARY_UPLOAD_PRESET: string;
   readonly PUBLIC_PAYPAL_CLIENTID: string;
-  readonly PUBLIC_AUTH_DOMAIN_URL: string;
-  readonly PUBLIC_AUTH_REDIRECT_URL: string;
-  readonly PUBLIC_AUTH_CLIENT_ID: string;
-  readonly AUTH_CLIENT_SECRET: string;
-  readonly PUBLIC_HOST_NAME: string;
+
+  readonly AUTH0_CLIENTSECRET: string;
+  readonly PUBLIC_AUTH0_CLIENTID: string;
+  readonly PUBLIC_AUTH0_BASEURL: string;
+  readonly PUBLIC_AUTH0_AUDIENCE: string;
 }

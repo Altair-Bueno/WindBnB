@@ -1,0 +1,10 @@
+---
+export interface Props {
+  action: string;
+}
+const { action } = Astro.props;
+---
+
+<form method="post" action={action}>
+  <input type="submit" class="btn btn-danger" value="Log out" />
+</form>
