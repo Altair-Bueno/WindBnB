@@ -25,8 +25,8 @@ services:
     build: A2viviendasREST
     environment:
       mongo_url: "mongodb://root:example@mongodb:27017"
-      mongo_database: "iweb"
-      mongo_collection: "houses"
+    env_file:
+      - A2viviendasREST/.env
     ports:
       - "8002:8000"
   # http://localhost:8003
