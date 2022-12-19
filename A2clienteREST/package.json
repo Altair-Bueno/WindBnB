@@ -17,25 +17,14 @@
     "openapi-viviendas": "openapi-generator-cli generate -i ../A2viviendasREST/openapi.json -g typescript-fetch -o src/api/A2viviendasREST"
   },
   "dependencies": {
-    "@astrojs/react": "^1.2.2",
     "@astrojs/svelte": "^1.0.2",
     "@astrojs/vercel": "^2.3.3",
-    "@auth0/auth0-react": "^1.12.0",
-    "@auth0/auth0-spa-js": "^2.0.1",
-    "@aws-sdk/types": "^3.222.0",
     "@paypal/paypal-js": "^5.1.4",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.9",
-    "astro": "^1.6.0",
-    "aws-amplify": "^5.0.5",
-    "aws-sdk": "^2.1267.0",
+    "astro": "^1.7.0",
     "bootstrap": "^5.2.2",
     "leaflet": "^1.9.3",
-    "nodemailer": "^6.8.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "svelte": "^3.52.0",
-    "yup": "^0.32.11"
+    "zod": "^3.20.2"
   },
   "volta": {
     "node": "19.0.0"
