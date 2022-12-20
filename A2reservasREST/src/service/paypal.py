@@ -35,4 +35,16 @@ class PaypalService:
                 }
             )
         return response.json()
+
+    async def refund_payment(self, payment_id: str)-> dict[str, Any]:
+        async with AsyncClient(base_url=self.base_url) as client:
+            token = await self.__get_access_token(client)
+            response = await client.post(
+                f'/v2/payments/captures/{payment_id}/refund',
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {token}",
+                }
+            )
+        return response.json()
         

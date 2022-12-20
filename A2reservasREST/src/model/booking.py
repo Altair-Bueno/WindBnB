@@ -1,6 +1,6 @@
 from datetime import date
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from bson.objectid import ObjectId
 from pydantic import BaseModel, root_validator, FutureDate
@@ -21,7 +21,7 @@ class Booking(BaseModel):
     start_date: date
     end_date: date
     state: BookingStateEnum = BookingStateEnum.reserved
-    paypal_order_id: Optional[str] = None
+    paypal_order: dict[str,Any] = {}
 
     class Config:
         json_encoders = {ObjectId: str}

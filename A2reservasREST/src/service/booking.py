@@ -132,26 +132,30 @@ class BookingService:
             raise AlreadyBookedError("A booking already exists")
 
     async def update_booking(self, auth: Claims, booking_id: PyObjectId, order_id: str):
-        booking = await self.get_booking_by_id(auth, booking_id)
-
         order = await self.paypal.capture_order(order_id)
         result = await self.collection.update_one(
             {"bookings._id": booking_id},
-            {"$set": {"bookings.$[booking].paypal_order_id": order['id']}},
+            {"$set": {"bookings.$[booking].paypal_order": order}},
             array_filters=[{
                 "booking._id": booking_id,
                 "booking.state": BookingStateEnum.reserved.value,
                 "booking.user_id": auth.sub,
-                "booking.paypal_transaction_id": None
+                "booking.paypal_order": None
             }]
         )
 
         if result.modified_count == 1:
-            return await self.get_booking_by_id(auth,booking_id)
+            return await self.get_booking_by_id(auth, booking_id)
         else: 
             raise UpdateBookingError("Couldn't update booking")
 
     async def cancel_booking(self, auth: Claims, booking_id: PyObjectId):
+        booking = await self.get_booking_by_id(auth, booking_id)
+        
+        for purchase_unit in booking.paypal_order["purchase_units"]:
+            for capture in purchase_unit['payments']["captures"]:
+                _response = await self.paypal.refund_payment(capture["id"])
+
         result = await self.collection.update_one(
             {"bookings._id": booking_id},
             {"$set": {
