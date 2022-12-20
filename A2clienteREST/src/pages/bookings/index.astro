@@ -43,7 +43,7 @@ const formData = formScheme.parse(rawFormData);
 const skip = formData.page * ITEMS_PER_PAGE;
 
 const bookingConfig = new BookingConfiguration({
-  basePath: AppConfig.reservas.basePath,
+  basePath: import.meta.env.RESERVAS_BASE_PATH,
   accessToken: () => getAccessToken(Astro),
 });
 const bookingApi = new BookingApi(bookingConfig);

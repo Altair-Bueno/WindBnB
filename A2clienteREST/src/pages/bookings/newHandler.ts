@@ -1,7 +1,6 @@
 // I love ts...
 import type { APIContext } from "astro";
 import { BookingApi, Configuration } from "../../api/A2reservasREST";
-import AppConfig from "../../config";
 import cookies from "../../cookies";
 import { getAccessToken } from "../../utils/auth0";
 import { z } from "zod";
@@ -29,7 +28,7 @@ export async function post(context: APIContext) {
       .then((x) => postScheme.parse(x));
 
     const config = new Configuration({
-      basePath: AppConfig.reservas.basePath,
+      basePath: import.meta.env.RESERVAS_BASE_PATH,
       accessToken: () => getAccessToken(context),
     });
     const api = new BookingApi(config);
@@ -54,7 +53,7 @@ export async function put(context: APIContext) {
     const { paypalOrderId, bookingId } = putScheme.parse(payload);
 
     const config = new Configuration({
-      basePath: AppConfig.reservas.basePath,
+      basePath: import.meta.env.RESERVAS_BASE_PATH,
       accessToken: () => getAccessToken(context),
     });
     const api = new BookingApi(config);
