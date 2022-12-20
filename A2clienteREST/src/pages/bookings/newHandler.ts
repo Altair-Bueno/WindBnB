@@ -3,6 +3,7 @@ import type { APIContext } from "astro";
 import { BookingApi, Configuration } from "../../api/A2reservasREST";
 import AppConfig from "../../config";
 import cookies from "../../cookies";
+import { getAccessToken } from "../../utils/auth0";
 import { z } from "zod";
 
 export const URI = "/bookings/newHandler";
@@ -23,18 +24,18 @@ const postScheme = z.object({
  */
 export async function post(context: APIContext) {
   try {
-    const userId = await getUserId(context);
     const payload = await context.request
       .json()
       .then((x) => postScheme.parse(x));
 
-    const config = new Configuration(AppConfig.reservas);
+    const config = new Configuration({
+      basePath: AppConfig.reservas.basePath,
+      accessToken: () => getAccessToken(context),
+    });
     const api = new BookingApi(config);
 
     const body = await api
-      .newBookingRaw({
-        newBooking: { ...payload, userId },
-      })
+      .newBookingRaw({ newBooking: payload })
       .then((x) => x.raw.text());
     return { body };
   } catch (e: any) {
@@ -50,15 +51,17 @@ const putScheme = z.object({
 export async function put(context: APIContext) {
   try {
     const payload = await context.request.json();
-    const userId = getUserId(context);
     const { paypalOrderId, bookingId } = putScheme.parse(payload);
 
-    const config = new Configuration(AppConfig.reservas);
+    const config = new Configuration({
+      basePath: AppConfig.reservas.basePath,
+      accessToken: () => getAccessToken(context),
+    });
     const api = new BookingApi(config);
 
-    const response = await api.updateBooking({
+    const response = await api.captureBookingPayment({
       bookingId,
-      updateBooking: { paypalOrderId, userId },
+      orderId: paypalOrderId,
     });
     return {
       body: JSON.stringify(response),
