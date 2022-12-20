@@ -1,15 +1,13 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import PositiveInt
+from pydantic import conint
 
-from ..model.types import ApiError
-
-from ..service.error import *
+from ..auth import Authentication, Claims
 
 from ..beans import get_booking_service
 from ..model import *
-from ..service import BookingService
+from ..service import *
 
 router = APIRouter()
 
@@ -22,20 +20,19 @@ ALREADY_BOOKED_RESPONSE = {
 
 @router.get("", response_model=List[Booking], operation_id="get_bookings")
 async def get_bookings(
-    user_id: Optional[str] = None,
     before_date: Optional[date] = None,
     after_date: Optional[date] = None,
-    skip: Optional[PositiveInt] = None,
+    skip: Optional[conint(ge=0)] = None,
     sort_by: Optional[SortBookingEnum] = None,
     ascending: Optional[bool] = False,
     house_id: Optional[PyObjectId] = None,
     owner_id: Optional[PyObjectId] = None,
     state: Optional[BookingStateEnum] = None,
     service: BookingService = Depends(get_booking_service),
+    auth: Claims = Depends(Authentication)
 ):
     """Returns a list of bookings that match the given criteria. 10 bookings max"""
     f = FilterBooking(
-        user_id=user_id,
         before_date=before_date,
         after_date=after_date,
         skip=skip,
@@ -45,21 +42,23 @@ async def get_bookings(
         owner_id=owner_id,
         state=state,
     )
-    return await service.get_bookings(f)
+    return await service.get_bookings(auth, f)
 
 
 @router.post(
     "", 
     response_model=PaypalCreateOrderRequestBody, 
     operation_id="new_booking",
-    responses=ALREADY_BOOKED_RESPONSE
+    responses=ALREADY_BOOKED_RESPONSE,
 )
 async def create_booking(
-    request: NewBooking, service: BookingService = Depends(get_booking_service)
+    request: NewBooking, 
+    service: BookingService = Depends(get_booking_service),
+    auth: Claims = Depends(Authentication)
 ):
     """Creates a new booking"""
     try:
-        return await service.new_booking(request)
+        return await service.new_booking(auth, request)
     except AlreadyBookedError as e:
         raise HTTPException(
             status_code=409, 
@@ -67,17 +66,20 @@ async def create_booking(
         )
 
 @router.put(
-    "/{booking_id}", 
+    "/{booking_id}/capture", 
     response_model=Booking, 
-    operation_id="update_booking",
+    operation_id="capture_booking_payment",
     responses=NOT_FOUND_RESPONSE
 )
-async def update_booking(
-    booking_id:PyObjectId,request: UpdateBooking, service: BookingService = Depends(get_booking_service)
+async def capture_booking_payment(
+    booking_id: PyObjectId,
+    order_id: str,
+    service: BookingService = Depends(get_booking_service),
+    auth: Claims = Depends(Authentication)
 ):
     """Updates an existing booking"""
     try:
-        return await service.update_booking(booking_id,request)
+        return await service.update_booking(auth, booking_id, order_id)
     except UpdateBookingError as e:
         raise HTTPException(
             status_code=404, 
@@ -92,11 +94,13 @@ async def update_booking(
     responses=NOT_FOUND_RESPONSE
 )
 async def get_booking_by_id(
-    booking_id: PyObjectId, service: BookingService = Depends(get_booking_service)
+    booking_id: PyObjectId, 
+    service: BookingService = Depends(get_booking_service),
+    auth: Claims = Depends(Authentication)
 ):
     """Returns all the information related to the given `booking_id`"""
     try: 
-        return await service.get_booking_by_id(booking_id)
+        return await service.get_booking_by_id(auth, booking_id)
     except NotFoundError as e:
         raise HTTPException(
             status_code=404, 
@@ -112,11 +116,13 @@ async def get_booking_by_id(
     responses=NOT_FOUND_RESPONSE
 )
 async def cancel_booking(
-    booking_id: PyObjectId, service: BookingService = Depends(get_booking_service)
+    booking_id: PyObjectId, 
+    service: BookingService = Depends(get_booking_service),
+    auth: Claims = Depends(Authentication)
 ):
     """Cancels the booking identified by the given `booking_id`"""
     try: 
-        await service.cancel_booking(booking_id)
+        await service.cancel_booking(auth, booking_id)
         return Message(message=f"Successfully canceled booking")
     except NotFoundError as e:
         raise HTTPException(

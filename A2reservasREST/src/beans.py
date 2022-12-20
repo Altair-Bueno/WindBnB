@@ -1,10 +1,8 @@
 from fastapi import Depends
 from functools import lru_cache
+from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .service.paypal import PaypalService
-
-from .service import BookingService
 from .settings import Settings
 
 
@@ -12,6 +10,18 @@ from .settings import Settings
 def get_settings() -> Settings:
     return Settings()
 
+_keys = None
+
+async def get_public_key(settings: Settings = Depends(get_settings)):
+    global _keys
+    if _keys:
+        return _keys
+    
+    async with AsyncClient(base_url=settings.auth.baseurl) as client:
+        response = await client.get("/.well-known/jwks.json")
+        _keys = response.json()["keys"]
+    
+    return _keys
 
 @lru_cache
 def get_mongo_client(config: Settings = Depends(get_settings)):
@@ -35,11 +45,13 @@ def get_windbnb_collection(
 
 @lru_cache
 def get_paypal_service(settings: Settings = Depends(get_settings)):
+    from .service import PaypalService
     return PaypalService(settings.paypal)
 
 @lru_cache
 def get_booking_service(
     collection=Depends(get_windbnb_collection), 
-    paypal: PaypalService = Depends(get_paypal_service)
-) -> BookingService:
+    paypal = Depends(get_paypal_service)
+):
+    from .service import BookingService
     return BookingService(collection, paypal)

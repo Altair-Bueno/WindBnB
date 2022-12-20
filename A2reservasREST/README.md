@@ -60,6 +60,8 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `paypal_clientid`  | Paypal client id                        |                   |
 | `paypal_secret`    | Paypal client secret                    |                   |
 | `paypal_url`       | Paypal API URL                          |                   |
+| `auth_audience`    | JWT audience                            |                   |
+| `auth_baseurl`     | Base url where to find public JWK       |                   |
 
 # Documentación
 

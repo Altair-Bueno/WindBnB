@@ -1,8 +1,9 @@
 from typing import List
-from httpx import AsyncClient
 
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorCollection
+
+from ..auth import Claims
 
 from .paypal import PaypalService
 
@@ -18,11 +19,10 @@ class BookingService:
         self.collection = collection
         self.paypal = paypal
 
-    async def get_booking_by_id(self, booking_id: PyObjectId) -> Optional[
-        Booking]:
+    async def get_booking_by_id(self, auth: Claims, booking_id: PyObjectId) -> Optional[Booking]:
         document = await self.collection.find_one(
             {"bookings._id": booking_id},
-            {"bookings": {"$elemMatch": {"_id": booking_id}}}
+            {"bookings": {"$elemMatch": {"_id": booking_id, "user_id": auth.sub}}}
         )
         if document:
             booking = document["bookings"][0]
@@ -34,17 +34,16 @@ class BookingService:
         else:
             raise NotFoundError(f"Booking not found. {booking_id=}")
 
-    async def get_bookings(self, f: FilterBooking) -> List[Booking]:
-        pipeline = []
+    async def get_bookings(self, auth: Claims, f: FilterBooking) -> List[Booking]:
+        pipeline = [
+            {"$match": {"bookings.user_id": auth.sub}}
+        ]
 
         if f.house_id:
             pipeline.append({"$match": {"_id": f.house_id}})
 
         if f.owner_id:
-            pipeline.append({"$match": {"user_id": f.user_id}})
-
-        if f.user_id:
-            pipeline.append({"$match": {"bookings.user_id": f.user_id}})
+            pipeline.append({"$match": {"user_id": f.owner_id}})
 
         if f.before_date:
             pipeline.append(
@@ -81,13 +80,13 @@ class BookingService:
             async for document in self.collection.aggregate(pipeline)
         ]
 
-    async def new_booking(self, request: NewBooking) -> PaypalCreateOrderRequestBody:
+    async def new_booking(self, auth: Claims, request: NewBooking) -> PaypalCreateOrderRequestBody:
         booking_id = ObjectId()
         result = await self.collection.update_one(
             {
                 "_id": request.house_id,
                 "state": HouseStateEnum.available.value,
-                "user_id" : {"$ne": request.user_id},
+                "user_id" : {"$ne": auth.sub},
                 "bookings": {
                     "$not": {
                         "$elemMatch": {
@@ -110,7 +109,7 @@ class BookingService:
                 "$push": {
                     "bookings": {
                         "_id": booking_id,
-                        "user_id": request.user_id,
+                        "user_id": auth.sub,
                         "state": BookingStateEnum.reserved.value,
                         "start_date": str(request.start_date),
                         "end_date": str(request.end_date),
@@ -132,31 +131,34 @@ class BookingService:
         else:
             raise AlreadyBookedError("A booking already exists")
 
-    async def update_booking(self, booking_id: PyObjectId, payload: UpdateBooking):
-        order = await self.paypal.capture_order(payload.paypal_order_id)
+    async def update_booking(self, auth: Claims, booking_id: PyObjectId, order_id: str):
+        booking = await self.get_booking_by_id(auth, booking_id)
+
+        order = await self.paypal.capture_order(order_id)
         result = await self.collection.update_one(
             {"bookings._id": booking_id},
             {"$set": {"bookings.$[booking].paypal_order_id": order['id']}},
             array_filters=[{
                 "booking._id": booking_id,
                 "booking.state": BookingStateEnum.reserved.value,
-                "booking.user_id": payload.user_id,
+                "booking.user_id": auth.sub,
                 "booking.paypal_transaction_id": None
             }]
         )
 
         if result.modified_count == 1:
-            return await self.get_booking_by_id(booking_id)
+            return await self.get_booking_by_id(auth,booking_id)
         else: 
             raise UpdateBookingError("Couldn't update booking")
 
-    async def cancel_booking(self, booking_id: PyObjectId):
+    async def cancel_booking(self, auth: Claims, booking_id: PyObjectId):
         result = await self.collection.update_one(
             {"bookings._id": booking_id},
             {"$set": {
                 "bookings.$[booking].state": BookingStateEnum.canceled.value}},
             array_filters=[{
                 "booking._id": booking_id,
+                "booking.user_id": auth.sub,
                 "booking.state": BookingStateEnum.reserved.value
             }]
         )

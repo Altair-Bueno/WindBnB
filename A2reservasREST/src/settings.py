@@ -16,9 +16,16 @@ class PaypalConfig(BaseModel):
     class Config:
         frozen = True
 
+class AuthConfig(BaseModel):
+    baseurl: HttpUrl
+    audience: str
+    class Config:
+        frozen = True
+
 class Settings(BaseSettings):
     mongo: MongoConfig
     paypal: PaypalConfig
+    auth: AuthConfig
 
     class Config:
         env_file = ".env"

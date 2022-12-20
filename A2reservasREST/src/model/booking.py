@@ -26,15 +26,9 @@ class Booking(BaseModel):
     class Config:
         json_encoders = {ObjectId: str}
 
-class UpdateBooking(BaseModel):
-    user_id: str
-    paypal_order_id: str
-    
-
 class NewBooking(BaseModel):
     """Payload for creating new bookings"""
     house_id: PyObjectId
-    user_id: str
     start_date: FutureDate
     end_date: FutureDate
 
@@ -59,7 +53,6 @@ class SortBookingEnum(str, Enum):
 
 class FilterBooking(BaseModel):
     """Payload for filtering bookings"""
-    user_id: Optional[str]
     owner_id: Optional[str]
     house_id: Optional[PyObjectId]
     state: Optional[BookingStateEnum]
