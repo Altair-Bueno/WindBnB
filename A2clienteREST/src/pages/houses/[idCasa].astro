@@ -2,7 +2,6 @@
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import Map from "../../components/Map.svelte";
-import Layout from "../../layouts/Layout.astro";
 import cookies from "../../cookies";
 import AppConfig from "../../config";
 import {
@@ -150,14 +149,12 @@ try {
       </div>
     </div>
     <div class="col-12">
-      <Layout title="Map">
         <p class="lead fw-normal">{viv?.location}</p>
         <Map
           client:load
           coordinates={requestParameters}
           gasStations={gasStationsInRadius}
         />
-      </Layout>
     </div>
   </body>
 </WindbnbLayout>
