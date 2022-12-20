@@ -27,14 +27,16 @@
     );
   }
   async function handleOnSubmit() {
-    let image : string[] = [];
-    if(files){
+    let image: string[] = [];
+    if (files) {
       //image = await upload(cloudName, uploadPreset, files[0]).then(x => x.json()).then(x => [x.url]);
       //image = await Promise.all(files.map((fich : any) => upload(cloudName, uploadPreset, fich).then(x => x.json()).then(x => x.url)));
-      for (let i = 0; i < files.length; i++){
-          let fich = files[i];
-          let res = await upload(cloudName, uploadPreset, fich).then(x => x.json()).then(x => x.url)
-          image.push(res);
+      for (let i = 0; i < files.length; i++) {
+        let fich = files[i];
+        let res = await upload(cloudName, uploadPreset, fich)
+          .then((x) => x.json())
+          .then((x) => x.url);
+        image.push(res);
       }
     } else {
       image = [];
@@ -54,44 +56,106 @@
         cp,
         country,
         price,
-        image
+        image,
       }),
-    }).then(x => x.json());
-    window.location.href = res.redirect;   
+    }).then((x) => x.json());
+    window.location.href = res.redirect;
   }
 </script>
 
 <!--<form action="/houses/new/newHandler" method="post">-->
-  <form on:submit|preventDefault={handleOnSubmit}>
+<form on:submit|preventDefault={handleOnSubmit}>
   <!-- <input hidden value="EXAMPLE_USER_HARDCODED" name="userId" /> TODO -->
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
-    <input bind:value={title} type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" required>
-
+    <input
+      bind:value={title}
+      type="text"
+      name="title"
+      class="form-control"
+      id="title"
+      aria-describedby="titleHelp"
+      required
+    />
   </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>
-    <input bind:value={description} type="text" name="description" class="form-control" id="description">
+    <input
+      bind:value={description}
+      type="text"
+      name="description"
+      class="form-control"
+      id="description"
+    />
   </div>
   <div class="mb-3">
     <label for="street" class="form-label">Street</label>
-    <input bind:value={street} type="text" name="street" class="form-control" id="street" required>
+    <input
+      bind:value={street}
+      type="text"
+      name="street"
+      class="form-control"
+      id="street"
+      required
+    />
     <label for="number" class="form-label">Number</label>
-    <input bind:value={number} type="text" name="number" class="form-control" id="number" required>
+    <input
+      bind:value={number}
+      type="text"
+      name="number"
+      class="form-control"
+      id="number"
+      required
+    />
     <label for="city" class="form-label">City</label>
-    <input bind:value={city} type="text" name="city" class="form-control" id="city" required>
+    <input
+      bind:value={city}
+      type="text"
+      name="city"
+      class="form-control"
+      id="city"
+      required
+    />
     <label for="province" class="form-label">Province</label>
-    <input bind:value={province} type="text" name="province" class="form-control" id="province" required>
+    <input
+      bind:value={province}
+      type="text"
+      name="province"
+      class="form-control"
+      id="province"
+      required
+    />
     <label for="cp" class="form-label">Postal code</label>
-    <input bind:value={cp} type="number" name="cp" class="form-control" id="cp" required>
+    <input
+      bind:value={cp}
+      type="number"
+      name="cp"
+      class="form-control"
+      id="cp"
+      required
+    />
     <label for="country" class="form-label">Country</label>
-    <input bind:value={country} type="text" name="country" class="form-control" id="country" required>
+    <input
+      bind:value={country}
+      type="text"
+      name="country"
+      class="form-control"
+      id="country"
+      required
+    />
   </div>
   <div class="mb-3">
     <label for="price" class="form-label">Price per night</label>
-    <input bind:value={price} type="number" name="price" class="form-control" id="price" required>
-</div>
-  <input bind:files type="file" class="form-control" multiple/>
-  <br>
+    <input
+      bind:value={price}
+      type="number"
+      name="price"
+      class="form-control"
+      id="price"
+      required
+    />
+  </div>
+  <input bind:files type="file" class="form-control" multiple />
+  <br />
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
