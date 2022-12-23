@@ -4,6 +4,7 @@ from pydantic import BaseModel, BaseSettings
 class MongoConfig(BaseModel):
     url: str
     collection: str
+    valoraciones: str
     database: str
 
     class Config:

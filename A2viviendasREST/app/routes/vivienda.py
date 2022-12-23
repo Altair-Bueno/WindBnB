@@ -5,6 +5,7 @@ from fastapi.openapi.models import Response
 from fastapi.responses import Response
 from pymongo import ReturnDocument
 from pydantic import PositiveFloat
+from app.service.valoracion import ValoracionService
 from app.models.vivienda import NewValoracion
 from app.models.vivienda import Valoracion
 from app.models.vivienda import FilterVivienda
@@ -17,7 +18,7 @@ from app.models.vivienda import NewVivienda, EditVivienda
 from app.models.vivienda import viviendaStateEnum
 
 from app.models.vivienda import Vivienda
-from ..dependencies import get_vivienda_service, get_windbnb_collection
+from ..dependencies import get_valoraciones_service, get_vivienda_service, get_windbnb_collection
 
 vivienda = APIRouter(tags=["Vivienda"])
 
@@ -88,12 +89,16 @@ async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(ge
         )
 
 @vivienda.post("/{idCasa}/valoraciones", response_model=Valoracion, operation_id="new_valoracion", responses=NOT_FOUND_RESPONSE)
-async def create_valoracion(idCasa: PyObjectId, request: NewValoracion, service: ViviendaService = Depends(get_vivienda_service)):
+async def create_valoracion(idCasa: PyObjectId, request: NewValoracion, service: ValoracionService = Depends(get_valoraciones_service), service2: ViviendaService = Depends(get_vivienda_service)):
     """Creates a new valoration"""
-    return await service.new_valoracion(idCasa, request)
+    valoracion = await service.new_valoracion(idCasa, request)
+    await service2.update_houseValoracion(idCasa, valoracion.id)
+    return valoracion
+
+    
 
 @vivienda.delete("/{idCasa}/valoraciones/{idValoracion}", response_model=Message, operation_id="delete_valoracion", responses=NOT_FOUND_RESPONSE)
-async def delete_valoracion(idCasa: PyObjectId, idValoracion: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
+async def delete_valoracion(idCasa: PyObjectId, idValoracion: PyObjectId, service: ValoracionService = Depends(get_valoraciones_service)):
     """Deletes a valoration"""
     try: 
         await service.delete_valoracion(idCasa, idValoracion)
@@ -104,10 +109,10 @@ async def delete_valoracion(idCasa: PyObjectId, idValoracion: PyObjectId, servic
             detail=e.error_code
         )
     
-'''@vivienda.get("/{idCasa}/valoraciones", response_model=List[Valoracion], operation_id="get_valoraciones", responses=NOT_FOUND_RESPONSE)
-async def get_valoraciones(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):
+@vivienda.get("/{idCasa}/valoraciones", response_model=List[Valoracion], operation_id="get_valoraciones", responses=NOT_FOUND_RESPONSE)
+async def get_valoraciones(idCasa: PyObjectId, service: ValoracionService = Depends(get_valoraciones_service)):
     """Get all valorations of a house"""
-    return await service.get_valoraciones(idCasa)'''
+    return await service.get_valoraciones(idCasa)
 
 @vivienda.get("/viviendas/{idCasa}/getBookingsAmount", response_model=Message, operation_id="bookings amount", responses=NOT_FOUND_RESPONSE)
 async def get_house_amount_bookings(idCasa: PyObjectId, service: ViviendaService = Depends(get_vivienda_service)):

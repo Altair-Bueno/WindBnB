@@ -42,7 +42,7 @@ class ViviendaService:
     async def new_vivienda(self, request: NewVivienda) -> Vivienda:
         document = request.dict()
         document["state"] = viviendaStateEnum.available.value
-        #document["valoraciones"] = []
+        document["valoraciones"] = []
         
         result = await self.collection.insert_one(document) 
             
@@ -96,6 +96,12 @@ class ViviendaService:
                 f"Couldn't find any available houses to delete. {idCasa}"
             )
 
+    async def update_houseValoracion(self, idCasa: PyObjectId, valoracion: PyObjectId):
+        await self.collection.find_one_and_update(
+                {"_id": idCasa},
+                {"$push": {"valoraciones": valoracion}}
+            )
+
     async def bookings_amount(self, idCasa: PyObjectId):
         result = await self.collection.find_one(
             {"_id": idCasa},
@@ -109,33 +115,4 @@ class ViviendaService:
             )
 
 
-    async def new_valoracion(self, idCasa: str, valoracion: NewValoracion):
-        document = valoracion.dict()
-        document["vivienda_id"] = idCasa
-        document["state"] = valoracionStateEnum.available.value
-
-        result = await self.collection.insert_one(document)
-
-        if result.inserted_id:
-            return Valoracion(
-                id = result.inserted_id,
-                **document
-            )
-
-    async def delete_valoracion(self, idCasa: str, idValoracion: PyObjectId):
-        result = await self.collection.update_one(
-            {"_id": idValoracion},
-            #{"vivienda_id": idCasa},
-            {"$set": {
-                "state": valoracionStateEnum.deleted.value}}
-        )
-
-        if result.modified_count == 0:
-            raise NotFoundError(
-                f"Couldn't find any available valoration to delete. {idValoracion=}")
-
-    '''async def get_valoraciones(self, idCasa: PyObjectId) -> List[Valoracion]:
-        res = [x async for x in self.collection.find({"vivienda_id": idCasa})]
-        return res'''
-            
-
+   
