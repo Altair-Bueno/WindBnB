@@ -7,7 +7,7 @@ REQUIREMENTS_FILES = requirements.txt dev-requirements.txt
 
 # Goals
 dev:
-	$(VENV_DIR)/bin/uvicorn src:app --host=$(HOST) --port=$(PORT)
+	$(VENV_DIR)/bin/uvicorn src:app --host=$(HOST) --port=$(PORT) --reload
 
 install: $(VENV_DIR) $(REQUIREMENTS_FILES)
 	$(VENV_DIR)/bin/pip-sync $(REQUIREMENTS_FILES)
