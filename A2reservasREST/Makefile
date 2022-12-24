@@ -22,7 +22,7 @@ clean:
 	rm -fr $(VENV_DIR)
 
 # Artifacts
-%.txt: %.in venv 
+%.txt: %.in $(VENV_DIR)
 	$(VENV_DIR)/bin/pip-compile $<
 
 $(VENV_DIR): 
