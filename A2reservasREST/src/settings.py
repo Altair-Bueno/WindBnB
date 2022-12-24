@@ -9,18 +9,23 @@ class MongoConfig(BaseModel):
     class Config:
         frozen = True
 
+
 class PaypalConfig(BaseModel):
     url: HttpUrl
     clientid: str
     secret: str
+
     class Config:
         frozen = True
+
 
 class AuthConfig(BaseModel):
     baseurl: HttpUrl
     audience: str
+
     class Config:
         frozen = True
+
 
 class Settings(BaseSettings):
     mongo: MongoConfig
