@@ -9,16 +9,19 @@ from app.models.vivienda import FilterVivienda
 from app.service.error import NotFoundError
 from app.models.types import PyObjectId
 
+from ..auth import Claims
+
 class ValoracionService:
     collection: AsyncIOMotorCollection
 
     def __init__(self, collection: AsyncIOMotorCollection):
         self.collection = collection
 
-    async def new_valoracion(self, idCasa: str, valoracion: NewValoracion):
+    async def new_valoracion(self, auth: Claims, idCasa: str, valoracion: NewValoracion):
         document = valoracion.dict()
         document["vivienda_id"] = idCasa
         document["state"] = valoracionStateEnum.available.value
+        document["user_id"] = auth.sub
 
         result = await self.collection.insert_one(document)
 
@@ -28,7 +31,7 @@ class ValoracionService:
                 **document
             )
 
-    async def delete_valoracion(self, idValoracion: PyObjectId):
+    async def delete_valoracion(self, auth: Claims, idValoracion: PyObjectId):
         result = await self.collection.update_one(
             {"_id": idValoracion},
             {"$set": {
