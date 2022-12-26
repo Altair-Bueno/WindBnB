@@ -28,10 +28,9 @@ class ValoracionService:
                 **document
             )
 
-    async def delete_valoracion(self, idCasa: str, idValoracion: PyObjectId):
+    async def delete_valoracion(self, idValoracion: PyObjectId):
         result = await self.collection.update_one(
             {"_id": idValoracion},
-            #{"vivienda_id": idCasa},
             {"$set": {
                 "state": valoracionStateEnum.deleted.value}}
         )

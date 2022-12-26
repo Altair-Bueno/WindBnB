@@ -91,17 +91,16 @@ async def delete_house(idCasa: PyObjectId, service: ViviendaService = Depends(ge
 @vivienda.post("/{idCasa}/valoraciones", response_model=Valoracion, operation_id="new_valoracion", responses=NOT_FOUND_RESPONSE)
 async def create_valoracion(idCasa: PyObjectId, request: NewValoracion, service: ValoracionService = Depends(get_valoraciones_service), service2: ViviendaService = Depends(get_vivienda_service)):
     """Creates a new valoration"""
-    valoracion = await service.new_valoracion(idCasa, request)
-    await service2.update_houseValoracion(idCasa, valoracion.id)
-    return valoracion
+    return await service.new_valoracion(idCasa, request)
+    
 
     
 
-@vivienda.delete("/{idCasa}/valoraciones/{idValoracion}", response_model=Message, operation_id="delete_valoracion", responses=NOT_FOUND_RESPONSE)
-async def delete_valoracion(idCasa: PyObjectId, idValoracion: PyObjectId, service: ValoracionService = Depends(get_valoraciones_service)):
+@vivienda.delete("/valoraciones/{idValoracion}", response_model=Message, operation_id="delete_valoracion", responses=NOT_FOUND_RESPONSE)
+async def delete_valoracion(idValoracion: PyObjectId, service: ValoracionService = Depends(get_valoraciones_service)):
     """Deletes a valoration"""
     try: 
-        await service.delete_valoracion(idCasa, idValoracion)
+        await service.delete_valoracion(idValoracion)
         return Message(message=f"Successfully deleted valoration")
     except NotFoundError as e:
         raise HTTPException(

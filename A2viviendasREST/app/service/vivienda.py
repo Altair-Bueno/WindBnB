@@ -42,7 +42,7 @@ class ViviendaService:
     async def new_vivienda(self, request: NewVivienda) -> Vivienda:
         document = request.dict()
         document["state"] = viviendaStateEnum.available.value
-        document["valoraciones"] = []
+        #document["valoraciones"] = []
         
         result = await self.collection.insert_one(document) 
             
@@ -94,12 +94,6 @@ class ViviendaService:
         else:
             raise NotFoundError(
                 f"Couldn't find any available houses to delete. {idCasa}"
-            )
-
-    async def update_houseValoracion(self, idCasa: PyObjectId, valoracion: PyObjectId):
-        await self.collection.find_one_and_update(
-                {"_id": idCasa},
-                {"$push": {"valoraciones": valoracion}}
             )
 
     async def bookings_amount(self, idCasa: PyObjectId):

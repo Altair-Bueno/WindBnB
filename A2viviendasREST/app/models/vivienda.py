@@ -45,7 +45,7 @@ class Vivienda(BaseModel):
     longitude: str
     latitude: str
     price: PositiveFloat
-    valoraciones : List[PyObjectId]
+    #valoraciones : List[PyObjectId]
 
     class Config:
         json_encoders = {ObjectId: str}
@@ -73,7 +73,7 @@ class EditVivienda(BaseModel):
     longitude: Optional[str]
     latitude: Optional[str]
     price: Optional[PositiveFloat]
-    valoracion : Optional[PyObjectId]
+    #valoracion : Optional[PyObjectId]
 
     class Config:
         json_encoders = {ObjectId: str}
