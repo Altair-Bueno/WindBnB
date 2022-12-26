@@ -1,0 +1,18 @@
+---
+import type { Valoracion } from "../api/A2viviendasREST";
+
+import AppConfig from "../config";
+
+const { valoracion } = Astro.props as { valoracion: Valoracion };
+---
+
+<div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{valoracion.valoracion}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{valoracion.userId}</h6>
+      <p class="card-text">{valoracion.comentario}</p>
+      <!--<a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+        -->
+    </div>
+  </div>

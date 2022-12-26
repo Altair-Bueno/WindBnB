@@ -1,6 +1,7 @@
 ---
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import ValoracionComponente from "../../components/ValoracionComponente.astro";
 import Map from "../../components/Map.svelte";
 import cookies from "../../cookies";
 import AppConfig from "../../config";
@@ -75,6 +76,8 @@ try {
     valor: undefined,
   };
 }
+
+const valoraciones = await viviendaApi.getValoraciones({ idCasa });
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
@@ -155,6 +158,10 @@ try {
         coordinates={requestParameters}
         gasStations={gasStationsInRadius}
       />
+    </div>
+    <div class="col-12">
+      <h1>VALORACIONES</h1>
+      {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
     </div>
   </body>
 </WindbnbLayout>
