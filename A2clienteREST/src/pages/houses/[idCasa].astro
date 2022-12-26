@@ -3,7 +3,6 @@ import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import ValoracionComponente from "../../components/ValoracionComponente.astro";
 import Map from "../../components/Map.svelte";
-import cookies from "../../cookies";
 import AppConfig from "../../config";
 import {
   Configuration as ViviendaConfiguration,
@@ -21,9 +20,15 @@ import {
 import Carousel from "../../components/Carousel.astro";
 import { MONTHS } from "../../utils/months";
 import Checkout from "../../components/Checkout.svelte";
+import { getAccessToken, getUserId } from "../../utils/auth0";
+
+
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
-  new ViviendaConfiguration(AppConfig.viviendas)
+  new ViviendaConfiguration({
+      ...AppConfig.viviendas,
+      accessToken: () => getAccessToken(Astro),
+    })
 );
 
 let viv: Vivienda;
@@ -32,7 +37,7 @@ try {
   viv = await viviendaApi.getHouseById({ idCasa });
 } catch (error) {
   return Astro.redirect(
-    "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })
+    "/?" + new URLSearchParams({ danger: "Cannot find house with that ID" })
   );
 }
 
@@ -57,13 +62,10 @@ try {
   gasStationsInRadius = [];
 }
 
-const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
-
 const averageStayParameters: GetAverageStayRequest = {
   provincia: viv.location.split(", ")[3],
   mes: MONTHS[new Date().getMonth() - 1],
 };
-console.log(viv.location.split(", ")[4]);
 
 const averageStayApi = new AverageStayApi(
   new DatosAbiertosConfiguration(AppConfig.datosAbiertos)
@@ -78,6 +80,7 @@ try {
 }
 
 const valoraciones = await viviendaApi.getValoraciones({ idCasa });
+const userId = await getUserId(Astro);
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
@@ -134,7 +137,7 @@ const valoraciones = await viviendaApi.getValoraciones({ idCasa });
         <div class="bg-body shadow-sm mx-auto rounded-5 mb-2">
           <div class="text-center pt-3 mx-auto p-3">
             {
-              userId !== viv.userId ? (
+              userId !== viv?.userId ? (
                 <Checkout
                   client:load
                   vivienda={viv}

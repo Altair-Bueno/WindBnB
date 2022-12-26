@@ -2,9 +2,9 @@ import type { APIContext } from "astro";
 import { ViviendaApi } from "../../../api/A2viviendasREST";
 import {
   Configuration as ViviendaConfiguration,
-  Vivienda,
 } from "../../../api/A2viviendasREST";
 import AppConfig from "../../../config";
+import { getAccessToken } from "../../../utils/auth0";
 
 export async function post(context: APIContext) {
   const referer = new URL(
@@ -13,7 +13,10 @@ export async function post(context: APIContext) {
   const formData = await context.request.formData();
   const idCasa = formData.get("idCasa")?.toString() ?? "";
   const viviendaApi = new ViviendaApi(
-    new ViviendaConfiguration(AppConfig.viviendas)
+    new ViviendaConfiguration({
+      ...AppConfig.viviendas, 
+      accessToken: () => getAccessToken(context)
+    })
   );
 
   try {

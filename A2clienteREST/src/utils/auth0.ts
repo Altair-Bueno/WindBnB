@@ -1,5 +1,6 @@
 import type { APIContext } from "astro";
 import cookies from "../cookies";
+import jwt_decode from "jwt-decode";
 
 // https://auth0.com/docs/api/authentication#refresh-token
 async function refreshAccessToken(refresh_token: string) {
@@ -52,4 +53,14 @@ export async function getAccessToken(context: APIContext): Promise<string> {
 
 export function isLoggedIn(context: APIContext) {
   return context.cookies.has(cookies.refreshToken);
+}
+
+export async function getUserId(context: APIContext): Promise<string> {
+  const accessToken = context.cookies.get(cookies.accessToken).value as string;
+  if (accessToken) {
+    const decoded: any = jwt_decode(accessToken);
+    return decoded.sub as string;
+  } else {
+    return "";
+  }
 }

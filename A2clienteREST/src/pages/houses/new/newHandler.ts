@@ -6,8 +6,8 @@ import {
   ResponseError,
   ViviendaApi,
 } from "../../../api/A2viviendasREST";
-import cookies from "../../../cookies";
 import AppConfig from "../../../config";
+import { getAccessToken } from "../../../utils/auth0";
 
 interface GeoCodingData {
   latitude: string;
@@ -51,15 +51,10 @@ export async function post(context: APIContext) {
     context.request.headers.get("referer") ?? context.url
   );
 
-  //const formData = await context.request.formData();
-  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-
-  if (!userId) {
-    referer.searchParams.set("danger", "User isn't log in");
-    return context.redirect(referer.toString());
-  }
-
-  const config = new Configuration(AppConfig.viviendas);
+  const config = new Configuration({
+    ...AppConfig.viviendas, 
+    accessToken: () => getAccessToken(context)
+  });
   const api = new ViviendaApi(config);
 
   const data = await context.request.json();
@@ -120,7 +115,7 @@ export async function post(context: APIContext) {
     description,
     price,
     location: loc,
-    userId,
+    userId: "",
     latitude: geoRes.data[0].latitude,
     longitude: geoRes.data[0].longitude,
     urlPhoto: image,

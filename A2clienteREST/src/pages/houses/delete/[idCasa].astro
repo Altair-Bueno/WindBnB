@@ -6,6 +6,7 @@ import {
   Configuration as ViviendaConfiguration,
   Vivienda,
 } from "../../../api/A2viviendasREST";
+import { getUserId } from "../../../utils/auth0";
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
@@ -15,6 +16,11 @@ let viv: Vivienda;
 
 try {
   viv = await viviendaApi.getHouseById({ idCasa });
+  if (viv.userId !== await getUserId(Astro)) {
+    return Astro.redirect(
+      "/?" + new URLSearchParams({ danger: "User not allowed" })
+    ); 
+  }
 } catch (error) {
   return Astro.redirect(
     "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })

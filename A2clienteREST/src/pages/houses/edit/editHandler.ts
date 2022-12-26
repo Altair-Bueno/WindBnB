@@ -5,6 +5,7 @@ import {
   Vivienda,
 } from "../../../api/A2viviendasREST";
 import AppConfig from "../../../config";
+import { getAccessToken } from "../../../utils/auth0";
 
 interface GeoCodingData {
   latitude: string;
@@ -38,7 +39,10 @@ export async function post(context: APIContext) {
     context.request.headers.get("referer") ?? context.url
   );
   const viviendaApi = new ViviendaApi(
-    new ViviendaConfiguration(AppConfig.viviendas)
+    new ViviendaConfiguration({
+      ...AppConfig.viviendas, 
+      accessToken: () => getAccessToken(context)
+    })
   );
 
   const data = await context.request.json();
