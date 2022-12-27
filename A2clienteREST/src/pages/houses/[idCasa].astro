@@ -2,6 +2,7 @@
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import ValoracionComponente from "../../components/ValoracionComponente.astro";
+import { isLoggedIn } from "../../utils/auth0";
 import Map from "../../components/Map.svelte";
 import AppConfig from "../../config";
 import {
@@ -163,8 +164,23 @@ const userId = await getUserId(Astro);
       />
     </div>
     <div class="col-12">
-      <h1>VALORACIONES</h1>
-      {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
+      <h3>Create new valoration</h3>
+      {
+        isLoggedIn(Astro) ? 
+        (
+        <div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={userId}>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    Text: <input type="text">
+    </div>
+        ) 
+          : (<p>User must be signed in</p>)
+      }
+    {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
     </div>
   </body>
 </WindbnbLayout>
