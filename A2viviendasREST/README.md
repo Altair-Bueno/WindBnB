@@ -42,6 +42,15 @@ docker run a2viviendas -p 8080:8000 -e mongo_url=<VALOR> -e mongo_collection=<VA
 
 # Configuración
 
+| Variable           | Descripción                             | Valor por defecto |
+| ------------------ | --------------------------------------- | ----------------- |
+| `mongo_url`        | URL de un servidor Mongodb              |                   |
+| `mongo_collection` | Colección donde almacenar los datos     |                   |
+| `mongo_database`   | Base de datos donde buscar la colección |                   |
+| `mongo_valoraciones` | Colección donde almacenar los datos     |                   |
+| `auth_audience`    | JWT audience                            |                   |
+| `auth_baseurl`     | Base url where to find public JWK       |                   |
+
 Crear un fichero .env con los siguientes datos: 
 
 ```
