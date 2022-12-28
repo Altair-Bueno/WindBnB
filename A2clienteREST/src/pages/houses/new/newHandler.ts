@@ -101,8 +101,6 @@ export const FormDataKeys = {
         }
     }
     
-
-    
     let newHouse : NewVivienda = {
         title,
         description,
