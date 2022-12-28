@@ -44,6 +44,7 @@ docker run a2viviendas -p 8080:8000 -e mongo_url=<VALOR> -e mongo_collection=<VA
 
 Crear un fichero .env con los siguientes datos: 
 
+```
 mongo_url=mongodb://root:example@localhost:27017
 mongo_collection="houses"
 mongo_database="iweb-windbnb"
@@ -51,6 +52,7 @@ mongo_valoraciones="valoraciones"
 
 auth_baseurl=https://dev-dmw70d0ct8r06evt.us.auth0.com
 auth_audience=https://dev-dmw70d0ct8r06evt.us.auth0.com/api/v2/
+```
 
 # Documentación
 
