@@ -47,21 +47,10 @@ docker run a2viviendas -p 8080:8000 -e mongo_url=<VALOR> -e mongo_collection=<VA
 | `mongo_url`        | URL de un servidor Mongodb              |                   |
 | `mongo_collection` | Colección donde almacenar los datos     |                   |
 | `mongo_database`   | Base de datos donde buscar la colección |                   |
-| `mongo_valoraciones` | Colección donde almacenar los datos     |                   |
-| `auth_audience`    | JWT audience                            |                   |
-| `auth_baseurl`     | Base url where to find public JWK       |                   |
+| `mongo_valoraciones` | Colección donde almacenar los datos   |                   |
+| `auth_audience`    | Audicencia JWT                          |                   |
+| `auth_baseurl`     | URL base donde se encuentra el JWK público|                   |
 
-Crear un fichero .env con los siguientes datos: 
-
-```
-mongo_url=mongodb://root:example@localhost:27017
-mongo_collection="houses"
-mongo_database="iweb-windbnb"
-mongo_valoraciones="valoraciones"
-
-auth_baseurl=https://dev-dmw70d0ct8r06evt.us.auth0.com
-auth_audience=https://dev-dmw70d0ct8r06evt.us.auth0.com/api/v2/
-```
 
 # Documentación
 
