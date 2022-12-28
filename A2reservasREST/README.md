@@ -7,24 +7,17 @@ reservas
 
 ### Requisitos
 
-- Python 3.10 o superior
+- Python 3.11 o superior
 - Pip3
+- GNU Make
 
 ### Instrucciones
 
 ```sh
-# Crear un entorno virtual
-virtualenv .venv
-source .venv/bin/activate
-# Instalar los paquetes necesarios
-pip install -r requirements.txt
-
-# Configuración necesaria para arrancar el servicio
-export mongo_url=<VALOR>
-export mongo_database=<VALOR>
-# Ver la sección Configuración ...
-# Iniciar el servidor
-uvicorn --reload --port 8000 --host 127.0.0.0 src:app
+# Crear el entorno virtual e instalar dependencias
+make install
+# Arrancar el entorno de desarrollo
+make dev
 ```
 
 ## Ejecución mediante docker
@@ -60,6 +53,8 @@ La aplicación admite las siguientes opciones de configuración mediante fichero
 | `paypal_clientid`  | Paypal client id                        |                   |
 | `paypal_secret`    | Paypal client secret                    |                   |
 | `paypal_url`       | Paypal API URL                          |                   |
+| `auth_audience`    | JWT audience                            |                   |
+| `auth_baseurl`     | Base url where to find public JWK       |                   |
 
 # Documentación
 

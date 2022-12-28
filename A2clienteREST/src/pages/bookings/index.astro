@@ -3,7 +3,6 @@ import {
   BookingApi,
   BookingStateEnum,
   Configuration as BookingConfiguration,
-  GetBookingsRequest,
   SortBookingEnum,
 } from "../../api/A2reservasREST";
 import {
@@ -13,27 +12,24 @@ import {
 import AppConfig from "../../config";
 import { getUri } from "./[bookingId]";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
-import cookies from "../../cookies";
-import { object, number, date, mixed, bool } from "yup";
+import { z } from "zod";
 import { formatCheckbox, formatDate } from "../../utils/format";
+import { getAccessToken, isLoggedIn } from "../../utils/auth0";
 
-const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
-
-if (!userId) return Astro.redirect("/");
+if (!isLoggedIn(Astro)) return Astro.redirect("/");
 
 const ITEMS_PER_PAGE = 10;
 
-const formScheme = object({
-  beforeDate: date().optional(),
-  afterDate: date().optional(),
-  sortBy: mixed<SortBookingEnum>()
-    .oneOf(Object.values(SortBookingEnum))
+const formScheme = z.object({
+  beforeDate: z.coerce.date().optional(),
+  afterDate: z.coerce.date().optional(),
+  sortBy: z.nativeEnum(SortBookingEnum).optional(),
+  ascending: z
+    .string()
+    .transform((x) => x === "on")
     .optional(),
-  ascending: bool().transform((x) => x === "on"),
-  state: mixed<BookingStateEnum>()
-    .oneOf(Object.values(BookingStateEnum))
-    .optional(),
-  page: number().default(0),
+  state: z.nativeEnum(BookingStateEnum).optional(),
+  page: z.coerce.number().default(0),
 });
 
 const rawFormData = Array.from(Astro.url.searchParams.entries())
@@ -43,19 +39,19 @@ const rawFormData = Array.from(Astro.url.searchParams.entries())
     return acc;
   }, {} as Record<string, any>);
 
-const formData = formScheme.cast(rawFormData);
+const formData = formScheme.parse(rawFormData);
 const skip = formData.page * ITEMS_PER_PAGE;
 
-const bookingApi = new BookingApi(new BookingConfiguration(AppConfig.reservas));
+const bookingConfig = new BookingConfiguration({
+  basePath: import.meta.env.RESERVAS_BASE_PATH,
+  accessToken: () => getAccessToken(Astro),
+});
+const bookingApi = new BookingApi(bookingConfig);
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration(AppConfig.viviendas)
 );
 
-// We join both entities
-const filter: GetBookingsRequest = { ...formData, skip, userId };
-if (skip === 0) delete filter.skip;
-
-const bookings = await bookingApi.getBookings(filter);
+const bookings = await bookingApi.getBookings({ ...formData, skip });
 const futures = bookings.map(async (x) => {
   const house = await viviendaApi.getHouseById({ idCasa: x.houseId });
   return { ...x, house };

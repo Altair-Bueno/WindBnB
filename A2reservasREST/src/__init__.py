@@ -41,3 +41,15 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
+
+"""
+# Mock Oauth authentication for development purposes
+from .auth import Authentication, Claims
+def mock_auth():
+    return Claims(
+        sub="auth0|6396209463e2aad93a9bcbee",
+        exp=10^20,iat=1670881785,
+        iss="https://dev-dmw70d0ct8r06evt.us.auth0.com/"
+    )
+app.dependency_overrides[Authentication] = mock_auth
+"""

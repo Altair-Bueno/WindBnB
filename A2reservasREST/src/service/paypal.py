@@ -6,7 +6,7 @@ from typing import Any
 class PaypalService:
     """From https://developer.paypal.com/docs/checkout/standard/integrate/"""
 
-    base_url : str
+    base_url: str
     client_id: str
     app_secret: str
 
@@ -19,20 +19,31 @@ class PaypalService:
         response = await client.post(
             "/v1/oauth2/token",
             data={"grant_type": "client_credentials"},
-            auth=(self.client_id,self.app_secret)
+            auth=(self.client_id, self.app_secret),
         )
         payload = response.json()
-        return payload['access_token']
+        return payload["access_token"]
 
     async def capture_order(self, order_id: str) -> dict[str, Any]:
-        async with AsyncClient(base_url=self.base_url) as client: 
+        async with AsyncClient(base_url=self.base_url) as client:
             token = await self.__get_access_token(client)
             response = await client.post(
                 f"/v2/checkout/orders/{order_id}/capture",
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"Bearer {token}",
-                }
+                },
             )
         return response.json()
-        
+
+    async def refund_payment(self, payment_id: str) -> dict[str, Any]:
+        async with AsyncClient(base_url=self.base_url) as client:
+            token = await self.__get_access_token(client)
+            response = await client.post(
+                f"/v2/payments/captures/{payment_id}/refund",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {token}",
+                },
+            )
+        return response.json()

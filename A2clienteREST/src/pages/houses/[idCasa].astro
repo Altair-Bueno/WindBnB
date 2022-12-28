@@ -1,9 +1,9 @@
 ---
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
+import ValoracionComponente from "../../components/ValoracionComponente.astro";
+import { isLoggedIn } from "../../utils/auth0";
 import Map from "../../components/Map.svelte";
-import Layout from "../../layouts/Layout.astro";
-import cookies from "../../cookies";
 import AppConfig from "../../config";
 import {
   Configuration as ViviendaConfiguration,
@@ -19,15 +19,17 @@ import {
   GetAverageStayRequest,
 } from "../../api/A2datosabiertosREST";
 import Carousel from "../../components/Carousel.astro";
-import {
-  URI as NewBookingHandlerURI,
-  FormDataKeys as NewBookingFormDataKeys,
-} from "../bookings/newHandler";
 import { MONTHS } from "../../utils/months";
 import Checkout from "../../components/Checkout.svelte";
+import { getAccessToken, getUserId } from "../../utils/auth0";
+
+
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
-  new ViviendaConfiguration(AppConfig.viviendas)
+  new ViviendaConfiguration({
+      ...AppConfig.viviendas,
+      accessToken: () => getAccessToken(Astro),
+    })
 );
 
 let viv: Vivienda;
@@ -36,7 +38,7 @@ try {
   viv = await viviendaApi.getHouseById({ idCasa });
 } catch (error) {
   return Astro.redirect(
-    "/?" + new URLSearchParams({ danger: "Cant find house with that ID" })
+    "/?" + new URLSearchParams({ danger: "Cannot find house with that ID" })
   );
 }
 
@@ -61,13 +63,10 @@ try {
   gasStationsInRadius = [];
 }
 
-const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
-
 const averageStayParameters: GetAverageStayRequest = {
   provincia: viv.location.split(", ")[3],
   mes: MONTHS[new Date().getMonth() - 1],
 };
-console.log(viv.location.split(", ")[4]);
 
 const averageStayApi = new AverageStayApi(
   new DatosAbiertosConfiguration(AppConfig.datosAbiertos)
@@ -80,6 +79,9 @@ try {
     valor: undefined,
   };
 }
+
+const valoraciones = await viviendaApi.getValoraciones({ idCasa });
+const userId = await getUserId(Astro);
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
@@ -136,7 +138,7 @@ try {
         <div class="bg-body shadow-sm mx-auto rounded-5 mb-2">
           <div class="text-center pt-3 mx-auto p-3">
             {
-              userId !== viv.userId ? (
+              userId !== viv?.userId ? (
                 <Checkout
                   client:load
                   vivienda={viv}
@@ -154,14 +156,31 @@ try {
       </div>
     </div>
     <div class="col-12">
-      <Layout title="Map">
-        <p class="lead fw-normal">{viv?.location}</p>
-        <Map
-          client:load
-          coordinates={requestParameters}
-          gasStations={gasStationsInRadius}
-        />
-      </Layout>
+      <p class="lead fw-normal">{viv?.location}</p>
+      <Map
+        client:load
+        coordinates={requestParameters}
+        gasStations={gasStationsInRadius}
+      />
+    </div>
+    <div class="col-12">
+      <h3>Create new valoration</h3>
+      {
+        isLoggedIn(Astro) ? 
+        (
+        <div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={userId}>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    Text: <input type="text">
+    </div>
+        ) 
+          : (<p>User must be signed in</p>)
+      }
+    {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
     </div>
   </body>
 </WindbnbLayout>

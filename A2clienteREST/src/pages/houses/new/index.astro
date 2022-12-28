@@ -1,34 +1,25 @@
 ---
-import { NewHouseRequest, ViviendaApi } from "../../../api/A2viviendasREST/apis/ViviendaApi";
+import {
+  ViviendaApi,
+} from "../../../api/A2viviendasREST/apis/ViviendaApi";
 import WindbnbLayout from "../../../layouts/WindbnbLayout.astro";
 import AppConfig from "../../../config";
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 import {
   Configuration as ViviendaConfiguration,
-  NewVivienda,
-  Vivienda
 } from "../../../api/A2viviendasREST";
 import CloudinaryNew from "../../../components/CloudinaryNew.svelte";
-import cookies from "../../../cookies";
+import { isLoggedIn } from "../../../utils/auth0";
 
-const viviendaApi = new ViviendaApi(
-  new ViviendaConfiguration(AppConfig.viviendas)
-);
-
-let newHouseRequest : NewHouseRequest;
-let newVivienda : NewVivienda;
-
-const userId = Astro.cookies.get(cookies.USER_ID_KEY).value;
-if(userId === undefined){
-  return Astro.redirect('/?danger=User is not logged in');
-}
+if (!isLoggedIn(Astro)) return Astro.redirect("/");
 ---
+
 <WindbnbLayout title="New house" page={"NEW_HOUSE"}>
-    <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
-      <CloudinaryNew
-        cloudName= {import.meta.env.CLOUDINARY_CLOUD_NAME}
-        uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
-        client:load
-      />
-    </div>
+  <div class="position-relative overflow-hidden p-3 p-md-2 m-md-2 bg-light">
+    <CloudinaryNew
+      cloudName={import.meta.env.CLOUDINARY_CLOUD_NAME}
+      uploadPreset={import.meta.env.CLOUDINARY_UPLOAD_PRESET}
+      client:load
+    />
+  </div>
 </WindbnbLayout>

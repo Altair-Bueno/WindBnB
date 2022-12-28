@@ -4,7 +4,7 @@ import {
   Configuration,
   ResponseError,
 } from "../../api/A2reservasREST";
-import AppConfig from "../../config";
+import { getAccessToken } from "../../utils/auth0";
 
 export function getUri(bookingId: string) {
   return `/bookings/${bookingId}`;
@@ -20,7 +20,10 @@ export async function post(context: APIContext) {
     context.request.headers.get("referer") ?? context.url
   );
 
-  const config = new Configuration(AppConfig.reservas);
+  const config = new Configuration({
+    basePath: import.meta.env.RESERVAS_BASE_PATH,
+    accessToken: () => getAccessToken(context),
+  });
   const api = new BookingApi(config);
 
   try {

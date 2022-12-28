@@ -1,21 +1,21 @@
 // I love ts...
 import type { APIContext } from "astro";
 import { BookingApi, Configuration } from "../../api/A2reservasREST";
-import AppConfig from "../../config";
 import cookies from "../../cookies";
-import { object, date, string } from "yup";
+import { getAccessToken } from "../../utils/auth0";
+import { z } from "zod";
 
 export const URI = "/bookings/newHandler";
 
 function getUserId(context: APIContext) {
   const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-  return string().required("User isn't logged in").validate(userId);
+  return z.coerce.string().parse(userId);
 }
 
-const postScheme = object({
-  houseId: string().required(),
-  startDate: date().required(),
-  endDate: date().required(),
+const postScheme = z.object({
+  houseId: z.coerce.string(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
 });
 
 /**
@@ -23,18 +23,18 @@ const postScheme = object({
  */
 export async function post(context: APIContext) {
   try {
-    const userId = await getUserId(context);
     const payload = await context.request
       .json()
-      .then((x) => postScheme.validate(x));
+      .then((x) => postScheme.parse(x));
 
-    const config = new Configuration(AppConfig.reservas);
+    const config = new Configuration({
+      basePath: import.meta.env.RESERVAS_BASE_PATH,
+      accessToken: () => getAccessToken(context),
+    });
     const api = new BookingApi(config);
 
     const body = await api
-      .newBookingRaw({
-        newBooking: { ...payload, userId },
-      })
+      .newBookingRaw({ newBooking: payload })
       .then((x) => x.raw.text());
     return { body };
   } catch (e: any) {
@@ -42,23 +42,25 @@ export async function post(context: APIContext) {
   }
 }
 
-const putScheme = object({
-  paypalOrderId: string().required(),
-  bookingId: string().required(),
+const putScheme = z.object({
+  paypalOrderId: z.coerce.string(),
+  bookingId: z.coerce.string(),
 });
 
 export async function put(context: APIContext) {
   try {
     const payload = await context.request.json();
-    const userId = await getUserId(context);
-    const { paypalOrderId, bookingId } = await putScheme.validate(payload);
+    const { paypalOrderId, bookingId } = putScheme.parse(payload);
 
-    const config = new Configuration(AppConfig.reservas);
+    const config = new Configuration({
+      basePath: import.meta.env.RESERVAS_BASE_PATH,
+      accessToken: () => getAccessToken(context),
+    });
     const api = new BookingApi(config);
 
-    const response = await api.updateBooking({
+    const response = await api.captureBookingPayment({
       bookingId,
-      updateBooking: { paypalOrderId, userId },
+      orderId: paypalOrderId,
     });
     return {
       body: JSON.stringify(response),

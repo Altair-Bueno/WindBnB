@@ -1,0 +1,20 @@
+---
+export interface Props {
+  baseUrl: string;
+  clientId: string;
+  callbackUrl: string;
+  audience: string;
+}
+const { baseUrl, clientId, callbackUrl, audience } = Astro.props;
+---
+
+<!-- https://auth0.com/docs/get-started/authentication-and-authorization-flow/call-your-api-using-the-authorization-code-flow-->
+<form method="get" action={`${baseUrl}/authorize`}>
+  <input hidden name="response_type" value="code" />
+  <!-- https://auth0.com/docs/get-started/authentication-and-authorization-flow/add-login-auth-code-flow#parameters -->
+  <input hidden name="scope" value="offline_access read:logs read:logs_users" />
+  <input hidden name="audience" value={audience} />
+  <input hidden name="client_id" value={clientId} />
+  <input hidden name="redirect_uri" value={callbackUrl} />
+  <input type="submit" value="Log in" class="btn btn-primary" />
+</form>

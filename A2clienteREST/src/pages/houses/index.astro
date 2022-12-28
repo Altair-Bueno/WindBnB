@@ -2,13 +2,15 @@
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import ViviendaComponent from "../../components/ViviendaComponent.astro";
 
-
-import { GetViviendasRequest, ViviendaApi } from "../../api/A2viviendasREST/apis";
+import {
+  GetViviendasRequest,
+  ViviendaApi,
+} from "../../api/A2viviendasREST/apis";
 
 import {
   Configuration as ViviendaConfiguration,
   Vivienda,
-} from "../../api/A2viviendasREST"
+} from "../../api/A2viviendasREST";
 
 import AppConfig from "../../config";
 
@@ -24,56 +26,49 @@ const filter: GetViviendasRequest = {
   priceMin: priceMinFilter ? parseInt(priceMinFilter) : undefined,
 };
 
-const viviendaApi = new ViviendaApi(new ViviendaConfiguration(AppConfig.viviendas));
+const viviendaApi = new ViviendaApi(
+  new ViviendaConfiguration(AppConfig.viviendas)
+);
 const viviendas = await viviendaApi.getViviendas(filter);
-
 ---
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <WindbnbLayout title="Viviendas" page={"HOME"}>
   <div class="row">
     <h1>Filters</h1>
-    <aside class="col-md-12 col-lg-2">
+    <aside class="col-md-6 col-lg-4 col-sm-8 col-8">
       <form>
         <div class="mb-3">
           <label class="form-check-label">Search by title</label>
-          <input
-            type="text"
-            name="title"
-            value=""
-            class="form-control"
-          />
-    </div>
-    <div class="mb-3 h-100"></div>
-      <label class="form-check-label">Price</label>
-      <div class="row">
-        <div class="col">
-          <input
-            type="number"
-            name="priceMin"
-            value=""
-            placeholder="min"
-            class="form-control"
-          />
+          <input type="text" name="title" value="" class="form-control" />
         </div>
-        <div class="col">
-          <input
-            type="number"
-            name="priceMax"
-            value=""
-            placeholder="max"
-            class="form-control"
-          />
+        <div class="mb-3 h-100"></div>
+        <label class="form-check-label">Price</label>
+        <div class="row">
+          <div class="col">
+            <input
+              type="number"
+              name="priceMin"
+              value=""
+              placeholder="min"
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="number"
+              name="priceMax"
+              value=""
+              placeholder="max"
+              class="form-control"
+            />
+          </div>
         </div>
-      </div>
-    <button type="submit" class="btn btn-primary mt-3">Filter</button>
-  </form>
-  </aside>
+        <button type="submit" class="btn btn-primary mt-3">Filter</button>
+      </form>
+    </aside>
   </div>
 
-  {
-    viviendas.map(vivienda=> <ViviendaComponent vivienda = {vivienda} />)
-  }
-
+  {viviendas.map((vivienda) => <ViviendaComponent vivienda={vivienda} />)}
 </WindbnbLayout>
