@@ -81,7 +81,11 @@ try {
 }
 
 const valoraciones = await viviendaApi.getValoraciones({ idCasa });
-const userId = await getUserId(Astro);
+let userId = "";
+if (isLoggedIn(Astro)) {
+  userId = await getUserId(Astro);
+}
+
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
