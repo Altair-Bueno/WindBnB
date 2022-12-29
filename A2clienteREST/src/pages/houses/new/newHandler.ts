@@ -71,51 +71,6 @@ export async function post(context: APIContext) {
     image,
   } = data;
 
-<<<<<<< HEAD
-    if(data.price === 0){
-        referer.searchParams.set("danger", "Price can't be zero");
-        return {
-            body: JSON.stringify(
-                {
-                    redirect: `/houses/new?danger=Price can't be zero`
-                }
-            )
-        }
-    } else if(data.price < 0){
-        referer.searchParams.set("danger", "Price can't be negative");
-        return {
-            body: JSON.stringify(
-                {
-                    redirect: `/houses/new?danger=Price can't be negative`
-                }
-            )
-        }
-    }
-
-    const loc : string = street + ", " + number + ", " + city + ", " + province + ", " + cp + ", " + country;
-    const geoRes = await getGeocoding(loc);
-    
-    if(geoRes.data.length === 0){
-        referer.searchParams.set("danger", "Invalid address");
-        return {
-            body : JSON.stringify(
-                {
-                    redirect: `/houses/new?danger=Invalid address`
-                }
-            )
-        }
-    }
-    
-    let newHouse : NewVivienda = {
-        title,
-        description,
-        price,
-        location: loc,
-        userId,
-        latitude: geoRes.data[0].latitude,
-        longitude: geoRes.data[0].longitude,
-        urlPhoto: image
-=======
   if (data.price === 0) {
     referer.searchParams.set("danger", "Price can't be zero");
     return {
@@ -129,7 +84,6 @@ export async function post(context: APIContext) {
       body: JSON.stringify({
         redirect: `/houses/new?danger=Price can't be negative`,
       }),
->>>>>>> a16b8e10be29e01f5fc31e64c0e8e04b0c3df188
     };
   }
 

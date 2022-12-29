@@ -56,7 +56,7 @@ export function isLoggedIn(context: APIContext) {
 }
 
 export async function getUserId(context: APIContext): Promise<string> {
-  const accessToken = context.cookies.get(cookies.accessToken).value as string;
+  const accessToken = await getAccessToken(context);
   if (accessToken) {
     const decoded: any = jwt_decode(accessToken);
     return decoded.sub as string;
