@@ -163,24 +163,26 @@ const userId = await getUserId(Astro);
         gasStations={gasStationsInRadius}
       />
     </div>
+
     <div class="col-12">
-      <h3>Create new valoration</h3>
+      <h3>Valorations</h3>
       {
-        isLoggedIn(Astro) ? 
-        (
-        <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email:</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value={userId}>
-    </div>
-  </div>
-  <div class="mb-3 row">
-    Text: <input type="text">
-    </div>
-        ) 
-          : (<p>User must be signed in</p>)
+        isLoggedIn(Astro) && userId !== viv?.userId ? (
+
+        <form action="/houses/valorationHandler" method="post">
+          <input type="text" name="idCasa" value={idCasa} hidden />
+          <input type="text" name="userId" value={userId} hidden />
+          <label for="comment" class="form-label">Comment: </label>
+          <textarea name="comment" class="form-control"></textarea>
+          <label for="rate" class="form-label">Rate: </label>
+          <input name="rate" type="number" max="10" min="0" class="form-control"/>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+
+        ) : (<p></p>)
       }
-    {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
+      {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
     </div>
+
   </body>
 </WindbnbLayout>
