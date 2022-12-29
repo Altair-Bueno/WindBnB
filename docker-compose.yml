@@ -34,6 +34,11 @@ services:
     build: A2datosabiertosREST
     ports:
       - "8003:8000"
+  # http://localhost:8004
+  a2autenticacionrest:
+    build: A2autenticacionREST
+    ports:
+      - "8004:8000"
   # http://localhost
   # a2cliente:
   #   build: A2clienteREST

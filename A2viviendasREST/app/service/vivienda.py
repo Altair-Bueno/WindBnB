@@ -37,7 +37,6 @@ class ViviendaService:
         return [
             Vivienda(**document)
             async for document in self.collection.aggregate(pipeline)
-
         ]
 
     async def new_vivienda(self, auth: Claims, request: NewVivienda) -> Vivienda:
