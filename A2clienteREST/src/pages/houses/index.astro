@@ -37,7 +37,7 @@ const viviendas = await viviendaApi.getViviendas(filter);
 <WindbnbLayout title="Viviendas" page={"HOME"}>
   <div class="row">
     <h1>Filters</h1>
-    <aside class="col-md-12 col-lg-2">
+    <aside class="col-md-12 col-lg-2 position-sticky">
       <form>
         <div class="mb-3">
           <label class="form-check-label">Search by title</label>
@@ -68,7 +68,8 @@ const viviendas = await viviendaApi.getViviendas(filter);
         <button type="submit" class="btn btn-primary mt-3">Filter</button>
       </form>
     </aside>
+    <div class="col">
+      {viviendas.map((vivienda) => <ViviendaComponent vivienda={vivienda} />)}
+    </div>
   </div>
-
-  {viviendas.map((vivienda) => <ViviendaComponent vivienda={vivienda} />)}
 </WindbnbLayout>
