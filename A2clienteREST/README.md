@@ -25,13 +25,7 @@ npm run dev
 
 La aplicación ha sido configurada para ser desplegada en Vercel para producción.
 
-Actualmente la aplicación no puede ser ejecutada en modo producción localmente
-
-<!--
-TODO update URL
-
-Se encuentra disponible en la url: <https://example.org>
--->
+La aplicación se encuentra desplegada en <https://windbnb-fawn.vercel.app/>
 
 # Configuración
 
