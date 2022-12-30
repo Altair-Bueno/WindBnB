@@ -16,8 +16,11 @@ import { z } from "zod";
 import { formatCheckbox, formatDate } from "../../utils/format";
 import { getAccessToken, isLoggedIn } from "../../utils/auth0";
 
-if (!isLoggedIn(Astro)) return Astro.redirect("/");
-
+if (!isLoggedIn(Astro)) {
+  return Astro.redirect(
+    "/?" + new URLSearchParams({ danger: "User is not logged in" })
+  );
+}
 const ITEMS_PER_PAGE = 10;
 
 const formScheme = z.object({
