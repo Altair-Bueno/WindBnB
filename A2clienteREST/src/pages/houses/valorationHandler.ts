@@ -21,39 +21,37 @@ export async function post(context: APIContext) {
     });
     const api = new ViviendaApi(config);
   
-    const data = await context.request.json();
-    const {
-      idCasa,
-      userId,
-      comment,
-      rate
-    } = data;
+    const formData = await context.request.formData();
+    console.log(formData.values.toString());
+
+    const idCasa = formData.get("idCasa")?.toString() ?? "";
+    const userId = formData.get("userId")?.toString() ?? "";
+    const comment = formData.get("comment")?.toString() ?? "";
+    const rate = Number(formData.get("rate")?.toString()) ?? -1;
   
-    if (data.rate < 0 || data.rate > 10) {
+    if (rate < 0 || rate > 10) {
       referer.searchParams.set("danger", "Rate must be between 0 and 10");
       return {
         body: JSON.stringify({
-          redirect: `/houses/${data.idCasa}?danger=Rate must be between 0 and 10`,
+          redirect: `/houses/${idCasa}?danger=Rate must be between 0 and 10`,
         }),
       };
     } 
 
     try {
       const newValoracion: NewValoracion = {
-        userId: data.userId,
-        valoracion: data.rate,
-        comentario: data.comment
+        userId: userId,
+        valoracion: rate,
+        comentario: comment
       }
       const newValoracionRequest: NewValoracionRequest = {
-        idCasa: data.idCasa,
+        idCasa: idCasa,
         newValoracion: newValoracion
       }
       const response = await api.newValoracion(newValoracionRequest);
-      return {
-        body: JSON.stringify({
-          redirect: `/houses/${data.idCasa}`,
-        }),
-      };
+      return context.redirect(
+        `/houses/${idCasa}?` + new URLSearchParams({ warning: "Thank you for your comment!" })
+      );
     } catch (e) {
       const error = e as ResponseError;
       const msg = await error.response.json().then((x) => x.detail[0]);

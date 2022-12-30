@@ -42,10 +42,12 @@ export function setCookies(context: APIContext, response: TokenPayload) {
 
 export async function getAccessToken(context: APIContext): Promise<string> {
   if (!context.cookies.has(cookies.accessToken)) {
-    const refreshToken = context.cookies.get(cookies.refreshToken)
+    try {
+      const refreshToken = context.cookies.get(cookies.refreshToken)
       .value as string;
-    const response = await refreshAccessToken(refreshToken);
-    setCookies(context, response);
+      const response = await refreshAccessToken(refreshToken);
+      setCookies(context, response);
+    } catch (e) {}
   }
 
   return context.cookies.get(cookies.accessToken).value as string;
