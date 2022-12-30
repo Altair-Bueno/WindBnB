@@ -23,13 +23,12 @@ import { MONTHS } from "../../utils/months";
 import Checkout from "../../components/Checkout.svelte";
 import { getAccessToken, getUserId } from "../../utils/auth0";
 
-
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
   new ViviendaConfiguration({
-      ...AppConfig.viviendas,
-      accessToken: () => getAccessToken(Astro),
-    })
+    ...AppConfig.viviendas,
+    accessToken: () => getAccessToken(Astro),
+  })
 );
 
 let viv: Vivienda;
@@ -90,8 +89,8 @@ const formData = {
   idCasa: idCasa,
   userId: userId,
   comment: "",
-  rate: ""
-}
+  rate: "",
+};
 ---
 
 <WindbnbLayout title={viv?.title} page={"HOME"}>
@@ -125,9 +124,7 @@ const formData = {
     </div>
 
     <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
-      <div
-        class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden"
-      >
+      <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center">
         <div class="my-3 p-3">
           <h2 class="display-5">Book now!</h2>
           <p class="lead">Check the available dates.</p>
@@ -178,21 +175,43 @@ const formData = {
       <h3>Valorations</h3>
       {
         isLoggedIn(Astro) && userId !== viv?.userId ? (
-        <form method="post" action="/houses/valorationHandler">
-          <div class="mb-3">
+          <form method="post" action="/houses/valorationHandler">
+            <div class="mb-3">
               <input type="text" name="idCasa" value={formData.idCasa} hidden />
               <input type="text" name="userId" value={formData.userId} hidden />
-              <label for="comment" class="form-label">Comment: </label>
-              <textarea value={formData.comment} name="comment" class="form-control"></textarea>
-              <label for="rate" class="form-label">Rate: </label>
-              <input value={formData.rate} name="rate" type="number" max="10" min="0" class="form-control"/>
-              <button type="submit" class="btn btn-primary">Send</button>
-          </div>    
-        </form>
-        ) : (<p></p>)
+              <label for="comment" class="form-label">
+                Comment:{" "}
+              </label>
+              <textarea
+                value={formData.comment}
+                name="comment"
+                class="form-control"
+              />
+              <label for="rate" class="form-label">
+                Rate:{" "}
+              </label>
+              <input
+                value={formData.rate}
+                name="rate"
+                type="number"
+                max="10"
+                min="0"
+                class="form-control"
+              />
+              <button type="submit" class="btn btn-primary">
+                Send
+              </button>
+            </div>
+          </form>
+        ) : (
+          <p />
+        )
       }
-      {valoraciones.map((valoracion) => <ValoracionComponente valoracion={valoracion} />)}
+      {
+        valoraciones.map((valoracion) => (
+          <ValoracionComponente valoracion={valoracion} />
+        ))
+      }
     </div>
-
   </body>
 </WindbnbLayout>
