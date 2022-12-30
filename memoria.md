@@ -282,3 +282,59 @@ caso, se mostrará el objeto
 ```
 
 # API REST desarrollada
+
+## A2ReservasREST
+
+La siguiente lista es una especificación informal sobre los endpoints REST
+disponibles en el microservicio, a modo de resumen. La documentación completa se
+puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
+`/redoc` (Redoc). Además, se adjunta una copia local en el fichero
+`openapi.json`, dentro de la carpeta del proyecto.
+
+> Nota: Todos los endpoints (menos la ruta `ping`) requieren de un token de
+> acceso válido suministrado en la cabecera HTTP `Authorization`. Además, las
+> rutas solo operan **sobre el usuario actual**, por lo que es imposible acceder
+> a las reservas de otros usuarios
+
+- `GET /booking`: Devuelve una lista de reservas que cumplan con los filtros
+  especificados. 10 reservas como máximo. Los parámetros de consulta son:
+  - `skip`: Número de reservas a ignorar
+  - `house_id`: Identificador de la vivienda
+  - `owner_id`: Identificador de usuario (propietario de la vivienda)
+  - `before_date`: Fechas de fin anteriores
+  - `after_date`: Fechas de inicio posteriores
+  - `sort_by`: Campo utilizado para ordenar
+  - `ascending`: Ordenar de forma ascendente. Por defecto: `false`
+  - `state`: Estado de la reserva
+- `POST /booking`: Crea una nueva reserva. El cuerpo de la petición es un json
+  con los siguientes campos:
+  - `house_id`: Identificador de la vivienda
+  - `start_date`: Fecha de inicio de la reserva
+  - `end_date`: Fecha de inicio de la reserva
+- `PUT /booking/{booking_id}/capture`: Completa la reserva de una vivienda
+  completando la transacción con Paypal con la siguiente información (parámetros
+  de consulta):
+  - `order_id`: Identificador de pedido de Paypal
+- `GET /booking/{booking_id}`: Devuelve toda la información sobre la reserva con
+  identificador `booking_id`
+- `DELETE /booking/{booking_id}`: Cancela la reserva con identificador
+  `booking_id`
+- `GET /ping`: Ruta utilizada para validar que el servicio se encuentra
+  disponible
+
+### Casos alternativos
+
+En caso de error en una petición bien formada, se devolverá un mensaje de error
+siguiendo el siguiente formato.
+
+```json
+{
+  "detail": "error"
+}
+```
+
+Donde el campo `detail` contiene uno de los siguientes códigos de error
+
+- `ALREADY_BOOKED` (409 Conflict): No se puede reservar por un conflicto
+- `NOT_FOUND` (404 Not Found): No se ha encontrado la vivienda
+- `UPDATE_ERROR` (404 Not Found): No se ha encontrado la reserva
