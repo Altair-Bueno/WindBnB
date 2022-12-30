@@ -1,16 +1,10 @@
 // I love ts...
 import type { APIContext } from "astro";
 import { BookingApi, Configuration } from "../../api/A2reservasREST";
-import cookies from "../../cookies";
 import { getAccessToken } from "../../utils/auth0";
 import { z } from "zod";
 
 export const URI = "/bookings/newHandler";
-
-function getUserId(context: APIContext) {
-  const userId = context.cookies.get(cookies.USER_ID_KEY).value;
-  return z.coerce.string().parse(userId);
-}
 
 const postScheme = z.object({
   houseId: z.coerce.string(),
