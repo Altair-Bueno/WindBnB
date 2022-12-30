@@ -30,6 +30,7 @@ Nota: credenciales PayPal
 [x] la(s) URL(s) donde está desplegada la aplicación en la nube.
 [x] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
 [ ] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente). 
+  > Falta lo utilizado para las reservas (Métodos de pago)
 [ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
 [x] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
 [x] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
@@ -57,10 +58,16 @@ Se han considerado los siguientes requisitos para la realización del cliente
 REST:
 
 - **El almacenamiento de datos se realizará en una base de datos no relacional**
+  - Se hace uso de [MongoDB Atlas](https://www.mongodb.com/atlas) para el almacenamiento de datos
 - **Identificación de los usuarios de la aplicación haciendo uso de técnicas basadas en OAuth**
+  - Se hace uso de [Auth0](https://auth0.com) para la autenticación y autorización de los usuarios
 - **La aplicación permitirá la interacción entre sus usuarios mediante un sistema de comentarios y valoraciones**
+  - Se ha actualizado el modelo de la base de datos, añadiendo un nuevo esquema `valorations`, que describe una valoración realizada sobre una publicación por un usuario y un comentario
 - **Integración de un servicio de pago en la aplicación**
+  - <!-- TODO: Añadir enlaces de los métodos de pago disponibles -->
 - **La aplicación estará desplegada en la nube**
+  - Para el despliegue de la parte frontend de la aplicación se ha hecho uso del proveedor [Vercel](https://vercel.com/)
+  - Para el despliegue de la parte backend de la aplicación se ha hecho uso del proveedor [Fly.io](https://fly.io)
 
 # Tecnologías Utilizadas
 
