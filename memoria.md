@@ -27,8 +27,8 @@ Nota: credenciales PayPal
 ```
 -->
 
-[ ] la(s) URL(s) donde está desplegada la aplicación en la nube.
-[ ] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
+[x] la(s) URL(s) donde está desplegada la aplicación en la nube.
+[x] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
 [ ] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente). 
 [ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
 [ ] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
@@ -48,19 +48,17 @@ la aplicación.
 
 # Despliegue
 
+Para el despliegue de la parte frontend de la aplicación se ha hecho uso del proveedor [Vercel](https://vercel.com/)
 
+Para el despliegue de la parte backend de la aplicación se ha hecho uso del proveedor [Fly.io](https://fly.io)
 
-# Replanteamiento de decisiones anteriores
+La base de datos se encuentra alojada en un cluster de [MongoDB Atlas](https://www.mongodb.com/atlas)
 
-Se han realizado varios cambios al backend:
-
-- Se ha añadido al modelo un campo `price` a la clase Vivienda, que se
-  corresponde con el precio de la vivienda al mes.
-- Se ha añadido una clase `FiltroVivienda` para poder filtrar las viviendas por
-  determinados campos con mas facilidad
-- Se ha cambiado el método `getViviendas` para que acepte unos filtros de
-  búsqueda
-- `openapi.json` actualizado
+- La aplicación se encuentra desplegada en <https://windbnb-fawn.vercel.app>
+- Los microservicios A2viviendasREST, A2datosabiertosREST y A2reservasREST están desplegados respectivamente en:
+  - <https://a2viviendas.fly.dev>
+  - <https://a2datosabiertos.fly.dev>
+  - <https://a2reservas.fly.dev>
 
 # Requisitos considerados
 
