@@ -68,8 +68,8 @@ const viviendas = await viviendaApi.getViviendas(filter);
         <button type="submit" class="btn btn-primary mt-3">Filter</button>
       </form>
     </aside>
-    <div class="col">
+    
       {viviendas.map((vivienda) => <ViviendaComponent vivienda={vivienda} />)}
-    </div>
+    
   </div>
 </WindbnbLayout>
