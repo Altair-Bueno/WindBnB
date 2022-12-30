@@ -27,15 +27,15 @@ Nota: credenciales PayPal
 ```
 -->
 
-[ ] la(s) URL(s) donde está desplegada la aplicación en la nube.
-[ ] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
+[x] la(s) URL(s) donde está desplegada la aplicación en la nube.
+[x] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
 [ ] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente). 
 [ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
 [x] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
 [x] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
 [ ] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
 [ ] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
-[ ] la funcionalidad de la capa de presentación o la aplicación cliente. 
+[x] la funcionalidad de la capa de presentación o la aplicación cliente. 
 
 # Introducción
 
@@ -48,33 +48,28 @@ la aplicación.
 
 # Despliegue
 
+Para el despliegue de la parte frontend de la aplicación se ha hecho uso del proveedor [Vercel](https://vercel.com/)
 
+Para el despliegue de la parte backend de la aplicación se ha hecho uso del proveedor [Fly.io](https://fly.io)
 
-# Replanteamiento de decisiones anteriores
+La base de datos se encuentra alojada en un cluster de [MongoDB Atlas](https://www.mongodb.com/atlas)
 
-Se han realizado varios cambios al backend:
-
-- Se ha añadido al modelo un campo `price` a la clase Vivienda, que se
-  corresponde con el precio de la vivienda al mes.
-- Se ha añadido una clase `FiltroVivienda` para poder filtrar las viviendas por
-  determinados campos con mas facilidad
-- Se ha cambiado el método `getViviendas` para que acepte unos filtros de
-  búsqueda
-- `openapi.json` actualizado
+- La aplicación se encuentra desplegada en <https://windbnb-fawn.vercel.app>
+- Los microservicios A2viviendasREST, A2datosabiertosREST y A2reservasREST están desplegados respectivamente en:
+  - <https://a2viviendas.fly.dev>
+  - <https://a2datosabiertos.fly.dev>
+  - <https://a2reservas.fly.dev>
 
 # Requisitos considerados
 
 Se han considerado los siguientes requisitos para la realización del cliente
 REST:
 
-- **Uso de los microservicios de acceso CRUD**
-- **Uso de las consultas y búsquedas a la base de datos**
-- **Uso de los datos abiertos desplegados como servicios REST en la práctica
-  anterior**
-- **Visualización de mapas con información relevante**:
-  [Leaflet](https://leafletjs.com/) y OpenStreetMaps
-- **Visualización de imágenes almacenadas en algún servicio cloud**:
-  [Cloudinary](https://cloudinary.com/)
+- **El almacenamiento de datos se realizará en una base de datos no relacional**
+- **Identificación de los usuarios de la aplicación haciendo uso de técnicas basadas en OAuth**
+- **La aplicación permitirá la interacción entre sus usuarios mediante un sistema de comentarios y valoraciones**
+- **Integración de un servicio de pago en la aplicación**
+- **La aplicación estará desplegada en la nube**
 
 # Tecnologías Utilizadas
 
@@ -188,16 +183,11 @@ fichero `A2clienteREST/README.md`.
   - `Bookings`: Accede a la Páginas de reservas del usuario
   - `New House`: Una vez iniciada sesión, aparece esta opción que redirige a la
     página para crear una nueva vivienda.
-  - `Login/Logout`: Redirige a una página de inicio de sesión si no se ha
-    iniciado sesión aún, o directamente sale de la sesión si se estaba en una
+  - `Login`: Redirige a una página para el inicio de sesión.
+  - `Logout`: Cierra la sesión del usuario y lo redirige a la página principal.
 - Buscador de viviendas mediante un filtro que busca por título de la vivienda.
 - Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
-
-## Página de inicio de sesión `/auth/login`
-
-La página de inicio de sesión tiene la única funcionalidad de que un usuario
-entre a su sesión con su nombre de usuario. La contraseña no es requerida. Con
-el botón `Log in` se redirige a la Página principal con la sesión ya iniciada.
+- Accesible para cualquier usuario, esté autenticado o no.
 
 ## Página de una vivienda `/houses/{vivienda_id}`
 
@@ -211,8 +201,7 @@ La página de una vivienda tiene distintas funciones:
 - Visualización de **datos** de la vivienda.
 - Visualización de **imágenes** de la vivienda.
 - Formulario para reservar la vivienda: Muestra dos campos de fecha de
-  calendario para indicar el rango de días que quiere reservar el usuario y un
-  botón `Book` para realizar la acción y añadir la reserva a la base de datos.
+  calendario para indicar el rango de días que quiere reservar el usuario y varios botones que representan distintos métodos de pago. Al pulsar uno de ellos habiendo seleccionado una fecha de inicio y fin, se iniciará el proceso de pago.
 - Visualización de un **mapa**: Muestra la localización de la vivienda a partir
   de la latitud y longitud almacenados en la base de datos, y las gasolineras
   cercanas en un área de 5km llamando a la api encargada de los datos abiertos
@@ -223,6 +212,10 @@ La página de una vivienda tiene distintas funciones:
   viajeros en esa provincia a partir de la provincia de la vivienda llamando a
   la api encargada de los datos abiertos en el backend
   (`/average-stay?provincia={provincia}`).
+- Accesible para cualquier usuario, esté autenticado o no
+  - Los usuarios no autenticados solo podrán visualizar la publicación
+  - Los usuarios autenticados que no hayan creado la publicación podrán realizar valoraciones sobre la casa y hacer una reserva
+  - El usuario autenticado y autor de la publicación podrá editar y eliminar la misma, pero no podrá realizar valoraciones ni reservas
 
 ## Página de reservas `/bookings`
 
@@ -242,6 +235,8 @@ También cuenta con opciones de filtro y ordenación de las reservas:
 - Filtro por estado
 - Ordenar por fecha de inicio o fin
 - Orden ascendente o descendente
+
+- Solo accesible para usuarios autenticados
 
 ## Página de creación de una vivienda `/houses/new`
 
@@ -265,6 +260,8 @@ Mediante el botón `Create` se añade a la base de datos con los datos rellenado
 en el formulario y se redirige a la página de esa vivienda. Las fotos
 seleccionadas se almacenan en Cloudinary.
 
+- Solo accesible para usuarios autenticados
+
 ## Página de modificación de una vivienda `/houses/edit/{vivienda_id}`
 
 La página muestra un formulario con los datos correspondientes a una vivienda
@@ -285,3 +282,5 @@ autocompletados:
 Mediante el botón `Edit data` se actualiza la vivienda de la base de datos si se
 ha cambiado algún campo y redirige a la página de la vivienda. Si se han
 modificado imágenes, de la misma manera se actualiza en Cloudinary.
+
+- Solo accesible para un usuario autenticado y autor de la publicación
