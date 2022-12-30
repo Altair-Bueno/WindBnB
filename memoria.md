@@ -35,7 +35,7 @@ Nota: credenciales PayPal
 [ ] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
 [ ] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
 [ ] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
-[ ] la funcionalidad de la capa de presentación o la aplicación cliente. 
+[x] la funcionalidad de la capa de presentación o la aplicación cliente. 
 
 # Introducción
 
@@ -120,12 +120,7 @@ fichero `A2clienteREST/README.md`
     iniciado sesión aún, o directamente sale de la sesión si se estaba en una
 - Buscador de viviendas mediante un filtro que busca por título de la vivienda.
 - Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
-
-## Página de inicio de sesión `/auth/login`
-
-La página de inicio de sesión tiene la única funcionalidad de que un usuario
-entre a su sesión con su nombre de usuario. La contraseña no es requerida. Con
-el botón `Log in` se redirige a la Página principal con la sesión ya iniciada.
+- Accesible para cualquier usuario, esté autenticado o no.
 
 ## Página de una vivienda `/houses/{vivienda_id}`
 
@@ -139,8 +134,7 @@ La página de una vivienda tiene distintas funciones:
 - Visualización de **datos** de la vivienda.
 - Visualización de **imágenes** de la vivienda.
 - Formulario para reservar la vivienda: Muestra dos campos de fecha de
-  calendario para indicar el rango de días que quiere reservar el usuario y un
-  botón `Book` para realizar la acción y añadir la reserva a la base de datos.
+  calendario para indicar el rango de días que quiere reservar el usuario y varios botones que representan distintos métodos de pago. Al pulsar uno de ellos habiendo seleccionado una fecha de inicio y fin, se iniciará el proceso de pago.
 - Visualización de un **mapa**: Muestra la localización de la vivienda a partir
   de la latitud y longitud almacenados en la base de datos, y las gasolineras
   cercanas en un área de 5km llamando a la api encargada de los datos abiertos
@@ -151,6 +145,10 @@ La página de una vivienda tiene distintas funciones:
   viajeros en esa provincia a partir de la provincia de la vivienda llamando a
   la api encargada de los datos abiertos en el backend
   (`/average-stay?provincia={provincia}`).
+- Accesible para cualquier usuario, esté autenticado o no
+  - Los usuarios no autenticados solo podrán visualizar la publicación
+  - Los usuarios autenticados que no hayan creado la publicación podrán realizar valoraciones sobre la casa y hacer una reserva
+  - El usuario autenticado y autor de la publicación podrá editar y eliminar la misma, pero no podrá realizar valoraciones ni reservas
 
 ## Página de reservas `/bookings`
 
@@ -170,6 +168,8 @@ También cuenta con opciones de filtro y ordenación de las reservas:
 - Filtro por estado
 - Ordenar por fecha de inicio o fin
 - Orden ascendente o descendente
+
+- Solo accesible para usuarios autenticados
 
 ## Página de creación de una vivienda `/houses/new`
 
@@ -193,6 +193,8 @@ Mediante el botón `Create` se añade a la base de datos con los datos rellenado
 en el formulario y se redirige a la página de esa vivienda. Las fotos
 seleccionadas se almacenan en Cloudinary.
 
+- Solo accesible para usuarios autenticados
+
 ## Página de modificación de una vivienda `/houses/edit/{vivienda_id}`
 
 La página muestra un formulario con los datos correspondientes a una vivienda
@@ -213,3 +215,5 @@ autocompletados:
 Mediante el botón `Edit data` se actualiza la vivienda de la base de datos si se
 ha cambiado algún campo y redirige a la página de la vivienda. Si se han
 modificado imágenes, de la misma manera se actualiza en Cloudinary.
+
+- Solo accesible para un usuario autenticado y autor de la publicación
