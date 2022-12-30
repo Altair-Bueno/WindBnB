@@ -116,8 +116,8 @@ fichero `A2clienteREST/README.md`
   - `Bookings`: Accede a la Páginas de reservas del usuario
   - `New House`: Una vez iniciada sesión, aparece esta opción que redirige a la
     página para crear una nueva vivienda.
-  - `Login/Logout`: Redirige a una página de inicio de sesión si no se ha
-    iniciado sesión aún, o directamente sale de la sesión si se estaba en una
+  - `Login`: Redirige a una página para el inicio de sesión.
+  - `Logout`: Cierra la sesión del usuario y lo redirige a la página principal.
 - Buscador de viviendas mediante un filtro que busca por título de la vivienda.
 - Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
 - Accesible para cualquier usuario, esté autenticado o no.
