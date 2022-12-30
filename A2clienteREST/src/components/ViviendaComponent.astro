@@ -5,7 +5,7 @@ const { vivienda } = Astro.props as { vivienda: Vivienda };
 
 {
   vivienda.state == "available" && (
-    <div class="card mb-4">
+    <div class="card mb-4 col-8">
       {vivienda.urlPhoto == null ? (
         <img
           src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png"

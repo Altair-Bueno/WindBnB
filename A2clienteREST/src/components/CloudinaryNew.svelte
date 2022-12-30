@@ -12,6 +12,8 @@
   let cp = "";
   let country = "";
   let price = 0;
+  let loading: boolean = false;
+  let publishProgress = 0;
 
   // https://cloudinary.com/documentation/upload_images#code_explorer_upload_multiple_files_using_a_form_unsigned
   async function upload(cloudName: string, uploadPreset: string, file: any) {
@@ -27,6 +29,7 @@
     );
   }
   async function handleOnSubmit() {
+    loading = true;
     let image: string[] = [];
     if (files) {
       //image = await upload(cloudName, uploadPreset, files[0]).then(x => x.json()).then(x => [x.url]);
@@ -37,6 +40,8 @@
           .then((x) => x.json())
           .then((x) => x.url);
         image.push(res);
+        publishProgress = ((i + 1) * 100) / (files.length);
+        console.log(publishProgress);
       }
     } else {
       image = [];
@@ -58,7 +63,10 @@
         price,
         image,
       }),
-    }).then((x) => x.json());
+    }).then((x) => {
+      loading = false;
+      return x.json();
+    });
     window.location.href = res.redirect;
   }
 </script>
@@ -80,82 +88,114 @@
   </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>
-    <input
+    <textarea
       bind:value={description}
-      type="text"
       name="description"
       class="form-control"
       id="description"
     />
   </div>
-  <div class="mb-3">
-    <label for="street" class="form-label">Street</label>
-    <input
-      bind:value={street}
-      type="text"
-      name="street"
-      class="form-control"
-      id="street"
-      required
-    />
-    <label for="number" class="form-label">Number</label>
-    <input
-      bind:value={number}
-      type="text"
-      name="number"
-      class="form-control"
-      id="number"
-      required
-    />
-    <label for="city" class="form-label">City</label>
-    <input
-      bind:value={city}
-      type="text"
-      name="city"
-      class="form-control"
-      id="city"
-      required
-    />
-    <label for="province" class="form-label">Province</label>
-    <input
-      bind:value={province}
-      type="text"
-      name="province"
-      class="form-control"
-      id="province"
-      required
-    />
-    <label for="cp" class="form-label">Postal code</label>
-    <input
-      bind:value={cp}
-      type="number"
-      name="cp"
-      class="form-control"
-      id="cp"
-      required
-    />
-    <label for="country" class="form-label">Country</label>
-    <input
-      bind:value={country}
-      type="text"
-      name="country"
-      class="form-control"
-      id="country"
-      required
-    />
+  <div class="mb-3 row">
+    <div class="col">
+      <label for="street" class="form-label">Street</label>
+      <input
+        bind:value={street}
+        type="text"
+        name="street"
+        class="form-control"
+        id="street"
+        required
+      />
+    </div>
+    <div class="col">
+      <label for="number" class="form-label">Number</label>
+      <input
+        bind:value={number}
+        type="text"
+        name="number"
+        class="form-control col"
+        id="number"
+        required
+      />
+    </div>
   </div>
-  <div class="mb-3">
-    <label for="price" class="form-label">Price per night</label>
-    <input
-      bind:value={price}
-      type="number"
-      name="price"
-      class="form-control"
-      id="price"
-      required
-    />
+  <div class="mb-3 row">
+    <div class="col">
+      <label for="city" class="form-label">City</label>
+      <input
+        bind:value={city}
+        type="text"
+        name="city"
+        class="form-control col"
+        id="city"
+        required
+      />
+    </div>
+    <div class="col">
+      <label for="province" class="form-label">Province</label>
+      <input
+        bind:value={province}
+        type="text"
+        name="province"
+        class="form-control col"
+        id="province"
+        required
+      />
+    </div>
   </div>
-  <input bind:files type="file" class="form-control" multiple />
-  <br />
-  <button type="submit" class="btn btn-primary">Create</button>
+  <div class="mb-3 row">
+    <div class="col">
+      <label for="cp" class="form-label">Postal code</label>
+      <input
+        bind:value={cp}
+        type="number"
+        name="cp"
+        class="form-control col"
+        id="cp"
+        required
+      />
+    </div>
+    <div class="col">
+      <label for="country" class="form-label">Country</label>
+      <input
+        bind:value={country}
+        type="text"
+        name="country"
+        class="form-control col"
+        id="country"
+        required
+      />
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <div class="col">
+      <label for="price" class="form-label">€ / night</label>
+      <input
+        bind:value={price}
+        type="number"
+        name="price"
+        class="form-control"
+        id="price"
+        required
+      />
+    </div>
+    <div class="col">
+      <label for="photos" class="form-label">Photos</label>
+      <input bind:files name="photos" type="file" class="form-control" multiple />
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary mb-3">
+    {#if loading}
+    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+    <span class="sr-only">Loading...</span>
+    {:else}
+    <span>Publish your House</span>
+    {/if}
+  </button>
+  <div class="progress">
+    <div class="progress-bar" style="width: {publishProgress}%" role="progressbar"></div>
+  </div>
+  {#if publishProgress === 100}
+    <span>Your house is almost published, wait a few seconds...</span>
+  {/if}
 </form>
