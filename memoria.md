@@ -33,18 +33,9 @@ Nota: credenciales PayPal
 [ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
 [x] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
 [x] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
-[ ] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
+[x] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
 [ ] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
 [x] la funcionalidad de la capa de presentación o la aplicación cliente. 
-
-# Introducción
-
-Para la realización del cliente REST propuesto en el documento _Práctica de
-servicios Web (II): cliente_, se ha optado por usar un cliente de tipo
-[Server-Side Rendering con Astro](https://docs.astro.build/en/guides/server-side-rendering/).
-A continuación se especifican las tecnologías utilizadas, requisitos
-implementados, instrucciones de despliegue y explicación del funcionamiento de
-la aplicación.
 
 # Despliegue
 
@@ -171,116 +162,98 @@ proporciona un método para lanzar el servicio en producción localmente. Para m
 información sobre como desplegar el servicio en modo desarrollo, visite el
 fichero `A2clienteREST/README.md`.
 
-# Funcionalidad de la aplicación cliente
+# Conjunto de datos abiertos
 
-## Página principal `/houses`
+El microservicio encargado de servir los datos abiertos es `A2datosabiertosREST`
 
-- Lista de viviendas que están en la base de datos. Pulsando sobre un título se
-  accede a la página de la vivienda. Muestra varios datos de cada vivienda,
-  almacenados en la base de datos.
-- Visualización de una barra de navegación con las opciones de:
-  - `Home` y `WindBnB`: Redirige a la Página principal
-  - `Bookings`: Accede a la Páginas de reservas del usuario
-  - `New House`: Una vez iniciada sesión, aparece esta opción que redirige a la
-    página para crear una nueva vivienda.
-  - `Login`: Redirige a una página para el inicio de sesión.
-  - `Logout`: Cierra la sesión del usuario y lo redirige a la página principal.
-- Buscador de viviendas mediante un filtro que busca por título de la vivienda.
-- Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
-- Accesible para cualquier usuario, esté autenticado o no.
+## Precio de carburantes en las gasolineras españolas
 
-## Página de una vivienda `/houses/{vivienda_id}`
+El conjunto de datos abiertos relacionado con 
+[las gasolineras de España](https://datos.gob.es/es/catalogo/e05068001-precio-de-carburantes-en-las-gasolineras-espanolas)
+incluye información
+sobre su posición geográfica, dirección y precio de los carburantes ofertados
+de cada gasolinera.
+Este será utilizado para mostrar en el mapa las gasolineras cercanas a la
+vivienda publicada en una determinada
+provincia.
 
-La página de una vivienda tiene distintas funciones:
+### Endpoints
 
-- Botón `Edit house`: Redirige a una página para completar la acción de editar.
-  Sólo disponible si el usuario es el dueño.
-- Botón `Delete house`: Realiza la acción de borrar la vivienda de la base de
-  datos y redirige a la página principal. Sólo disponible si el usuario es el
-  dueño.
-- Visualización de **datos** de la vivienda.
-- Visualización de **imágenes** de la vivienda.
-- Formulario para reservar la vivienda: Muestra dos campos de fecha de
-  calendario para indicar el rango de días que quiere reservar el usuario y varios botones que representan distintos métodos de pago. Al pulsar uno de ellos habiendo seleccionado una fecha de inicio y fin, se iniciará el proceso de pago.
-- Visualización de un **mapa**: Muestra la localización de la vivienda a partir
-  de la latitud y longitud almacenados en la base de datos, y las gasolineras
-  cercanas en un área de 5km llamando a la api encargada de los datos abiertos
-  en el backend
-  (`/gas-stations?area={area}&limit={limit}&latitude={latitude}&longitude={longitude}`).
-  Se hace uso de la librería Leaflet y se muestra con OpenStreetMaps.
-- Visualización de la **estancia media**: Muestra la estancia media de los
-  viajeros en esa provincia a partir de la provincia de la vivienda llamando a
-  la api encargada de los datos abiertos en el backend
-  (`/average-stay?provincia={provincia}`).
-- Accesible para cualquier usuario, esté autenticado o no
-  - Los usuarios no autenticados solo podrán visualizar la publicación
-  - Los usuarios autenticados que no hayan creado la publicación podrán realizar valoraciones sobre la casa y hacer una reserva
-  - El usuario autenticado y autor de la publicación podrá editar y eliminar la misma, pero no podrá realizar valoraciones ni reservas
+- `GET /gas-stations`: Devuelve una lista de gasolineras (`List[EESSPrecio]`)
+  filtrados por provincia y rótulo. Por defecto 10 gasolineras como máximo
 
-## Página de reservas `/bookings`
+  - `provincia`: `Optional[str]`. Nombre de la provincia
+  - `rotulo`: `Optional[str]`. Nombre de la marca o rótulo de la gasolinera
+  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor
+    es 10
 
-La página de reservas muestra una lista de reservas realizadas por el usuario
-que está con la sesión iniciada en ese momento. De cada reserva se muestra la
-vivienda, a la que se puede acceder a su página pulsando sobre ella, la fecha de
-inicio y fin de la reserva, el estado y el botón `Cancel booking` cancela la
-reserva, eliminándola de la base de datos.
+- `GET /gas-stations/{latitude}/{longitude}`: Devuelve una lista de gasolineras
+  (`List[EESSPrecio]`) que se encuentran como máximo en un área a partir de una
+  geolocalización. Por defecto 10 gasolineras como máximo.
+  - `latitude`: `float`. Latitud de la vivienda
+  - `longitude`: `float`. Longitud de la vivienda
+  - `area`: `int`. Límite del área en kilómetros. Por defecto, el valor es 5
+  - `limit`: `int`. Número máximo de elementos a devolver. Por defecto, el valor
+    es 10
 
-Las reservas se encuentran paginadas de 10 en 10, contando con los botones
-`Previous` y `Next` para navegar entre la lista de reservas del usuario.
+El modelo del tipo de salida `EESSPrecio` se puede ver en
+`A2datosabiertosREST/src/models/gas_stations.py` en modo local.
 
-También cuenta con opciones de filtro y ordenación de las reservas:
+## Estancia media de los viajeros por provincias y meses
 
-- Filtro por fecha de inicio
-- Filtro por fecha de fin
-- Filtro por estado
-- Ordenar por fecha de inicio o fin
-- Orden ascendente o descendente
+El conjunto de datos abiertos relacionado con la
+[estancia media de viajeros](https://datos.gob.es/es/catalogo/ea0010587-estancia-media-de-los-viajeros-por-provincias-y-meses-eoap-identificador-api-t11-e162eoap-a2020-l0-01ndp03-px)
+contiene información de la estancia media en días de los viajeros por
+provincia y mes según la vivienda. 
 
-- Solo accesible para usuarios autenticados
+### Endpoints
 
-## Página de creación de una vivienda `/houses/new`
+- `GET /average-stay`: Devuelve el valor de la estancia media (`Data`) de
+  viajeros de una provincia en un mes o año.
+  - `provincia`: `str`. Nombre de la provincia
+  - `mes`: `Optional[str]`. Nombre del mes
 
-La página muestra un formulario con los datos correspondientes a una vivienda
-para crear una nueva vivienda y almacenarla en la base de datos:
+El modelo del tipo de salida `Data` se puede ver en
+`A2datosabiertosREST/src/models/average_stay.py` en modo local.
 
-- Título
-- Descripción
-- Calle
-- Número
-- Ciudad
-- Provincia
-- Código postal
-- País
-- Precio por noche
-- Imágenes: Mediante un botón `Elegir archivos` se accede al explorador de
-  archivos donde se puede realizar una selección múltiple de imágenes. Es
-  obligatorio seleccionar al menos 1 imagen.
+## Casos Alternativos
 
-Mediante el botón `Create` se añade a la base de datos con los datos rellenados
-en el formulario y se redirige a la página de esa vivienda. Las fotos
-seleccionadas se almacenan en Cloudinary.
+En el caso de que no se introduzca una entrada correcta, se han definido dos
+excepciones que se elevarán cuando sea oportuno: `NoGasStations` y
+`NoDataFound`. Si no se encuentran resultados en la búsqueda, el endpoint
+devuelve un mensaje indicándolo.
 
-- Solo accesible para usuarios autenticados
+### NoGasStations Exception
 
-## Página de modificación de una vivienda `/houses/edit/{vivienda_id}`
+En el caso de `NoGasStations`, se puede mostrar en dos ocasiones. Cuando no hay
+gasolineras dado una provincia y rótulo se mostraría un objeto
 
-La página muestra un formulario con los datos correspondientes a una vivienda
-para modificar una vivienda ya existente en la base de datos, con los campos ya
-autocompletados:
+```json
+{
+  "message": "No {rotulo} gas stations found in {provincia}"
+}
+```
 
-- Título
-- Descripción
-- Calle
-- Número
-- Ciudad
-- Provincia
-- Código postal
-- País
-- Precio por noche
-- Imágenes
+O, en el caso de que no haya gasolineras dado un radio de búsqueda, una latitud
+y una longitud, se mostraría otro objeto de la misma forma
 
-Mediante el botón `Edit data` se actualiza la vivienda de la base de datos si se
-ha cambiado algún campo y redirige a la página de la vivienda. Si se han
-modificado imágenes, de la misma manera se actualiza en Cloudinary.
+```json
+{
+  "message": "No gas stations found within {kilometers}km from [{latitude}º, {longitude}º]"
+}
+```
 
-- Solo accesible para un usuario autenticado y autor de la publicación
+### NoDataFound Exception
+
+Cuando buscamos la estancia media dada una provincia y un mes (o la media
+anual), puede darse el caso de que no haya datos sobre ello. No es que no se
+encuentre el recurso, simplemente que no hay información sobre ello. En este
+caso, se mostrará el objeto
+
+```json
+{
+  "message": "No data was found for [{provincia}, {mes/total}]"
+}
+```
+
+# API REST desarrollada
