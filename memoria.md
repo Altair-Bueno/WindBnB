@@ -68,7 +68,7 @@ REST:
 - **La aplicación permitirá la interacción entre sus usuarios mediante un
   sistema de comentarios y valoraciones**
   - Se ha actualizado el modelo de la base de datos, añadiendo un nuevo esquema
-    `valorations`, que describe una valoración realizada sobre una publicación
+    `valoraciones`, que describe una valoración realizada sobre una publicación
     por un usuario y un comentario
 - **Integración de un servicio de pago en la aplicación**:
   - El microservicio `A2ReservasREST` ha sido actualizado con soporte para
@@ -123,6 +123,7 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
 
 <!-- TODO @carmen @tapia: valorations tiene tambén un estado??? eso no tiene sentido-->
 
+Colección houses:
 ```json
 {
   // Clave primaria de Mongo
@@ -156,22 +157,29 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
       // Estado de la reserva. Por defecto: reserved
       "state": "enum(reserved,canceled)"
     }
-  ],
-  // Lista de todas las valoraciones de esta vivienda
-  "valorations": [
-    {
-      "_id": "ObjectId",
-      // Identificador del usuario que hace la valoración
-      "user_id": "string",
-      // Valoración de la vivienda entre 0 y 10
-      "valoracion": "integer",
-      // Comentario de la vivienda
-      "comentario": "string",
-      // Estado de la reserva. Por defecto: reserved
-      "state": "enum(reserved,canceled)"
-    }
   ]
 }
+```
+
+Colección valoraciones:
+```json
+  // Lista de todas las valoraciones de esta vivienda
+  
+"valoraciones": 
+{
+    "_id": "ObjectId",
+    // Identificador de la vivienda asociada a la valoración
+    "vivienda_id": "ObjectId"
+    // Identificador del usuario que hace la valoración
+    "user_id": "string",
+    // Valoración de la vivienda entre 0 y 10
+    "valoracion": "integer",
+    // Comentario de la vivienda
+    "comentario": "string",
+    // Estado de la reserva. Por defecto: available
+    "state": "enum(available,canceled)"
+}
+  
 ```
 
 # Instrucciones de Despliegue
@@ -338,3 +346,50 @@ Donde el campo `detail` contiene uno de los siguientes códigos de error
 - `ALREADY_BOOKED` (409 Conflict): No se puede reservar por un conflicto
 - `NOT_FOUND` (404 Not Found): No se ha encontrado la vivienda
 - `UPDATE_ERROR` (404 Not Found): No se ha encontrado la reserva
+
+## A2ViviendasREST
+
+Este microservicio se encarga de proporcionar los datos sobre las viviendas.
+
+### Endpoints REST disponibles
+
+La siguiente lista es una especificación informal sobre los endpoints REST
+disponibles en el microservicio, a modo de resumen. La documentación completa se
+puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
+`/redoc` (Redoc). Además, se adjunta una copia local en el fichero
+`openapi.json`, dentro de la carpeta del proyecto.
+
+Todos los endpoints (menos las rutas `GET /viviendas` y `/GET /{idCasa}/valoraciones`) requieren de un token de acceso válido suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo operan **sobre el usuario actual**, 
+
+- `GET /viviendas`: Devuelve una lista de viviendas que cumplan con los filtros especificados
+- `POST /viviendas`: Crea una nueva vivienda. El cuerpo de la petición es un
+  json con los siguientes campos:
+  - `title`: Título de la vivienda
+  - `description`: Descripción de la vivienda
+  - `user_id`: Identificador del usuario que realiza la reserva
+  - `location`: Lugar donde se encuentra la vivienda
+  - `url_photo`: Fotos de la vivienda
+  - `longitude`: Coordenada geográfica longitud de la vivienda
+  - `latitude`: Coordenada geográfica latitud de la vivienda
+  - `price`: Precio por noche de la vivienda
+- `GET /viviendas/{idCasa}`: Devuelve toda la información sobre la vivienda con
+  identificador `idCasa`
+- `PUT /viviendas/{idCasa}`: Modifica los campos de la vivienda con
+  identificador `idCasa`
+- `DELETE /viviendas/{idCasa}`: Borra la vivienda con identificador `idCasa`
+- `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
+  de una vivienda con identificador `idCasa`
+- `GET /{idCasa}/valoraciones`: Devuelve una lista de valoraciones de una vivienda
+  con identificador `idCasa`
+- `POST /{idCasa}/valoraciones`: Crea una nueva valoración de una vivienda con identificador `idCasa` con los siguientes campos:
+  - `user_id`: Identificador del usuario que realiza la valoración
+  - `valoración`: Puntuación de la vivienda(del 1 al 10)
+  - `comentario`: Comentario de la vivienda
+- `DELETE /valoraciones/{idValoracion}`: Borra la valoración con identificador `idValoracion`
+
+
+### Casos alternativos
+
+En el caso de no encontrar una vivienda con el identificador proporcionado, se
+devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
+dependiendo de la operación.
