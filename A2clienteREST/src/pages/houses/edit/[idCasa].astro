@@ -13,20 +13,20 @@ if (!isLoggedIn(Astro)) return Astro.redirect("/");
 
 const { idCasa } = Astro.params as { idCasa: string };
 const viviendaApi = new ViviendaApi(
-    new ViviendaConfiguration({
-      ...AppConfig.viviendas, 
-      accessToken: () => getAccessToken(Astro)
-    })
-  );
+  new ViviendaConfiguration({
+    ...AppConfig.viviendas,
+    accessToken: () => getAccessToken(Astro),
+  })
+);
 
 let viv: Vivienda;
 
 try {
   viv = await viviendaApi.getHouseById({ idCasa });
-  if (viv.userId !== await getUserId(Astro)) {
+  if (viv.userId !== (await getUserId(Astro))) {
     return Astro.redirect(
       "/?" + new URLSearchParams({ danger: "User not allowed" })
-    ); 
+    );
   }
 } catch (error) {
   return Astro.redirect(
@@ -34,8 +34,8 @@ try {
   );
 }
 
-const loc = viv?.location;
-const loc_splitted = loc.split(", ");
+//const loc = viv?.location;
+//const loc_splitted = loc.split(", ");
 ---
 
 <WindbnbLayout title="Edit house">

@@ -1,14 +1,11 @@
 ---
 import type { Vivienda } from "../api/A2viviendasREST";
-
-import AppConfig from "../config";
-
 const { vivienda } = Astro.props as { vivienda: Vivienda };
 ---
 
 {
   vivienda.state == "available" && (
-    <div class="card mb-4" style="width: 80%; margin-top: 1rem;">
+    <div class="card mb-4">
       {vivienda.urlPhoto == null ? (
         <img
           src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png"
