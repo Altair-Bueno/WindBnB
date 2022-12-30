@@ -2,7 +2,7 @@ from pydantic import BaseModel, BaseSettings, MongoDsn, HttpUrl
 
 
 class MongoConfig(BaseModel):
-    url: MongoDsn
+    url: str
     collection: str
     database: str
 
