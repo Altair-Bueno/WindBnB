@@ -65,14 +65,11 @@ La base de datos se encuentra alojada en un cluster de [MongoDB Atlas](https://w
 Se han considerado los siguientes requisitos para la realización del cliente
 REST:
 
-- **Uso de los microservicios de acceso CRUD**
-- **Uso de las consultas y búsquedas a la base de datos**
-- **Uso de los datos abiertos desplegados como servicios REST en la práctica
-  anterior**
-- **Visualización de mapas con información relevante**:
-  [Leaflet](https://leafletjs.com/) y OpenStreetMaps
-- **Visualización de imágenes almacenadas en algún servicio cloud**:
-  [Cloudinary](https://cloudinary.com/)
+- **El almacenamiento de datos se realizará en una base de datos no relacional**
+- **Identificación de los usuarios de la aplicación haciendo uso de técnicas basadas en OAuth**
+- **La aplicación permitirá la interacción entre sus usuarios mediante un sistema de comentarios y valoraciones**
+- **Integración de un servicio de pago en la aplicación**
+- **La aplicación estará desplegada en la nube**
 
 # Tecnologías Utilizadas
 
