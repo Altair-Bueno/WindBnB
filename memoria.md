@@ -27,6 +27,16 @@ Nota: credenciales PayPal
 ```
 -->
 
+[ ] la(s) URL(s) donde está desplegada la aplicación en la nube.
+[ ] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
+[ ] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente). 
+[ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
+[ ] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
+[ ] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
+[ ] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
+[ ] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
+[ ] la funcionalidad de la capa de presentación o la aplicación cliente. 
+
 # Introducción
 
 Para la realización del cliente REST propuesto en el documento _Práctica de
@@ -35,6 +45,10 @@ servicios Web (II): cliente_, se ha optado por usar un cliente de tipo
 A continuación se especifican las tecnologías utilizadas, requisitos
 implementados, instrucciones de despliegue y explicación del funcionamiento de
 la aplicación.
+
+# Despliegue
+
+
 
 # Replanteamiento de decisiones anteriores
 
@@ -64,16 +78,17 @@ REST:
 
 # Tecnologías Utilizadas
 
-Para la interfaz del cliente se ha usado los frameworks
+Durante el desarrollo de la interfaz del cliente se han usado los frameworks
 [Astro](https://astro.build/), [Svelte](https://svelte.dev/) y
 [Bootstrap](https://getbootstrap.com) para la generación de las páginas y
 componentes usando Typescript. Para los mapas se ha usado la librería
 [Leaflet](https://leafletjs.com/) que hace a su vez uso de OpenStreetMaps.
+El proveedor OAuth2 escogido es [Auth0](https://auth0.com).
 
 Para la persistencia de datos se ha optado por la base de datos de
 [MongoDB](https://www.mongodb.com/), conectada a través del driver asíncrono
 [Motor](https://motor.readthedocs.io/en/stable/index.html), al igual que con el
-servidor REST, y para el servicio cloud de almacenaje de imágenes
+servidor REST, y para el servicio cloud de almacenamiento de imágenes
 [Cloudinary](https://cloudinary.com/).
 
 # Instrucciones de Despliegue
@@ -90,14 +105,6 @@ El cliente web está configurado para ser desplegado en Vercel, por lo que no se
 proporciona un método para lanzar el servicio en producción localmente. Para más
 información sobre como desplegar el servicio en modo desarrollo, visite el
 fichero `A2clienteREST/README.md`
-
-## Datos de prueba para Mongo
-
-En el interior de la carpeta `iweb`, se proporciona un fichero `houses.json` con
-el volcado de la colección de pruebas. Para restaurarla, basta con realizar una
-inserción de multiples elementos del contenido del fichero. Para automatizar el
-proceso, se proporciona un script de Python `iweb.py`. Requiere que la librería
-`pymongo` esté instalada
 
 # Funcionalidad de la aplicación cliente
 
