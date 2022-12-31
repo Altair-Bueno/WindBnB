@@ -96,6 +96,8 @@ servidor REST, y para el servicio cloud de almacenamiento de imágenes
 
 # Arquitectura de la aplicación y esquema de navegación
 
+![IFML_Model](/ifml/model.png)
+
 El esquema de navegación de la aplicación consta de una página principal a la
 que se puede acceder sin credenciales. Desde ella, el usuario puede iniciar
 sesión, cambiando a un proveedor externo [Auth0](https://auth0.com), o crear una
