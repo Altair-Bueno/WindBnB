@@ -29,7 +29,7 @@ toc: true
 # Credenciales
 
 ```yaml
-base de datos: mongo_url=mongodb+srv://root:root@windbnb.uecdw2z.mongodb.net
+base de datos: mongodb+srv://root:root@windbnb.uecdw2z.mongodb.net
 paypal:
   - email: sb-5qp7q22405408@personal.example.com
     password: 2o}yF$ct
