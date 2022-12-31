@@ -144,8 +144,9 @@ const formData = {
         </div>
         <div class="bg-body shadow-sm mx-auto rounded-5 mb-2">
           <div class="text-center pt-3 mx-auto p-3">
+            {userId === viv.userId && <div>You can't book your own house</div>}
             {
-              userId === viv.userId && (
+              userId && userId !== viv.userId && (
                 <Checkout
                   client:load
                   vivienda={viv}
@@ -154,11 +155,12 @@ const formData = {
               )
             }
             {
-              userId && userId === viv.userId && (
-                <div>You can't book your own house</div>
+              !userId && (
+                <div>
+                  <span>Login to book this house</span>
+                </div>
               )
             }
-            {!userId && <div>Login to book this house</div>}
           </div>
         </div>
       </div>
