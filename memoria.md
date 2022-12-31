@@ -517,3 +517,9 @@ suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo operan
 En el caso de no encontrar una vivienda con el identificador proporcionado, se
 devolverá una excepción de tipo NotFoundError con su mensaje correspondiente
 dependiendo de la operación.
+
+```json
+{
+  "error_code": "string"
+}
+```
