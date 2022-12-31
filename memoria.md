@@ -170,7 +170,7 @@ Colección valoraciones:
 {
   "_id": "ObjectId",
   // Identificador de la vivienda asociada a la valoración
-  "vivienda_id": "ObjectId"
+  "vivienda_id": "ObjectId",
   // Identificador del usuario que hace la valoración
   "user_id": "string",
   // Valoración de la vivienda entre 0 y 10
