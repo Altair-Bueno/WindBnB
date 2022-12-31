@@ -2,7 +2,7 @@
 import { ViviendaApi } from "../../api/A2viviendasREST/apis";
 import WindbnbLayout from "../../layouts/WindbnbLayout.astro";
 import ValoracionComponente from "../../components/ValoracionComponente.astro";
-import { isLoggedIn } from "../../utils/auth0";
+import { getUserEmail, getUserEmailById, isLoggedIn } from "../../utils/auth0";
 import Map from "../../components/Map.svelte";
 import AppConfig from "../../config";
 import {
@@ -81,8 +81,12 @@ try {
 
 const valoraciones = await viviendaApi.getValoraciones({ idCasa });
 let userId = "";
+let userEmail = "";
+//let ownerEmail = "";
 if (isLoggedIn(Astro)) {
   userId = await getUserId(Astro);
+  userEmail = await getUserEmail(Astro);
+  //ownerEmail = await getUserEmailById(Astro, viv?.userId);
 }
 
 const formData = {

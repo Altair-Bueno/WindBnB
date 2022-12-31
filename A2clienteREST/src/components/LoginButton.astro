@@ -12,7 +12,7 @@ const { baseUrl, clientId, callbackUrl, audience } = Astro.props;
 <form method="get" action={`${baseUrl}/authorize`}>
   <input hidden name="response_type" value="code" />
   <!-- https://auth0.com/docs/get-started/authentication-and-authorization-flow/add-login-auth-code-flow#parameters -->
-  <input hidden name="scope" value="offline_access read:logs read:logs_users" />
+  <input hidden name="scope" value="offline_access openid email profile read:users read:logs read:logs_users" />
   <input hidden name="audience" value={audience} />
   <input hidden name="client_id" value={clientId} />
   <input hidden name="redirect_uri" value={callbackUrl} />

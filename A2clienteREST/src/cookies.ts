@@ -3,4 +3,5 @@ export default {
   USER_ID_KEY: "userid",
   refreshToken: "refreshToken",
   accessToken: "accessToken",
+  idToken: "idToken"
 };

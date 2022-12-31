@@ -26,6 +26,7 @@ async function refreshAccessToken(refresh_token: string) {
 interface TokenPayload {
   access_token: string;
   refresh_token: string;
+  id_token: string;
   scope: string;
   expires_in: number;
   token_type: string;
@@ -36,6 +37,9 @@ export function setCookies(context: APIContext, response: TokenPayload) {
     expires: new Date(Date.now() + response.expires_in),
   });
   context.cookies.set(cookies.refreshToken, response.refresh_token as string, {
+    path: "/",
+  });
+  context.cookies.set(cookies.idToken, response.id_token as string, {
     path: "/",
   });
 }
@@ -53,6 +57,10 @@ export async function getAccessToken(context: APIContext): Promise<string> {
   return context.cookies.get(cookies.accessToken).value as string;
 }
 
+export async function getIdToken(context: APIContext): Promise<string> {
+  return context.cookies.get(cookies.idToken).value as string;
+}
+
 export function isLoggedIn(context: APIContext) {
   return context.cookies.has(cookies.refreshToken);
 }
@@ -62,6 +70,37 @@ export async function getUserId(context: APIContext): Promise<string> {
   if (accessToken) {
     const decoded: any = jwt_decode(accessToken);
     return decoded.sub as string;
+  } else {
+    return "";
+  }
+}
+
+export async function getUserEmail(context: APIContext): Promise<string> {
+  const idToken = await getIdToken(context);
+  if (idToken) {
+    const decoded: any = jwt_decode(idToken);
+    return decoded.email as string;
+  } else {
+    return "";
+  }
+}
+
+// Permissions need to be added to Auth0 API from dashboard (read:users)
+export async function getUserEmailById(context: APIContext, userId: string): Promise<string> {
+  const accessToken = await getAccessToken(context);
+  if (userId && accessToken) {
+    const response = await fetch(
+      `${import.meta.env.PUBLIC_AUTH0_BASEURL}/api/v2/users/%7B${userId}%7D`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        },
+      }
+    ).then((x) => x.json());
+    console.log(response);
+    return response.email;
   } else {
     return "";
   }
