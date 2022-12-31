@@ -33,18 +33,12 @@ const viviendas = await viviendaApi.getViviendas(filter);
 
 <WindbnbLayout title="Viviendas" page={"HOME"}>
   <div class="row">
-    <h1>Houses</h1>
-    <aside class="col-12 col-xl-3 mb-2">
-      <h4>Filters</h4>
+    <h1>Filters</h1>
+    <aside class="col-md-6 col-lg-6 col-sm-8 col-8 mb-4">
       <form>
         <div class="mb-3">
           <label class="form-check-label">Search by title</label>
-          <input
-            type="text"
-            name="title"
-            value={filter.title}
-            class="form-control"
-          />
+          <input type="text" name="title" value="" class="form-control" />
         </div>
         <div class="mb-3 h-100"></div>
         <label class="form-check-label">Price</label>
@@ -53,33 +47,25 @@ const viviendas = await viviendaApi.getViviendas(filter);
             <input
               type="number"
               name="priceMin"
-              value={filter.priceMin}
+              value=""
               placeholder="min"
               class="form-control"
-              min="1"
             />
           </div>
           <div class="col">
             <input
               type="number"
               name="priceMax"
-              value={filter.priceMax}
+              value=""
               placeholder="max"
               class="form-control"
-              min="1"
             />
           </div>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Filter</button>
       </form>
     </aside>
-    <div class="col d-flex flex-wrap">
-      {
-        viviendas
-          .filter((x) => x.state === "available")
-          .map((vivienda) => <ViviendaComponent vivienda={vivienda} />)
-          .map((x) => <div class="mx-2">{x}</div>)
-      }
-    </div>
+
+    {viviendas.map((vivienda) => <ViviendaComponent vivienda={vivienda} />)}
   </div>
 </WindbnbLayout>
