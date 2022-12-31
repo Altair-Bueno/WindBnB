@@ -96,7 +96,7 @@ servidor REST, y para el servicio cloud de almacenamiento de imágenes
 
 # Arquitectura de la aplicación y esquema de navegación
 
-![IFML_Model](/ifml/model.png)
+![IFML_Model](ifml/model.png)
 
 El esquema de navegación de la aplicación consta de una página principal a la
 que se puede acceder sin credenciales. Desde ella, el usuario puede iniciar
@@ -105,18 +105,18 @@ nueva vivienda (si ha iniciado sesión), o ver sus reservas (si ha iniciado
 sesión) o ver los detalles de una vivienda en concreto. Dentro de la vista de
 detalles de la vivienda, el usuario puede eliminar o editar dicha vivienda,
 siempre que el usuario que esté con la sesión iniciada coincida con el usuario
-que publicó la vivienda. 
+que publicó la vivienda.
 
-Además se puede reservar la vivienda, si el usuario no
-es el dueño, cambiando a un proveedor externo
-[PayPal](https://www.paypal.com/es/home) para realizar el pago. Dentro de la
-vista de reservas de un usuario aparece una lista con las reservas, pudiéndose
-filtrar y cancelar. Dentro de las vistas de creación y edición de una vivienda,
-aparece un formulario con los campos de dicha vivienda y un botón para realizar
-la acción correspondiente. Al eliminar una vivienda, se pide confirmación
-explícita en otra vista.
+Además se puede reservar la vivienda, si el usuario no es el dueño, cambiando a
+un proveedor externo [PayPal](https://www.paypal.com/es/home) para realizar el
+pago. Dentro de la vista de reservas de un usuario aparece una lista con las
+reservas, pudiéndose filtrar y cancelar. Dentro de las vistas de creación y
+edición de una vivienda, aparece un formulario con los campos de dicha vivienda
+y un botón para realizar la acción correspondiente. Al eliminar una vivienda, se
+pide confirmación explícita en otra vista.
 
-El modelo de la arquitectura se encuentra en el directorio `/ifml`, junto con unos conjuntos de datos de prueba.
+El modelo de la arquitectura se encuentra en el directorio `/ifml`, junto con
+unos conjuntos de datos de prueba.
 
 # Base de datos
 
