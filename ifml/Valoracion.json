@@ -1,0 +1,16 @@
+[
+    {
+        "id": "0",
+        "comentario": "Me gustó mucho la estancia",
+        "usuario": "1",
+        "valoración": "9",
+        "vivienda": "0"
+    },
+    {
+        "id": "1",
+        "comentario": "Muy mala experiencia, había un mosquito en la cocina",
+        "usuario": "0",
+        "valoración": "3",
+        "vivienda": "1"
+    }
+]

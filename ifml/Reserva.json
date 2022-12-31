@@ -1,0 +1,18 @@
+[
+    {
+        "id": "0",
+        "casa": "0",
+        "estado": "reserved",
+        "fin": "12/12/2022",
+        "inicio": "19/12/2022",
+        "usuario": "1"
+    },
+    {
+        "id": "1",
+        "casa": "1",
+        "estado": "reserved",
+        "fin": "12/12/2022",
+        "inicio": "19/12/2022",
+        "usuario": "0"
+    }
+]

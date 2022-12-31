@@ -1,0 +1,22 @@
+[
+    {
+        "id":"0",
+        "descripcion":"Bonita casa en los alpes",
+        "imagenes":"http://domain.com/imagen.png",
+        "latitud":"39",
+        "longitud":"-1",
+        "precio":"45",
+        "usuario":"0",
+        "titulo":"Bonita casa"
+    },
+    {
+        "id":"1",
+        "descripcion":"Gran duplex en el centro con vistas al mar",
+        "imagenes":"http://domain.com/imagen.png",
+        "latitud":"123",
+        "longitud":"45",
+        "precio":"70",
+        "usuario":"0",
+        "titulo":"Duplex en el centro"
+    }
+]

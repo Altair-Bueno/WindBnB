@@ -16,13 +16,12 @@ toc: true
 <!-- TODO
 [x] la(s) URL(s) donde está desplegada la aplicación en la nube.
 [x] las tecnologías utilizadas en la práctica (proveedor cloud, lenguajes, bibliotecas, frameworks, base de datos, etc.)
-[ ] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente).
-  > Falta lo utilizado para las reservas (Métodos de pago)
+[x] los principales requisitos del caso de estudio considerados en la práctica y cómo se han abordado desde un punto de vista técnico (es decir, el uso que se ha hecho de las tecnologías y APIs mencionadas anteriormente).
 [ ] la arquitectura de la aplicación y su esquema de navegación, por ejemplo, actualizando los esquemas desarrollados en la primera entrega.
 [x] las entidades de la base de datos, sus propiedades (columnas de las tablas) y la relación entre ellas, así como las credenciales o una cuenta de usuario que permita acceder a los datos almacenados en la base de datos.
 [x] instrucciones y scripts de instalación y despliegue de las aplicaciones, en particular si utilizáis cualquier tecnología diferente de las presentadas en clase.
 [x] descripción de los conjuntos de datos abiertos utilizados, incluyendo sus puntos de acceso.
-[ ] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
+[x] descripción de la API REST desarrollada, especialmente si se han realizado cambios respecto a la anterior entrega del caso de estudio.
 [x] la funcionalidad de la capa de presentación o la aplicación cliente.
 -->
 
@@ -97,10 +96,6 @@ servidor REST, y para el servicio cloud de almacenamiento de imágenes
 
 # Arquitectura de la aplicación y esquema de navegación
 
-<!-- TODO @carmen: missing URL to IFML model -->
-
-![Modelo IFML]()
-
 El esquema de navegación de la aplicación consta de una página principal a la
 que se puede acceder sin credenciales. Desde ella, el usuario puede iniciar
 sesión, cambiando a un proveedor externo [Auth0](https://auth0.com), o crear una
@@ -108,7 +103,9 @@ nueva vivienda (si ha iniciado sesión), o ver sus reservas (si ha iniciado
 sesión) o ver los detalles de una vivienda en concreto. Dentro de la vista de
 detalles de la vivienda, el usuario puede eliminar o editar dicha vivienda,
 siempre que el usuario que esté con la sesión iniciada coincida con el usuario
-que publicó la vivienda. Además se puede reservar la vivienda, si el usuario no
+que publicó la vivienda. 
+
+Además se puede reservar la vivienda, si el usuario no
 es el dueño, cambiando a un proveedor externo
 [PayPal](https://www.paypal.com/es/home) para realizar el pago. Dentro de la
 vista de reservas de un usuario aparece una lista con las reservas, pudiéndose
@@ -117,11 +114,11 @@ aparece un formulario con los campos de dicha vivienda y un botón para realizar
 la acción correspondiente. Al eliminar una vivienda, se pide confirmación
 explícita en otra vista.
 
+El modelo de la arquitectura se encuentra en el directorio `/ifml`, junto con unos conjuntos de datos de prueba.
+
 # Base de datos
 
 Los documentos almacenados en Mongo mantienen el siguiente esquema:
-
-<!-- TODO @carmen @tapia: valorations tiene tambén un estado??? eso no tiene sentido-->
 
 Colección houses:
 
