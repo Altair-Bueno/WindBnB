@@ -3,15 +3,21 @@ import type { Vivienda } from "../api/A2viviendasREST";
 const { vivienda } = Astro.props as { vivienda: Vivienda };
 ---
 
-<div class="card mb-4 col-8" style="width: 15rem;">
+<div class="card mb-4 col-8" style="width: 15rem; height: 26rem">
   {
     vivienda.urlPhoto && vivienda.urlPhoto[0] ? (
-      <img src={vivienda.urlPhoto[0]} class="card-img-top" alt="House photo" />
+      <img
+        src={vivienda.urlPhoto[0]}
+        class="card-img-top"
+        alt="House photo"
+        style="height: 10rem;"
+      />
     ) : (
       <img
         src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png"
         class="card-img-top"
         alt="House photo"
+        style="height: 10rem;"
       />
     )
   }
