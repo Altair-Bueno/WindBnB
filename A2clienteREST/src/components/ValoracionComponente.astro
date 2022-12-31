@@ -8,7 +8,6 @@ if (isLoggedIn(Astro)) {
   userId = await getUserId(Astro);
 }
 ---
-<!-- EL ACTION DEL FORM TENGO QUE CAMBIARLO POR EL HANDLER -->
 {
   valoracion.state == "available" && (<div class="card mb-3">
   <div class="card-body">
@@ -16,7 +15,8 @@ if (isLoggedIn(Astro)) {
     <h6 class="card-subtitle mb-2 text-muted">{valoracion.userId}</h6>
     <p class="card-text">{valoracion.comentario}</p>
     {
-      valoracion.userId == userId && (<form action={"/valoraciones/" + valoracion.id} method="post">
+      valoracion.userId == userId && (
+      <form action={"/valoraciones/delete/" + valoracion.id} method="post">
       <button class="btn btn-danger" type="submit">
         Delete 
       </button>
