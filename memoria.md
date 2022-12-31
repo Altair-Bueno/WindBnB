@@ -29,7 +29,7 @@ toc: true
 # Credenciales
 
 ```yaml
-base de datos: mongo_url=mongodb+srv://root:root@windbnb.uecdw2z.mongodb.net
+base de datos: mongodb+srv://root:root@windbnb.uecdw2z.mongodb.net
 paypal:
   - email: sb-5qp7q22405408@personal.example.com
     password: 2o}yF$ct
@@ -124,6 +124,7 @@ Los documentos almacenados en Mongo mantienen el siguiente esquema:
 <!-- TODO @carmen @tapia: valorations tiene tambén un estado??? eso no tiene sentido-->
 
 Colección houses:
+
 ```json
 {
   // Clave primaria de Mongo
@@ -155,31 +156,30 @@ Colección houses:
       // Fecha de fin de la reserva en formato YYYY-MM-DD
       "end_date": "string",
       // Estado de la reserva. Por defecto: reserved
-      "state": "enum(reserved,canceled)"
+      "state": "enum(reserved,canceled)",
+      // Información sobre el pedido de Paypal
+      "paypal_order": {}
     }
   ]
 }
 ```
 
 Colección valoraciones:
+
 ```json
-  // Lista de todas las valoraciones de esta vivienda
-  
-"valoraciones": 
 {
-    "_id": "ObjectId",
-    // Identificador de la vivienda asociada a la valoración
-    "vivienda_id": "ObjectId"
-    // Identificador del usuario que hace la valoración
-    "user_id": "string",
-    // Valoración de la vivienda entre 0 y 10
-    "valoracion": "integer",
-    // Comentario de la vivienda
-    "comentario": "string",
-    // Estado de la reserva. Por defecto: available
-    "state": "enum(available,canceled)"
+  "_id": "ObjectId",
+  // Identificador de la vivienda asociada a la valoración
+  "vivienda_id": "ObjectId",
+  // Identificador del usuario que hace la valoración
+  "user_id": "string",
+  // Valoración de la vivienda entre 0 y 10
+  "valoracion": "integer",
+  // Comentario de la vivienda
+  "comentario": "string",
+  // Estado de la reserva. Por defecto: available
+  "state": "enum(available,canceled)"
 }
-  
 ```
 
 # Instrucciones de Despliegue
@@ -196,6 +196,126 @@ El cliente web está configurado para ser desplegado en Vercel, por lo que no se
 proporciona un método para lanzar el servicio en producción localmente. Para más
 información sobre como desplegar el servicio en modo desarrollo, visite el
 fichero `A2clienteREST/README.md`.
+
+# Funcionalidad de la aplicación cliente
+
+## Página principal `/houses`
+
+- Lista de viviendas que están en la base de datos. Pulsando sobre un título se
+  accede a la página de la vivienda. Muestra varios datos de cada vivienda,
+  almacenados en la base de datos.
+- Visualización de una barra de navegación con las opciones de:
+  - `Home` y `WindBnB`: Redirige a la Página principal
+  - `Bookings`: Accede a la Páginas de reservas del usuario
+  - `New House`: Una vez iniciada sesión, aparece esta opción que redirige a la
+    página para crear una nueva vivienda.
+  - `Login`: Redirige a una página para el inicio de sesión.
+  - `Logout`: Cierra la sesión del usuario y lo redirige a la página principal.
+- Buscador de viviendas mediante un filtro que busca por título de la vivienda.
+- Filtro de precio: Se puede filtrar por un rango de precios. (mínimo y máximo).
+- Accesible para cualquier usuario, esté autenticado o no.
+
+## Página de una vivienda `/houses/{vivienda_id}`
+
+La página de una vivienda tiene distintas funciones:
+
+- Botón `Edit house`: Redirige a una página para completar la acción de editar.
+  Sólo disponible si el usuario es el dueño.
+- Botón `Delete house`: Realiza la acción de borrar la vivienda de la base de
+  datos y redirige a la página principal. Sólo disponible si el usuario es el
+  dueño.
+- Visualización de **datos** de la vivienda.
+- Visualización de **imágenes** de la vivienda.
+- Formulario para reservar la vivienda: Muestra dos campos de fecha de
+  calendario para indicar el rango de días que quiere reservar el usuario y
+  varios botones que representan distintos métodos de pago. Al pulsar uno de
+  ellos habiendo seleccionado una fecha de inicio y fin, se iniciará el proceso
+  de pago.
+- Visualización de un **mapa**: Muestra la localización de la vivienda a partir
+  de la latitud y longitud almacenados en la base de datos, y las gasolineras
+  cercanas en un área de 5km llamando a la api encargada de los datos abiertos
+  en el backend
+  (`/gas-stations?area={area}&limit={limit}&latitude={latitude}&longitude={longitude}`).
+  Se hace uso de la librería Leaflet y se muestra con OpenStreetMaps.
+- Visualización de la **estancia media**: Muestra la estancia media de los
+  viajeros en esa provincia a partir de la provincia de la vivienda llamando a
+  la api encargada de los datos abiertos en el backend
+  (`/average-stay?provincia={provincia}`).
+- Accesible para cualquier usuario, esté autenticado o no
+  - Los usuarios no autenticados solo podrán visualizar la publicación
+  - Los usuarios autenticados que no hayan creado la publicación podrán realizar
+    valoraciones sobre la casa y hacer una reserva
+  - El usuario autenticado y autor de la publicación podrá editar y eliminar la
+    misma, pero no podrá realizar valoraciones ni reservas
+  - Los usuarios autenticados podrán borrar su propia valoración
+
+## Página de reservas `/bookings`
+
+La página de reservas muestra una lista de reservas realizadas por el usuario
+que está con la sesión iniciada en ese momento. De cada reserva se muestra la
+vivienda, a la que se puede acceder a su página pulsando sobre ella, la fecha de
+inicio y fin de la reserva, el estado y el botón `Cancel booking` cancela la
+reserva, eliminándola de la base de datos.
+
+Las reservas se encuentran paginadas de 10 en 10, contando con los botones
+`Previous` y `Next` para navegar entre la lista de reservas del usuario.
+
+También cuenta con opciones de filtro y ordenación de las reservas:
+
+- Filtro por fecha de inicio
+- Filtro por fecha de fin
+- Filtro por estado
+- Ordenar por fecha de inicio o fin
+- Orden ascendente o descendente
+
+- Solo accesible para usuarios autenticados
+
+## Página de creación de una vivienda `/houses/new`
+
+La página muestra un formulario con los datos correspondientes a una vivienda
+para crear una nueva vivienda y almacenarla en la base de datos:
+
+- Título
+- Descripción
+- Calle
+- Número
+- Ciudad
+- Provincia
+- Código postal
+- País
+- Precio por noche
+- Imágenes: Mediante un botón `Elegir archivos` se accede al explorador de
+  archivos donde se puede realizar una selección múltiple de imágenes. Es
+  obligatorio seleccionar al menos 1 imagen.
+
+Mediante el botón `Create` se añade a la base de datos con los datos rellenados
+en el formulario y se redirige a la página de esa vivienda. Las fotos
+seleccionadas se almacenan en Cloudinary.
+
+- Solo accesible para usuarios autenticados
+
+## Página de modificación de una vivienda `/houses/edit/{vivienda_id}`
+
+La página muestra un formulario con los datos correspondientes a una vivienda
+para modificar una vivienda ya existente en la base de datos, con los campos ya
+autocompletados:
+
+- Título
+- Descripción
+- Calle
+- Número
+- Ciudad
+- Provincia
+- Código postal
+- País
+- Precio por noche
+- Imágenes
+
+Mediante el botón `Edit data` se actualiza la vivienda de la base de datos si se
+ha cambiado algún campo y redirige a la página de la vivienda. Si se han
+modificado imágenes, de la misma manera se actualiza en Cloudinary.
+
+- Solo accesible para un usuario autenticado y autor de la publicación
 
 # Conjunto de datos abiertos
 
@@ -359,9 +479,13 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 `/redoc` (Redoc). Además, se adjunta una copia local en el fichero
 `openapi.json`, dentro de la carpeta del proyecto.
 
-Todos los endpoints (menos las rutas `GET /viviendas` y `/GET /{idCasa}/valoraciones`) requieren de un token de acceso válido suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo operan **sobre el usuario actual**, 
+Todos los endpoints (menos las rutas `GET /viviendas` y
+`/GET /{idCasa}/valoraciones`) requieren de un token de acceso válido
+suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo operan
+**sobre el usuario actual**,
 
-- `GET /viviendas`: Devuelve una lista de viviendas que cumplan con los filtros especificados
+- `GET /viviendas`: Devuelve una lista de viviendas que cumplan con los filtros
+  especificados
 - `POST /viviendas`: Crea una nueva vivienda. El cuerpo de la petición es un
   json con los siguientes campos:
   - `title`: Título de la vivienda
@@ -379,14 +503,15 @@ Todos los endpoints (menos las rutas `GET /viviendas` y `/GET /{idCasa}/valoraci
 - `DELETE /viviendas/{idCasa}`: Borra la vivienda con identificador `idCasa`
 - `GET /viviendas/{idCasa}/getBookingsAmount`: Devuelve la cantidad de reservas
   de una vivienda con identificador `idCasa`
-- `GET /{idCasa}/valoraciones`: Devuelve una lista de valoraciones de una vivienda
-  con identificador `idCasa`
-- `POST /{idCasa}/valoraciones`: Crea una nueva valoración de una vivienda con identificador `idCasa` con los siguientes campos:
+- `GET /{idCasa}/valoraciones`: Devuelve una lista de valoraciones de una
+  vivienda con identificador `idCasa`
+- `POST /{idCasa}/valoraciones`: Crea una nueva valoración de una vivienda con
+  identificador `idCasa` con los siguientes campos:
   - `user_id`: Identificador del usuario que realiza la valoración
   - `valoración`: Puntuación de la vivienda(del 1 al 10)
   - `comentario`: Comentario de la vivienda
-- `DELETE /valoraciones/{idValoracion}`: Borra la valoración con identificador `idValoracion`
-
+- `DELETE /valoraciones/{idValoracion}`: Borra la valoración con identificador
+  `idValoracion`
 
 ### Casos alternativos
 

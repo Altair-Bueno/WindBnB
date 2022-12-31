@@ -1,15 +1,28 @@
 ---
 import type { Valoracion } from "../api/A2viviendasREST";
+import { isLoggedIn } from "../utils/auth0";
 const { valoracion } = Astro.props as { valoracion: Valoracion };
+import { getAccessToken, getUserId } from "../utils/auth0";
+let userId = "a";
+if (isLoggedIn(Astro)) {
+  userId = await getUserId(Astro);
+}
 ---
-
-<div class="card mb-3">
+{
+  valoracion.state == "available" && (<div class="card mb-3">
   <div class="card-body">
     <h5 class="card-title">{valoracion.valoracion}</h5>
     <h6 class="card-subtitle mb-2 text-muted">{valoracion.userId}</h6>
     <p class="card-text">{valoracion.comentario}</p>
-    <!--<a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
-        -->
+    {
+      valoracion.userId == userId && (
+      <form action={"/valoraciones/delete/" + valoracion.id} method="post">
+      <button class="btn btn-danger" type="submit">
+        Delete 
+      </button>
+    </form>) 
+    }
   </div>
 </div>
+)
+}
