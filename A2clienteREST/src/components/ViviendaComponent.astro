@@ -3,32 +3,24 @@ import type { Vivienda } from "../api/A2viviendasREST";
 const { vivienda } = Astro.props as { vivienda: Vivienda };
 ---
 
-{
-  vivienda.state == "available" && (
-    <div class="card mb-4 col-8">
-      {vivienda.urlPhoto == null ? (
-        <img
-          src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png"
-          class="card-img-top"
-          alt="House photo"
-          style="max-height:35rem; max-width: auto;"
-        />
-      ) : (
-        <img
-          src={vivienda.urlPhoto[0]}
-          class="card-img-top"
-          alt="House photo"
-          style="max-height:35rem; max-width: auto;"
-        />
-      )}
-      <div class="card-body">
-        <h5 class="card-title">
-          <a href={`/houses/${vivienda.id}`}>{vivienda.title}</a>
-        </h5>
-        <p class="card-text">{vivienda.description}</p>
-        <p class="card-text">{vivienda.location}</p>
-        <p class="card-text">{vivienda.price}€/night</p>
-      </div>
-    </div>
-  )
-}
+<div class="card mb-4 col-8" style="width: 15rem;">
+  {
+    vivienda.urlPhoto && vivienda.urlPhoto[0] ? (
+      <img src={vivienda.urlPhoto[0]} class="card-img-top" alt="House photo" />
+    ) : (
+      <img
+        src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png"
+        class="card-img-top"
+        alt="House photo"
+      />
+    )
+  }
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href={`/houses/${vivienda.id}`}>{vivienda.title}</a>
+    </h5>
+    <p class="card-text">{vivienda.description}</p>
+    <p class="card-text">{vivienda.location}</p>
+    <p class="card-text">{vivienda.price}€/night</p>
+  </div>
+</div>
