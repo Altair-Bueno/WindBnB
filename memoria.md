@@ -156,7 +156,9 @@ Colección houses:
       // Fecha de fin de la reserva en formato YYYY-MM-DD
       "end_date": "string",
       // Estado de la reserva. Por defecto: reserved
-      "state": "enum(reserved,canceled)"
+      "state": "enum(reserved,canceled)",
+      // Información sobre el pedido de Paypal
+      "paypal_order": {}
     }
   ]
 }
