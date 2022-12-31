@@ -189,16 +189,8 @@ const formData = {
             <div class="mb-3">
               <input type="text" name="idCasa" value={formData.idCasa} hidden />
               <input type="text" name="userId" value={formData.userId} hidden />
-              <label for="comment" class="form-label">
-                Comment:{" "}
-              </label>
-              <textarea
-                value={formData.comment}
-                name="comment"
-                class="form-control"
-              />
               <label for="rate" class="form-label">
-                Rate:{" "}
+                Rate*
               </label>
               <input
                 value={formData.rate}
@@ -207,8 +199,17 @@ const formData = {
                 max="10"
                 min="0"
                 class="form-control"
+                required
               />
-              <button type="submit" class="btn btn-primary">
+              <label for="comment" class="form-label">
+                Comment
+              </label>
+              <textarea
+                value={formData.comment}
+                name="comment"
+                class="form-control"
+              />
+              <button type="submit" class="btn btn-primary mt-2">
                 Send
               </button>
             </div>
