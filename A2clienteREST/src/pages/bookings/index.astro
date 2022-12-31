@@ -133,46 +133,48 @@ const model = await Promise.all(futures);
     </aside>
 
     <main class="col">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">House</th>
-            <th scope="col">Start date</th>
-            <th scope="col">End date</th>
-            <th scope="col">State</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            model.map((booking, idx) => (
-              <tr>
-                <td>{idx + 1 + formData.page * ITEMS_PER_PAGE}</td>
-                <td>
-                  <a href={`/houses/${booking.houseId}`}>
-                    {booking.house.title}
-                  </a>
-                </td>
-                <td>{booking.startDate.toLocaleDateString()}</td>
-                <td>{booking.endDate.toLocaleDateString()}</td>
-                <td>{booking.state}</td>
-                <td>
-                  <form method="POST" action={getUri(booking.id)}>
-                    <input hidden />
-                    <input
-                      type="submit"
-                      value="Cancel booking"
-                      class="btn btn-danger"
-                      disabled={booking.state !== "reserved"}
-                    />
-                  </form>
-                </td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">House</th>
+              <th scope="col">Start date</th>
+              <th scope="col">End date</th>
+              <th scope="col">State</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              model.map((booking, idx) => (
+                <tr>
+                  <td>{idx + 1 + formData.page * ITEMS_PER_PAGE}</td>
+                  <td>
+                    <a href={`/houses/${booking.houseId}`}>
+                      {booking.house.title}
+                    </a>
+                  </td>
+                  <td>{booking.startDate.toLocaleDateString()}</td>
+                  <td>{booking.endDate.toLocaleDateString()}</td>
+                  <td>{booking.state}</td>
+                  <td>
+                    <form method="POST" action={getUri(booking.id)}>
+                      <input hidden />
+                      <input
+                        type="submit"
+                        value="Cancel booking"
+                        class="btn btn-danger"
+                        disabled={booking.state !== "reserved"}
+                      />
+                    </form>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
       <nav>
         <ul class="pagination justify-content-center">
           <li class={`page-item ${formData.page === 0 ? "disabled" : ""}`}>
