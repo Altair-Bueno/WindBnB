@@ -478,10 +478,10 @@ puede encontrar en el propio servidor, bajo las rutas `/docs` (SwaggerUI) y
 `/redoc` (Redoc). Además, se adjunta una copia local en el fichero
 `openapi.json`, dentro de la carpeta del proyecto.
 
-Todos los endpoints (menos las rutas `GET /viviendas` y
-`/GET /{idCasa}/valoraciones`) requieren de un token de acceso válido
-suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo operan
-**sobre el usuario actual**,
+> Todos los endpoints (menos las rutas `GET /viviendas` y
+> `/GET /{idCasa}/valoraciones`) requieren de un token de acceso válido
+> suministrado en la cabecera HTTP `Authorization`. Además, las rutas solo
+> operan **sobre el usuario actual**,
 
 - `GET /viviendas`: Devuelve una lista de viviendas que cumplan con los filtros
   especificados
